@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Benchmark1</title>
+    <title>Game Design Documentation | Benchmark 1</title>
 
     <!-- update the version number as needed -->
     <script defer src="/__/firebase/9.6.10/firebase-app-compat.js"></script>
@@ -25,6 +25,90 @@
 
   </head>
   <body>
-    <h1>Benchmark 1: Game Design Document</h1>
+  <img src="./Logo_cat.png" width="25%" height="25%"/>
+  <h1>Don’t Steal Meow Food<br>A Game For Wolfie2D<br>Copyright 2022 Jun Yi Lin, Tahmidul Alam, and Prathamesh Patwekar</h1>
+  <h2>Introduction </h2>
+    <p>“No way! These raccoons stole my food again ugh!”, were the words the kitty named Vanilla said when the raccoons stole all the food she had saved up for summer. In our game, “Don’t Steal Meow Food”, you must help Vanilla to get her revenge against the raccoons. Don’t Steal Meow Food is a 2D, single player, top-down game designed by a team of three university students: Prathamesh Patwekar, Tahmidul Alam, Jun Yi Lin, from the academic course, CSE 380, offered by Stony Brook University. The game employs sprite based animations, collision detection between collidable entities, use of a tiled map,  use of artificial intelligence and use of other 2D game design techniques.</p>
+  <h2>Technology</h2>
+    <p>Don't Steal Meow Food will be developed for the web platform using the Wolfie2D game engine. We will be using Tiled to make the game level. We will also use FL Studio, Audacity, Chiptone, and other musical softwares for music/sound production. We will use other applications for player construction, animation, and effects.<p>
+  <h2>Background Story</h2>
+    <p>Vanilla the cat had been living peacefully her entire life, but recently a gang of raccoons invaded her living space and stole all her cat food. Vanilla decides to take revenge on the raccoons and get her food back.</p>
+  <h2>Objective</h2>
+    <section>Vanilla needs to sneak into areas controlled by raccoons and collect as much stolen cat food as possible and defeat the raccoon’s leader to drive the raccoons out of her living space.</section>
+  <h2>Gameplay</h2>
+    <section>The game will be a top-down game with six different levels. Player’s goal is to explore the map and finish the objective of each level.
+
+    The objectives include stealing information about raccoon’ base, collecting stoten car food, and defeating special enemies. 
+
+    Vanilla have to deal with the raccoons that poraling the map. They will try to battle Vanilla if they spot her. However, Vanilla has the ability to assassinate the enemy if she can get on the enemy’s back. She can also choose to take down the enemies that spot her before they call for help. 
+
+    Vanilla can find a variety of items in the raccoon's base that can help her complete her mission. Including food that heals her, rocks that distract enemies, and guns that can take down enemies in distance.
+
+    The leaders of raccoons are a lot stronger than normal raccoons and can’t be assassinated. The only way to defeat them is face to face combat.</section>
+  <h2>Characters</h2>
+    The characters in this game are categorized into cats and raccoons. The main character is a cat and the enemies are raccoons.
+  <h2>Controls</h2>
+    This game is playable with the use of a mouse and a keyboard. The following are the controls that are used to control the cat player:
+  <h3>Keyboard Controls</h3>
+  <ul>
+    <li>W - Move the cat player upwards</li>
+
+    <li>A - Move the cat player towards the left</li>
+
+    <li>S - Move the cat player downwards</li>
+
+    <li>D - Move the cat player towards the right</li>
+ 
+    <li>1 - Use item in inventory location 1</li>
+
+    <li>2 - Use item in inventory location 2</li>
+
+    <li>3 - Use item in inventory location 3</li>
+
+    <li>4 - Use item in inventory location 4</li>
+
+    <li>5 - Use item in inventory location 5</li>
+  </ul>
+  <h3>Mouse Controls</h3>
+  <ul>
+    <li>Left Click - To Attack</li>
+    <li>Right Click - Special Attack/ Item</li>
+  </ul>
+  <em>Note: The player can only use one inventory item at a time, so pressing different numbers will switch the item being used.</em>
+  <br>
+  <h3>Graphical User Interface (GUI)</h3>
+  <img src="./benchmark1_gui_design.png" width="75%" height="50%" />
+  <p>In our GUI Models, we have (as shown above):</p>
+    <ul>
+      <li><strong>Splash Screen</strong>: There is our game logo and a “Click Anywhere to Continue” text that prompts the player to click to move past the splash screen. When clicked, the player gets redirected to the main menu where they are given different options to choose from.</li>
+      <li><strong>Main Menu:</strong> The main menu has the following option: If the player is new, then the player will be entered in level 1 (a new game). Otherwise, the player will continue from where they have left off previously.</li>
+      <li><strong>Controls</strong>: This button will redirect the player to a new screen where they can view the controls of the game. They can go back to the main menu whenever they wish.</li>
+      <li><strong>Levels</strong>: After pressing this button, the screen will show all the levels (levels 1 to 6) in the game. If the player has not finished a level or multiple levels, then a lock icon will appear above the levels. Otherwise, a text with a blurred map background will appear indicating that the player has completed the level. If they wish to replay a level, they can. If the player wishes to go back to the main menu, they can press the back button.</li>
+      <li><strong>Help</strong>: This button will redirect the player to the “help” screen. Here, the player can read the overall background story. This page will also have the names of the creators of the game as well as cheat codes for the game.</li>
+      <li>
+        <ul><strong>In-Game GUI</strong>: The in-game GUI will have the following components:
+          <li><strong>Current Objective</strong>: There will be a text on the upper left corner displaying the current objective of this level.</li>
+          <li><strong>Button</strong>: When pressed, the game will pause.</li>
+          <li><strong>Inventory Slots</strong>: These slots are used for carrying weapons, health packs, and other usable items. The players can switch between slots and it will be highlighted at the equipped slot.</li>
+          <li><strong>Player Health Bar</strong>: This bar shows the player’s current and total health.</li>
+          <li><strong>Boss Health Bar</strong>: (Only during the last level) This bar shows the Boss enemy’s current and total health.</li>
+          <li><strong>Current Level Text</strong>: The text of the current level being played.</li>
+        </ul>
+      </li>
+  </ul>
+  <h2>Sounds and Music</h2>
+    All music and sounds will be original. Using FL Studio and other audio editing programs, the following will be implemented:
+  <ul>
+    <li>Sound Effects</li>
+    <li>Shooting</li>
+    <li>Walking</li>
+    <li>Using Items</li>
+    <li>Player Death</li>
+    <li>Music</li>
+    <li>Levels 1 to 6</li>
+  </ul>
+  <h2>Artwork</h2>
+  <p>All the artwork in the game including the animated and non-animated sprites, the tile maps will be original.</p> 
+  <p>The animated sprites will be produced using Piskel.</p>
   </body>
-</html>
+</html> 
