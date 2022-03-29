@@ -1,0 +1,1 @@
+Would contain BattleManager.ts and InvnetoryManager.ts

@@ -1,0 +1,1 @@
+Contains all .png and .json files for animated sprites such as cat player and raccoon enemy
