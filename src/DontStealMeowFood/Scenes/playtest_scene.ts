@@ -18,7 +18,7 @@ export default class playtest_scene extends Scene{
     private navGraph : PositionGraph;
 
     loadScene(): void {
-        this.load.tilemap("playTestLevel","hw4_assets/tilemaps/sampleMap.json");
+        this.load.tilemap("playTestLevel","project_assets/tilemaps/sampleMap.json");
         this.load.object("navmesh","project_assets/data/navmesh.json");
     }
 
