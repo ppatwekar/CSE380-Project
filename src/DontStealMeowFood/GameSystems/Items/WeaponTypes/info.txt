@@ -1,1 +1,0 @@
-WeaponTypes such as Claw.ts or Gun.ts etc

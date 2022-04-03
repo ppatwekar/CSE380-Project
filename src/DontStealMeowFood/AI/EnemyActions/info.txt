@@ -1,1 +1,0 @@
-Would contain typescript files indicating actions taken by enemies example: Retreat.ts, Attack.ts, Berserk.ts, Retreat.ts, Move.ts etc

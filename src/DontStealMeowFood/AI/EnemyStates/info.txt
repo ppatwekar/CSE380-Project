@@ -1,1 +1,0 @@
-Contains typescript files that represent the enemy states: Active.ts, Alert.ts, Guard.ts, Patrol.ts etc.
