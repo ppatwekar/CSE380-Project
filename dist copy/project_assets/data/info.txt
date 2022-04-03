@@ -1,1 +1,0 @@
-Contains data being used for the project such as enemy.json, navmesh.json, weaponData.json, items.json etc.
