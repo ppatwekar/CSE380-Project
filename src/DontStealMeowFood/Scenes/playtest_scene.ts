@@ -5,17 +5,21 @@ import Graphic from "../../Wolfie2D/Nodes/Graphic";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
+import Navmesh from "../../Wolfie2D/Pathfinding/Navmesh";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
+import { Custom_Names } from "../GameConstants";
 
 export default class playtest_scene extends Scene{
     private bushes : OrthogonalTilemap;
     private graph : PositionGraph;
     private player : Graphic
     private logo : Sprite
+    private navGraph : PositionGraph;
 
     loadScene(): void {
         this.load.tilemap("playTestLevel","hw4_assets/tilemaps/sampleMap.json");
+        this.load.object("navmesh","project_assets/data/navmesh.json");
     }
 
     startScene(): void {
@@ -40,6 +44,9 @@ export default class playtest_scene extends Scene{
         this.player.color = Color.BLACK;
 
         this.viewport.follow(this.player);
+
+        this.createNavmesh();
+        
     }
 
     updateScene(deltaT: number): void {
@@ -58,8 +65,33 @@ export default class playtest_scene extends Scene{
 
         this.viewport.follow(this.player);
 
+    }
 
-        
+    createNavmesh() : void {
+        let graphLayer = this.addLayer("graph");
+        graphLayer.setHidden(true);
+
+        let navmeshData = this.load.getObject("navmesh");
+
+        this.navGraph = new PositionGraph();
+
+        for(let node of navmeshData["nodes"]){
+            let position : Vec2 = new Vec2(node[0]/2,node[1]/2);
+
+            this.navGraph.addPositionedNode(position);
+
+            this.add.graphic(GraphicType.POINT, "graph", {position: position});
+        }
+
+        for(let edge of navmeshData["edges"]){
+            this.navGraph.addEdge(edge[0],edge[1]);
+
+            this.add.graphic(GraphicType.LINE,"graph",{start : this.navGraph.getNodePosition(edge[0]), end : this.navGraph.getNodePosition(edge[1])});
+        }
+
+        let navmesh = new Navmesh(this.navGraph);
+        this.navManager.addNavigableEntity(Custom_Names.NAVMESH,navmesh);
+
     }
 
 }
