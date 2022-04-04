@@ -1,8 +1,8 @@
 {
 	"name": "raccoon",
 	"spriteSheetImage": "Raccoon.png",
-	"spriteWidth": 160,
-	"spriteHeight": 160,
+	"spriteWidth": 32,
+	"spriteHeight": 32,
 	"leftBuffer": 0,
 	"rightBuffer": 0,
 	"topBuffer": 0,
