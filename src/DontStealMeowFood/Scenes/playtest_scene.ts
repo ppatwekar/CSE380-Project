@@ -20,7 +20,9 @@ export default class playtest_scene extends Scene{
     loadScene(): void {
         this.load.tilemap("playTestLevel","project_assets/tilemaps/sampleMap.json");
         this.load.object("navmesh","project_assets/data/navmesh.json");
+        this.load.spritesheet("cat","project_assets/spritesheets/cat.json");
     }
+
 
     startScene(): void {
         let tilemapLayers = this.add.tilemap("playTestLevel", new Vec2(0.5,0.5));
@@ -46,7 +48,7 @@ export default class playtest_scene extends Scene{
         this.viewport.follow(this.player);
 
         this.createNavmesh();
-        
+
     }
 
     updateScene(deltaT: number): void {
