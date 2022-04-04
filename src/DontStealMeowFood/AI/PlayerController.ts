@@ -72,6 +72,8 @@ export default class PlayerController implements BattlerAI {
             // if (Input.isMouseJustPressed(2)) {
             //     this.path = this.owner.getScene().getNavigationManager().getPath(Custom_Names.NAVMESH, this.owner.position, Input.getGlobalMousePosition(), true);
             // }
+
+                /*
             if (Input.isKeyPressed("up")) {
                 this.owner.move(new Vec2(0, -1 * this.owner._velocity.y));
             } else if (Input.isKeyPressed("down")) {
@@ -81,6 +83,14 @@ export default class PlayerController implements BattlerAI {
             } else if (Input.isKeyPressed("right")) {
                 this.owner.move(new Vec2(this.owner._velocity.x, 0));
             }
+                */
+
+            const velocity = Vec2.ZERO;
+
+            velocity.y = (Input.isKeyPressed("up") ? -1 * this.owner._velocity.y : 0) + (Input.isKeyPressed("down") ? 1 * this.owner._velocity.y : 0);
+            velocity.x = (Input.isKeyPressed("left") ? -1 * this.owner._velocity.x : 0) + (Input.isKeyPressed("right") ? 1 * this.owner._velocity.x : 0);
+
+            this.owner.move(velocity);
 
             // Check for slot change
             if (Input.isJustPressed("slot1")) {

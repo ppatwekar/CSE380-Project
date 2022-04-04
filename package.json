@@ -9,7 +9,7 @@
   "author": "Joe Weaver",
   "license": "ISC",
   "devDependencies": {
-    "browserify": "^16.5.1",
+    "browserify": "^16.5.2",
     "fancy-log": "^1.3.3",
     "gulp": "^4.0.0",
     "gulp-typescript": "^6.0.0-alpha.1",
