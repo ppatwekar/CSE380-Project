@@ -1,6 +1,6 @@
 {
 	"name": "Cat",
-	"spriteSheetImage": "Cat.png",
+	"spriteSheetImage": "cat.png",
 	"spriteWidth": 160,
 	"spriteHeight": 160,
 	"leftBuffer": 0,
