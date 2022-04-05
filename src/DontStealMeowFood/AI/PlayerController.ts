@@ -85,12 +85,15 @@ export default class PlayerController implements BattlerAI {
             }
                 */
 
-            const velocity = Vec2.ZERO;
+            const distance = Vec2.ZERO;
 
-            velocity.y = (Input.isKeyPressed("up") ? -1 * this.owner._velocity.y : 0) + (Input.isKeyPressed("down") ? 1 * this.owner._velocity.y : 0);
-            velocity.x = (Input.isKeyPressed("left") ? -1 * this.owner._velocity.x : 0) + (Input.isKeyPressed("right") ? 1 * this.owner._velocity.x : 0);
+            distance.y = (Input.isPressed("up") ? -1 : 0) + (Input.isPressed("down") ? 1 : 0);
+            distance.x = (Input.isPressed("left") ? -1 : 0) + (Input.isPressed("right") ? 1 : 0);
 
-            this.owner.move(velocity);
+            distance.normalize();
+            distance.scale(this.speed * deltaT);
+
+            this.owner.move(distance);
 
             // Check for slot change
             if (Input.isJustPressed("slot1")) {
