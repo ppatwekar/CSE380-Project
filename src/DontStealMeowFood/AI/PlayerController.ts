@@ -12,6 +12,7 @@ import Weapon from "../GameSystems/items/Weapon";
 import { Custom_Events, Custom_Names } from "../GameConstants";
 import BattlerAI from "./BattlerAI";
 import { PlayerAnimationManager } from "./PlayerAnimationManager";
+import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 
 
 export default class PlayerController implements BattlerAI {
@@ -46,7 +47,8 @@ export default class PlayerController implements BattlerAI {
 
     private playerAnimationManager : PlayerAnimationManager;
     private directionVector : Vec2;
-
+    private playerAABB : AABB;
+    private viewPortAABB : AABB;
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
@@ -62,6 +64,8 @@ export default class PlayerController implements BattlerAI {
         this.receiver = new Receiver();
         this.playerAnimationManager = new PlayerAnimationManager(this.owner);
         this.directionVector = Vec2.ZERO;
+        this.playerAABB = this.owner.boundary;
+        this.viewPortAABB = this.owner.getScene().getViewport().getView();
     }
 
     activate(options: Record<string, any>): void { }
@@ -79,6 +83,8 @@ export default class PlayerController implements BattlerAI {
 
             this.directionVector.y = distance.y = (Input.isPressed("up") ? -1 : 0) + (Input.isPressed("down") ? 1 : 0);
             this.directionVector.x = distance.x = (Input.isPressed("left") ? -1 : 0) + (Input.isPressed("right") ? 1 : 0);
+
+            this.boundPlayerInViewPort(distance);
 
             distance.normalize();
             distance.scale(this.speed * deltaT);
@@ -134,6 +140,40 @@ export default class PlayerController implements BattlerAI {
                     this.inventory.removeItem();
                     item.sprite.visible = false;
                 }
+            }
+        }
+    }
+
+    private boundPlayerInViewPort(direction : Vec2){
+        const vpLeftEdge : number = 0;
+        const vpTopEdge : number = 0;
+        let vpRightEdge : number = this.viewPortAABB.center.x + this.viewPortAABB.getHalfSize().x;
+        let vpBottomEdge : number = this.viewPortAABB.center.y + this.viewPortAABB.getHalfSize().y;
+
+        let playerLeftEdge : number = this.playerAABB.center.x - this.playerAABB.halfSize.x;
+        let playerRightEdge : number = this.playerAABB.center.x + this.playerAABB.halfSize.x;
+        let playerTopEdge : number = this.playerAABB.center.y - this.playerAABB.halfSize.y;
+        let playerBottomEdge : number = this.playerAABB.center.y + this.playerAABB.halfSize.y;
+
+        if(direction.x == 1){
+            if(playerRightEdge >= vpRightEdge){
+                direction.x = 0;
+            }
+        }
+        if(direction.x == -1){
+            if(playerLeftEdge <= vpLeftEdge){
+                direction.x = 0;
+            }
+        }
+        if(direction.y == 1){
+            if(playerBottomEdge >= vpBottomEdge){
+                direction.y = 0;
+            }
+            
+        }
+        if(direction.y == -1){
+            if(playerTopEdge <= vpTopEdge){
+                direction.y = 0;
             }
         }
     }
