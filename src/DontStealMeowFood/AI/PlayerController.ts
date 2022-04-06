@@ -11,6 +11,7 @@ import Item from "../GameSystems/items/Item";
 import Weapon from "../GameSystems/items/Weapon";
 import { Custom_Events, Custom_Names } from "../GameConstants";
 import BattlerAI from "./BattlerAI";
+import { PlayerAnimationManager } from "./PlayerAnimationManager";
 
 
 export default class PlayerController implements BattlerAI {
@@ -43,6 +44,9 @@ export default class PlayerController implements BattlerAI {
 
     private receiver: Receiver;
 
+    private playerAnimationManager : PlayerAnimationManager;
+    private directionVector : Vec2;
+
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
@@ -56,6 +60,8 @@ export default class PlayerController implements BattlerAI {
         this.inventory = options.inventory;
 
         this.receiver = new Receiver();
+        this.playerAnimationManager = new PlayerAnimationManager(this.owner);
+        this.directionVector = Vec2.ZERO;
     }
 
     activate(options: Record<string, any>): void { }
@@ -68,32 +74,18 @@ export default class PlayerController implements BattlerAI {
             this.handleEvent(this.receiver.getNextEvent());
         }
         if (this.inputEnabled && this.health > 0) {
-            //Check right click
-            // if (Input.isMouseJustPressed(2)) {
-            //     this.path = this.owner.getScene().getNavigationManager().getPath(Custom_Names.NAVMESH, this.owner.position, Input.getGlobalMousePosition(), true);
-            // }
-
-                /*
-            if (Input.isKeyPressed("up")) {
-                this.owner.move(new Vec2(0, -1 * this.owner._velocity.y));
-            } else if (Input.isKeyPressed("down")) {
-                this.owner.move(new Vec2(0, this.owner._velocity.y));
-            } else if (Input.isKeyPressed("left")) {
-                this.owner.move(new Vec2(-1 * this.owner._velocity.x, 0));
-            } else if (Input.isKeyPressed("right")) {
-                this.owner.move(new Vec2(this.owner._velocity.x, 0));
-            }
-                */
-
+            
             const distance = Vec2.ZERO;
 
-            distance.y = (Input.isPressed("up") ? -1 : 0) + (Input.isPressed("down") ? 1 : 0);
-            distance.x = (Input.isPressed("left") ? -1 : 0) + (Input.isPressed("right") ? 1 : 0);
+            this.directionVector.y = distance.y = (Input.isPressed("up") ? -1 : 0) + (Input.isPressed("down") ? 1 : 0);
+            this.directionVector.x = distance.x = (Input.isPressed("left") ? -1 : 0) + (Input.isPressed("right") ? 1 : 0);
 
             distance.normalize();
             distance.scale(this.speed * deltaT);
 
             this.owner.move(distance);
+            this.playerAnimationManager.handleInput(this.directionVector);
+
 
             // Check for slot change
             if (Input.isJustPressed("slot1")) {
