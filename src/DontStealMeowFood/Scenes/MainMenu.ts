@@ -24,7 +24,7 @@ export default class MainMenu extends Scene {
         this.mainMenu = this.addUILayer("mainMenu");
 
         let createButton = (p: Vec2, t: string) => {
-            const play = this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: p, text: (t[0].toUpperCase() + t.substring(1))});
+            const play = this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: p, text: t === "level1" ? "Start" : (t[0].toUpperCase() + t.substring(1))});
             play.size.set(200, 50);
             play.borderWidth = 2;
             play.borderColor = Color.WHITE;
@@ -33,7 +33,7 @@ export default class MainMenu extends Scene {
         }
        
         // Add Start Button and give it an event to emit on press
-        createButton(new Vec2(center.x, center.y - 100), "start");
+        createButton(new Vec2(center.x, center.y - 100), "level1");
         
         // Add Controls button
         // const control = this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: new Vec2(center.x, center.y - 300), text: "Controls"});
@@ -91,13 +91,13 @@ export default class MainMenu extends Scene {
             l1.size.set(l,w);
             l1.borderColor = Color.WHITE;
             l1.backgroundColor = Color.GREEN;
-            l1.onClickEventId = "start";
+            l1.onClickEventId = "level1";
 
             const l2 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l1.position.x + xMar + l, l1.position.y), text : "LOCKED"});
             l2.size.set(l,w);
             l2.borderColor = Color.WHITE;
             l2.backgroundColor = Color.TRANSPARENT;
-            l2.onClickEventId = "";
+            l2.onClickEventId = ""; // TODO
 
             const l3 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l2.position.x + xMar + l, l2.position.y), text : "LOCKED"});
             l3.size.set(l,w);
@@ -168,7 +168,7 @@ export default class MainMenu extends Scene {
 
         /* Receivers */
         this.receiver.subscribe("menu");
-        this.receiver.subscribe("start");
+        this.receiver.subscribe("level1");
         this.receiver.subscribe("control");
         this.receiver.subscribe("levels");
         this.receiver.subscribe("help");
@@ -181,7 +181,7 @@ export default class MainMenu extends Scene {
 
             console.log(event);
 
-            if(event.type === "start"){
+            if(event.type === "level1"){
                 this.sceneManager.changeToScene(playtest_scene, {});
             }
 
