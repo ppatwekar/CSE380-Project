@@ -1,5 +1,6 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import UIElement from "../../Wolfie2D/Nodes/UIElement";
+import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Layer from "../../Wolfie2D/Scene/Layer";
@@ -78,8 +79,56 @@ export default class MainMenu extends Scene {
         }
 
         /* TODO: Levels Screen */
-        let levelsScreen = () => {
+        let levelsScreen = (xMar: number, yMar: number) => {
             // TODO
+            this.levels = this.addUILayer("levels");
+            this.levels.setHidden(true);
+
+            const l = (2 * this.viewport.getHalfSize().x - 6 * xMar)/3;
+            const w = (2 * this.viewport.getHalfSize().y - 8*yMar)/2;
+
+            const l1 = <Button>this.add.uiElement(UIElementType.BUTTON, "levels",{position : new Vec2(2*xMar + l/2, 2*yMar + w/2), text : "Level 1"});
+            l1.size.set(l,w);
+            l1.borderColor = Color.WHITE;
+            l1.backgroundColor = Color.GREEN;
+            l1.onClickEventId = "start";
+
+            const l2 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l1.position.x + xMar + l, l1.position.y), text : "LOCKED"});
+            l2.size.set(l,w);
+            l2.borderColor = Color.WHITE;
+            l2.backgroundColor = Color.TRANSPARENT;
+            l2.onClickEventId = "";
+
+            const l3 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l2.position.x + xMar + l, l2.position.y), text : "LOCKED"});
+            l3.size.set(l,w);
+            l3.borderColor = Color.WHITE;
+            l3.backgroundColor = Color.TRANSPARENT;
+            l3.onClickEventId = "";
+
+            const l4 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l1.position.x , l1.position.y + w + 4 * yMar), text : "LOCKED"});
+            l4.size.set(l,w);
+            l4.borderColor = Color.WHITE;
+            l4.backgroundColor = Color.TRANSPARENT;
+            l4.onClickEventId = "";
+
+            const l5 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l4.position.x + xMar + l , l4.position.y), text : "LOCKED"});
+            l5.size.set(l,w);
+            l5.borderColor = Color.WHITE;
+            l5.backgroundColor = Color.TRANSPARENT;
+            l5.onClickEventId = "";
+
+            const l6 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l5.position.x + xMar + l , l5.position.y), text : "LOCKED"});
+            l6.size.set(l,w);
+            l6.borderColor = Color.WHITE;
+            l6.backgroundColor = Color.TRANSPARENT;
+            l6.onClickEventId = "";
+
+            const back = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(this.viewport.getHalfSize().x, 2 * this.viewport.getHalfSize().y - yMar/2), text: "Back"});
+            back.size.set(l,2*this.viewport.getHalfSize().y - 7 *yMar - 2 * w);
+            back.borderColor = Color.WHITE;
+            back.backgroundColor = Color.TRANSPARENT;
+            back.onClickEventId = "menu";
+
         }
 
         /* Help Screen */
@@ -114,7 +163,7 @@ export default class MainMenu extends Scene {
 
         // Call the Screen Functions
         controlScreen();
-        levelsScreen();
+        levelsScreen(40,40);
         helpScreen();
 
         /* Receivers */
@@ -144,11 +193,17 @@ export default class MainMenu extends Scene {
             if(event.type === "menu"){
                 this.mainMenu.setHidden(false);
                 this.help.setHidden(true);
+                this.levels.setHidden(true);
                 this.control.setHidden(true);
             }
             if(event.type === "control"){
                 this.mainMenu.setHidden(true);
                 this.control.setHidden(false);
+            }
+
+            if(event.type === "levels"){
+                this.mainMenu.setHidden(true);
+                this.levels.setHidden(false);
             }
 
         }

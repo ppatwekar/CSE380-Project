@@ -89,7 +89,7 @@ export default class playtest_scene extends Scene{
     initializePlayer() : void {
         this.player = this.add.animatedSprite("cat","primary");
         this.player.position.set(105,488);
-        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(8,8)));
+        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(10,10)));
         this.player.addAI(PlayerController,
             {
                 speed : 100,
