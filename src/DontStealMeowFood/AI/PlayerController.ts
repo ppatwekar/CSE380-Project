@@ -124,6 +124,7 @@ export default class PlayerController implements BattlerAI {
 
             if (Input.isJustPressed("pickup")) {
                 // Check if there is an item to pick up
+                if(this.items){
                 for (let item of this.items) {
                     if (this.owner.collisionShape.overlaps(item.sprite.boundary)) {
                         // We overlap it, try to pick it up
@@ -131,6 +132,7 @@ export default class PlayerController implements BattlerAI {
                         break;
                     }
                 }
+            }
             }
 
             if (Input.isJustPressed("drop")) {
