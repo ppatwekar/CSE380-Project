@@ -46,7 +46,7 @@ export default class InventoryManager {
 
         // Add a rect for the selected slot
         this.selectedSlot = <Rect>scene.add.graphic(GraphicType.RECT, slotLayer, {position: this.position.clone(), size: this.slotSize.clone().inc(-2)});
-        this.selectedSlot.color = Color.WHITE;
+        this.selectedSlot.color = Color.BLACK;
         this.selectedSlot.color.a = 0.2;
     }
 

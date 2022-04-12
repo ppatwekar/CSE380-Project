@@ -50,6 +50,9 @@ export default class PlayerController implements BattlerAI {
     private playerAABB : AABB;
     private viewPortAABB : AABB;
 
+    // Choosing inventory
+    private slotPos = 0;
+
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
         this.lookDirection = Vec2.ZERO;
@@ -95,9 +98,28 @@ export default class PlayerController implements BattlerAI {
 
             // Check for slot change
             if (Input.isJustPressed("slot1")) {
+                this.slotPos = 0;
                 this.inventory.changeSlot(0);
             } else if (Input.isJustPressed("slot2")) {
+                this.slotPos = 1;
                 this.inventory.changeSlot(1);
+            } else if (Input.isJustPressed("slot3")) {
+                this.slotPos = 2;
+                this.inventory.changeSlot(2);
+            } else if (Input.isJustPressed("slot4")) {
+                this.slotPos = 3;
+                this.inventory.changeSlot(3);
+            } else if (Input.isJustPressed("slot5")) {
+                this.slotPos = 4;
+                this.inventory.changeSlot(4);
+            } else if (Input.didJustScroll()) {
+                if (Input.getScrollDirection() == -1) {
+                    if (--this.slotPos < 0) this.slotPos = 4;
+                    this.inventory.changeSlot(this.slotPos);
+                } else {
+                    if (++this.slotPos > 4) this.slotPos = 0;
+                    this.inventory.changeSlot(this.slotPos);
+                }
             }
 
             if (Input.isJustPressed("pickup")) {

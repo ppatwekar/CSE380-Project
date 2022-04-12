@@ -16,7 +16,14 @@ import MainMenu from "./DontStealMeowFood/Scenes/MainMenu";
             {name: "left", keys: ["a"]},
             {name: "right", keys: ["d"]},
             {name: "up", keys: ["w", "space"]},
-            {name: "down", keys: ["s"]}
+            {name: "down", keys: ["s"]},
+            {name: "pickup", keys: ["e"]},
+            {name: "drop", keys: ["q"]},
+            {name: "slot1", keys: ["1"]},
+            {name: "slot2", keys: ["2"]},
+            {name: "slot3", keys: ["3"]},
+            {name: "slot4", keys: ["4"]},
+            {name: "slot5", keys: ["5"]}
         ],
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want

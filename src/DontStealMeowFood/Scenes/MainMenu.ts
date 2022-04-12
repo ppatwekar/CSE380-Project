@@ -60,7 +60,7 @@ export default class MainMenu extends Scene {
             const controls1 = "WASD | Move";
             const controls2 = "E | Item Pick Up";
             const controls3 = "Q | Drop Current Item";
-            const controls4 = "1/2/3/4/5 | Equip Inventory Item";
+            const controls4 = "1/2/3/4/5 or Mouse Wheel Up/Down | Equip Inventory Item";
 
             const cline1 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(center.x, center.y - 100), text: controls1});
             const cline2 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(center.x, center.y - 50), text: controls2});

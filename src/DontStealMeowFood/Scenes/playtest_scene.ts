@@ -7,11 +7,16 @@ import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
+import Label from "../../Wolfie2D/Nodes/UIElements/Label";
+import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Navmesh from "../../Wolfie2D/Pathfinding/Navmesh";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
+import BattlerAI from "../AI/BattlerAI";
 import PlayerController from "../AI/PlayerController";
 import { Custom_Names } from "../GameConstants";
+import InventoryManager from "../GameSystems/InventoryManager";
+import Item from "../GameSystems/items/Item";
 
 export default class playtest_scene extends Scene{
     private bushes : OrthogonalTilemap;
@@ -20,10 +25,17 @@ export default class playtest_scene extends Scene{
     private logo : Sprite
     private navGraph : PositionGraph;
 
+    private healthDisplay: Label;
+    private goalDisplay: Label;
+
+    // A list of items
+    private items: Array<Item>;
+
     loadScene(): void {
         this.load.tilemap("playTestLevel","project_assets/tilemaps/sampleMap.json");
         this.load.object("navmesh","project_assets/data/navmesh.json");
         this.load.spritesheet("cat","project_assets/spritesheets/cat.json");
+        this.load.image("inventorySlot", "project_assets/sprites/inventory.png");
     }
 
 
@@ -51,12 +63,24 @@ export default class playtest_scene extends Scene{
 
         this.viewport.follow(this.player);
 
+        // Add a UI for health
+        this.addUILayer("health");
+        this.healthDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "health", {position: new Vec2(25, 195), text: "Health: " + (<BattlerAI>this.player._ai).health});
+        this.healthDisplay.textColor = Color.BLACK;
+        this.healthDisplay.backgroundColor = Color.WHITE;
 
+        // Add a UI for Goals
+        this.addUILayer("objectives");
+        this.goalDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "objectives", {position: new Vec2(40, 10), text: "Objective: Playtest!"});
+        this.goalDisplay.textColor = Color.WHITE;
+        this.goalDisplay.backgroundColor = Color.BLACK;
     }
 
     updateScene(deltaT: number): void {
         //this.viewport.follow(this.player);
 
+        let currHealth = (<BattlerAI>this.player._ai).health;
+        this.healthDisplay.text = "Health: " + currHealth;
     }
 
     createNavmesh() : void {
@@ -87,21 +111,24 @@ export default class playtest_scene extends Scene{
     }
 
     initializePlayer() : void {
+        // Create Inventory
+        let inventory = new InventoryManager(this, 5, "inventorySlot", new Vec2(16, this.viewport.getCenter().y * 0.45), 2, "slots1", "items1");
+
         this.player = this.add.animatedSprite("cat","primary");
         this.player.position.set(105,488);
         this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(10,10)));
         this.player.addAI(PlayerController,
             {
                 speed : 100,
-                health : 25,
-                inventory : null,
+                health : 100,
+                inventory : inventory,
                 items : null,
                 inputEnabled : true,
                 range : 30
             });
 
         this.player.animation.play("IdleR");
-
+        (<PlayerController>this.player._ai).inventory.setActive(true);
     }
 
 }
