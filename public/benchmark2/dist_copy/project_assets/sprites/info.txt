@@ -1,0 +1,1 @@
+Contains all the .png files for non-animated sprites

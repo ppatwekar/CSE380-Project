@@ -1,0 +1,162 @@
+{
+	"name": "Cat",
+	"spriteSheetImage": "cat.png",
+	"spriteWidth": 32,
+	"spriteHeight": 32,
+	"leftBuffer": 0,
+	"rightBuffer": 0,
+	"topBuffer": 0,
+	"bottomBuffer": 0,
+	"columns": 5,
+	"rows": 5,
+	"animations": [
+		{
+			"name": "IdleR",
+			"repeat": true,
+			"frames": [
+				{
+					"index": 0,
+					"duration": 5
+				},
+				{
+					"index": 1,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "IdleL",
+			"repeat": true,
+			"frames": [
+				{
+					"index": 6,
+					"duration": 5
+				},
+				{
+					"index": 7,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "IdleD",
+			"repeat": true,
+			"frames": [
+				{
+					"index": 11,
+					"duration": 5
+				},
+				{
+					"index": 12,
+					"duration": 5
+				},
+				{
+					"index": 13,
+					"duration": 5
+				},
+				{
+					"index": 14,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "IdleU",
+			"repeat": true,
+			"frames": [
+				{
+					"index": 17,
+					"duration": 5
+				},
+				{
+					"index": 18,
+					"duration": 5
+				},
+				{
+					"index": 19,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "RunR",
+			"repeat": true,
+			"frames": [
+				{
+					"index": 2,
+					"duration": 5
+				},
+				{
+					"index": 3,
+					"duration": 5
+				},
+				{
+					"index": 4,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "RunL",
+			"repeat": true,
+			"frames": [
+				{
+					"index": 7,
+					"duration": 5
+				},
+				{
+					"index": 8,
+					"duration": 5
+				},
+				{
+					"index": 9,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "RunD",
+			"repeat": true,
+			"frames": [
+				{
+					"index": 11,
+					"duration": 5
+				},
+				{
+					"index": 15,
+					"duration": 5
+				},
+				{
+					"index": 11,
+					"duration": 5
+				},
+				{
+					"index": 16,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "RunU",
+			"repeat": true,
+			"frames": [
+				{
+					"index": 17,
+					"duration": 5
+				},
+				{
+					"index": 20,
+					"duration": 5
+				},
+				{
+					"index": 17,
+					"duration": 5
+				},
+				{
+					"index": 21,
+					"duration": 5
+				}
+			]
+		}
+	]
+}

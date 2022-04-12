@@ -18,10 +18,16 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "rewrites": [
+    "redirects": [
       {
         "source": "/benchmark1",
-        "destination": "/benchmark1.html"
+        "destination": "/benchmark1.html",
+        "type": 302
+      },
+      {
+        "source": "/benchmark2",
+        "destination": "/benchmark2/dist_copy/index.html",
+        "type": 302
       }
     ]
   },
