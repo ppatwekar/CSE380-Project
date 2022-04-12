@@ -13,4 +13,5 @@ dist/*
 ### IF YOU ARE MAKING A PROJECT, YOU MAY WANT TO UNCOMMENT THIS LINE ###
 !dist/project_assets/
 
-bundle.js
+!bundle.js
+!index.html
