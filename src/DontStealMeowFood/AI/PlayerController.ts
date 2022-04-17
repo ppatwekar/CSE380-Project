@@ -4,18 +4,38 @@ import Receiver from "../../Wolfie2D/Events/Receiver";
 import Input from "../../Wolfie2D/Input/Input";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import NavigationPath from "../../Wolfie2D/Pathfinding/NavigationPath";
-import Timer from "../../Wolfie2D/Timing/Timer";
 import InventoryManager from "../GameSystems/InventoryManager";
 import Healthpack from "../GameSystems/items/Healthpack";
 import Item from "../GameSystems/items/Item";
 import Weapon from "../GameSystems/items/Weapon";
 import { Custom_Events, Custom_Names } from "../GameConstants";
 import BattlerAI from "./BattlerAI";
-import { PlayerAnimationManager } from "./PlayerAnimationManager";
+import PlayerAnimationManager  from "./ProjectAnimations/ProjectAnimationManager";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
+import StateMachineAI from "../../Wolfie2D/AI/StateMachineAI";
+//import IdleD from "./PlayerCat/AnimationStates/IdleD";
+//import IdleL from "./PlayerCat/AnimationStates/IdleL";
+//import IdleR from "./PlayerCat/AnimationStates/IdleR";
+//import State from "../../Wolfie2D/DataTypes/State/State";
+//import IdleU from "./PlayerCat/AnimationStates/IdleU";
+//import RunR from "./PlayerCat/AnimationStates/RunR";
+//import RunL from "./PlayerCat/AnimationStates/RunL";
+//import RunD from "./PlayerCat/AnimationStates/RunD";
+//import RunU from "./PlayerCat/AnimationStates/RunU";
+//import AnimationState from "./PlayerCat/AnimationState";
+//import StateMachine from "../../Wolfie2D/DataTypes/State/StateMachine";
+//import GameNode from "../../Wolfie2D/Nodes/GameNode";
+import ProjectAnimationManager from "./ProjectAnimations/ProjectAnimationManager";
+import { AState, Direction } from "./ProjectAnimations/DirectionStates/DirectionEnums";
+import Idle from "./ProjectAnimations/ActualStates/Idle";
+import Down from "./ProjectAnimations/DirectionStates/Down";
+import Run from "./ProjectAnimations/ActualStates/Run";
+import Left from "./ProjectAnimations/DirectionStates/Left";
+import Right from "./ProjectAnimations/DirectionStates/Right";
+import Up from "./ProjectAnimations/DirectionStates/Up";
 
 
-export default class PlayerController implements BattlerAI {
+export default class PlayerController extends StateMachineAI implements BattlerAI {
     // Fields from BattlerAI
     health: number;
 
@@ -43,15 +63,14 @@ export default class PlayerController implements BattlerAI {
     private lookDirection: Vec2;
     private path: NavigationPath;
 
-    private receiver: Receiver;
+    receiver: Receiver;
 
     private playerAnimationManager : PlayerAnimationManager;
     private directionVector : Vec2;
     private playerAABB : AABB;
     private viewPortAABB : AABB;
+    anime : ProjectAnimationManager;
 
-    // Choosing inventory
-    private slotPos = 0;
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
@@ -65,10 +84,14 @@ export default class PlayerController implements BattlerAI {
         this.inventory = options.inventory;
 
         this.receiver = new Receiver();
-        this.playerAnimationManager = new PlayerAnimationManager(this.owner);
+
+        //this.playerAnimationManager = new PlayerAnimationManager(this.owner);
         this.directionVector = Vec2.ZERO;
         this.playerAABB = this.owner.boundary;
         this.viewPortAABB = this.owner.getScene().getViewport().getView();
+        //this.addAnimationStates();
+        this.addAnimationStates2(this.owner);
+
     }
 
     activate(options: Record<string, any>): void { }
@@ -80,51 +103,40 @@ export default class PlayerController implements BattlerAI {
         while(this.receiver.hasNextEvent()){
             this.handleEvent(this.receiver.getNextEvent());
         }
-        if (this.inputEnabled && this.health > 0) {
-            
+        if (this.inputEnabled && this.health > 0) { //can remove this for now. maybe not
+
+
             const distance = Vec2.ZERO;
 
             this.directionVector.y = distance.y = (Input.isPressed("up") ? -1 : 0) + (Input.isPressed("down") ? 1 : 0);
             this.directionVector.x = distance.x = (Input.isPressed("left") ? -1 : 0) + (Input.isPressed("right") ? 1 : 0);
 
+            //here, check where the animatedSprite is w.r.t the viewPort. Check if AABB size and stuff
+            //i.e if distance from animatedSprite to viewport edge is less than or equal the half size, then do not move 
+            //the AnimatedSprite in that direction. But it can move in other direction
+            //for example if animatedSprite is touching right edge, check if directionVector.x == 1. If so, make it 0
+            //otherwise if it is -1 or 0 (only other options) then no worries. Same for the y - coordinate.
             this.boundPlayerInViewPort(distance);
 
             distance.normalize();
             distance.scale(this.speed * deltaT);
 
             this.owner.move(distance);
-            this.playerAnimationManager.handleInput(this.directionVector);
-
-
+            //super.update(deltaT);
+            this.anime.update(distance);
+            
+            //this.playerAnimationManager.handleInput(this.directionVector);
+            
+            /*
             // Check for slot change
             if (Input.isJustPressed("slot1")) {
-                this.slotPos = 0;
                 this.inventory.changeSlot(0);
             } else if (Input.isJustPressed("slot2")) {
-                this.slotPos = 1;
                 this.inventory.changeSlot(1);
-            } else if (Input.isJustPressed("slot3")) {
-                this.slotPos = 2;
-                this.inventory.changeSlot(2);
-            } else if (Input.isJustPressed("slot4")) {
-                this.slotPos = 3;
-                this.inventory.changeSlot(3);
-            } else if (Input.isJustPressed("slot5")) {
-                this.slotPos = 4;
-                this.inventory.changeSlot(4);
-            } else if (Input.didJustScroll()) {
-                if (Input.getScrollDirection() == -1) {
-                    if (--this.slotPos < 0) this.slotPos = 4;
-                    this.inventory.changeSlot(this.slotPos);
-                } else {
-                    if (++this.slotPos > 4) this.slotPos = 0;
-                    this.inventory.changeSlot(this.slotPos);
-                }
             }
 
             if (Input.isJustPressed("pickup")) {
                 // Check if there is an item to pick up
-                if(this.items){
                 for (let item of this.items) {
                     if (this.owner.collisionShape.overlaps(item.sprite.boundary)) {
                         // We overlap it, try to pick it up
@@ -132,7 +144,6 @@ export default class PlayerController implements BattlerAI {
                         break;
                     }
                 }
-            }
             }
 
             if (Input.isJustPressed("drop")) {
@@ -147,9 +158,11 @@ export default class PlayerController implements BattlerAI {
                     this.items.push(item);
                 }
             }
+            */
         }
         
         //Target an enemy and attack
+        /*
         if (this.target != null) {
             let item = this.inventory.getItem();
             this.lookDirection = this.owner.position.dirTo(this.target);
@@ -165,7 +178,7 @@ export default class PlayerController implements BattlerAI {
                     item.sprite.visible = false;
                 }
             }
-        }
+        } */
     }
 
     private boundPlayerInViewPort(direction : Vec2){
@@ -200,6 +213,40 @@ export default class PlayerController implements BattlerAI {
                 direction.y = 0;
             }
         }
+    }
+
+    changeState(state: string): void {
+        
+    }
+
+    /*
+    addAnimationStates(){
+
+        let states : { stateName : string, constructor : {new(parent : StateMachineAI, owner : GameNode, direction : Vec2, currentState : string) : AnimationState}}[] = 
+        [{stateName : States.IdleR, constructor : IdleR},
+        {stateName : States.IdleL, constructor : IdleL},
+        {stateName : States.IdleD, constructor : IdleD},
+        {stateName : States.IdleU, constructor : IdleU},
+    
+        {stateName : States.RunD, constructor : RunD},
+        {stateName : States.RunL, constructor : RunL},
+        {stateName : States.RunR, constructor : RunR},
+        {stateName : States.RunU, constructor : RunU}];
+
+        for(let state of states){
+            this.addState(state.stateName, new state.constructor(this,this.owner,this.directionVector, States.IdleR));
+        }
+
+        this.initialize(States.IdleR);
+
+        
+    } */
+
+    addAnimationStates2(owner : AnimatedSprite){
+        this.anime = new ProjectAnimationManager(owner,
+            [{key : AState.Idle, state : Idle},{key: AState.Run, state : Run}],
+            [{key : Direction.D, state : Down},{key : Direction.L, state : Left},{key : Direction.R, state : Right},{key : Direction.U, state : Up}]);
+        
     }
 
     damage(damage: number): void {

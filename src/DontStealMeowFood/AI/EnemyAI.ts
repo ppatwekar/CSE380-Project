@@ -10,11 +10,20 @@ import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import NavigationPath from "../../Wolfie2D/Pathfinding/NavigationPath";
 import { Custom_Statuses } from "../GameConstants";
 import Weapon from "../GameSystems/items/Weapon";
+//import CommonState, { CommonStates } from "./CommonStates/CommonState";
 //import Infected from "./CommonStates/Infected";
 import Active from "./EnemyStates/Active";
 import Alert from "./EnemyStates/Alert";
 import Guard from "./EnemyStates/Guard";
 import Patrol from "./EnemyStates/Patrol";
+import Idle from "./ProjectAnimations/ActualStates/Idle";
+import Run from "./ProjectAnimations/ActualStates/Run";
+import { AState, Direction } from "./ProjectAnimations/DirectionStates/DirectionEnums";
+import Down from "./ProjectAnimations/DirectionStates/Down";
+import Left from "./ProjectAnimations/DirectionStates/Left";
+import Right from "./ProjectAnimations/DirectionStates/Right";
+import Up from "./ProjectAnimations/DirectionStates/Up";
+import ProjectAnimationManager from "./ProjectAnimations/ProjectAnimationManager";
 
 export default class EnemyAI extends StateMachineGoapAI{
     owner : AnimatedSprite;
@@ -40,6 +49,9 @@ export default class EnemyAI extends StateMachineGoapAI{
     inRange : number;
 
     retreatPath : NavigationPath; //if we want the retreat option
+
+    anime : ProjectAnimationManager;
+
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
@@ -79,6 +91,9 @@ export default class EnemyAI extends StateMachineGoapAI{
         this.initialize(EnemyStates.DEFAULT);
 
         this.bushes = <OrthogonalTilemap>this.owner.getScene().getLayer("Bushes").getItems()[0];
+
+        this.addAnimations(this.owner);
+
 
         //this.getPlayerPosition();
 
@@ -209,6 +224,15 @@ export default class EnemyAI extends StateMachineGoapAI{
         if(this.plan.isEmpty()){
             //this.plan = this.planner.plan(Custom_Statuses.REACHED_GOAL, this.possibleActions, this.currentStatus, null);
         }
+    }
+
+    addAnimations(owner : AnimatedSprite){
+
+        this.anime = new ProjectAnimationManager(owner,
+            [{key : AState.Idle, state : Idle},{key: AState.Run, state : Run}],
+            [{key : Direction.D, state : Down},{key : Direction.L, state : Left},{key : Direction.R, state : Right},{key : Direction.U, state : Up}]);
+      
+
     }
 
 }
