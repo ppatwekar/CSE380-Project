@@ -1,88 +1,75 @@
 import GoapActionPlanner from "../../Wolfie2D/AI/GoapActionPlanner";
-import StateMachineAI from "../../Wolfie2D/AI/StateMachineAI";
 import StateMachineGoapAI from "../../Wolfie2D/AI/StateMachineGoapAI";
 import GoapAction from "../../Wolfie2D/DataTypes/Interfaces/GoapAction";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Stack from "../../Wolfie2D/DataTypes/Stack";
-import State from "../../Wolfie2D/DataTypes/State/State";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import NavigationPath from "../../Wolfie2D/Pathfinding/NavigationPath";
+import { Custom_Statuses } from "../GameConstants";
 import Weapon from "../GameSystems/items/Weapon";
-import { Custom_Events, Custom_Names, Custom_Statuses } from "../GameConstants";
-import BattlerAI from "./BattlerAI";
-import Alert from "./EnemyStates/Alert";
+//import Infected from "./CommonStates/Infected";
 import Active from "./EnemyStates/Active";
+import Alert from "./EnemyStates/Alert";
 import Guard from "./EnemyStates/Guard";
 import Patrol from "./EnemyStates/Patrol";
 
+export default class EnemyAI extends StateMachineGoapAI{
+    owner : AnimatedSprite;
 
-export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
-    /** The owner of this AI */
-    owner: AnimatedSprite;
+    maxHealth : number;
 
-    /** The total possible amount of health this entity has */
-    maxHealth: number;
+    currentHealth : number;
 
-    /** The current amount of health this entity has */
-    health: number;
+    speed : number = 20;
 
-    /** The default movement speed of this AI */
-    speed: number = 20;
+    weapon : Weapon;
 
-    /** The weapon this AI has */
-    weapon: Weapon;
+    player : GameNode;
 
-    /** A reference to the player object */
-    player1: GameNode;
+    playerPos : Vec2;
 
-    // The current known position of the player
-    playerPos: Vec2;
+    lastPlayerPos : Vec2;
 
-    // The last known position of the player
-    lastPlayerPos: Vec2;
+    attackRange : number;
 
-    // Attack range
-    inRange: number;
+    path : NavigationPath;
 
-    // Path to player
-    path: NavigationPath;
+    inRange : number;
 
-    // Path away from player
-    retreatPath: NavigationPath;
+    retreatPath : NavigationPath; //if we want the retreat option
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
 
-        if (options.defaultMode === "guard") {
-            // Guard mode
-            this.addState(EnemyStates.DEFAULT, new Guard(this, owner, options.guardPosition));
-        } else {
-            // Patrol mode
-            this.addState(EnemyStates.DEFAULT, new Patrol(this, owner, options.patrolRoute));
+        if(options.defaultMode === "Guard"){
+            this.addState(EnemyStates.DEFAULT, new Guard(this,this.owner,options.guardPosition));
+        }
+        else {
+            this.addState(EnemyStates.DEFAULT, new Patrol(this,this.owner,options.patrolRoute));
         }
 
-        this.addState(EnemyStates.ALERT, new Alert(this, owner));
-        this.addState(EnemyStates.TARGETING, new Active(this, owner));
+        this.addState(EnemyStates.ALERT, new Alert(this,this.owner));
+        this.addState(EnemyStates.TARGETING, new Active(this,this.owner));
+        //this.addState(CommonStates.INFECTED, new Infected(this,this.owner));
 
         this.maxHealth = options.health;
 
-        this.health = options.health;
+        this.currentHealth = options.health;
 
-        this.weapon = options.weapon;
+        //this.weapon = options.weapon;
 
-        this.player1 = options.player1;
+        this.player = options.player;
 
-        this.inRange = options.inRange;
+        //this.inRange = options.inRange;
 
         this.goal = options.goal;
 
-        this.currentStatus = options.status;
+        this.currentStatus = []; //options.status;
 
-        this.possibleActions = options.actions;
+        this.possibleActions = []; //options.actions;
 
         this.plan = new Stack<GoapAction>();
 
@@ -91,99 +78,144 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         // Initialize to the default state
         this.initialize(EnemyStates.DEFAULT);
 
-        this.getPlayerPosition();
+        this.bushes = <OrthogonalTilemap>this.owner.getScene().getLayer("Bushes").getItems()[0];
+
+        //this.getPlayerPosition();
+
+
     }
 
-    activate(options: Record<string, any>): void { }
+    activate(options: Record<string, any>): void {
+        
+    }
 
-    damage(damage: number): void {
-        this.health -= damage;
+    damage(damage : number){
+        this.currentHealth -= damage;
 
-        // If we're low enough, add Low Health status to enemy
-        if (this.health <= Math.floor(this.maxHealth/2)) {
-            if (this.currentStatus.indexOf(Custom_Statuses.LOW_HEALTH) === -1){
+        //if health is less than or equal to maxHealth assigned
+        if(this.currentHealth <= Math.floor(this.maxHealth/2)){
+            if(this.currentStatus.indexOf(Custom_Statuses.LOW_HEALTH) === -1){
                 this.currentStatus.push(Custom_Statuses.LOW_HEALTH);
             }
         }
 
-        // If health goes below 0, disable AI and fire enemyDied event
-        if (this.health <= 0) {
-            this.owner.setAIActive(false, {});
+        if(this.currentHealth <= 0){ //player lost life
+            this.owner.setAIActive(false,{}); 
             this.owner.isCollidable = false;
             this.owner.visible = false;
+            this.emitter.fireEvent("enemyDied",{enemy : this.owner});
 
-            this.emitter.fireEvent("enemyDied", {enemy: this.owner})
-
-            if (Math.random() < 0.2) {
-                // Spawn a healthpack
-                this.emitter.fireEvent("healthpack", { position: this.owner.position });
+            if(Math.random() < 0.2){ 
+                //spawn a health pack or something else like cat food or water
+                //this.emitter.fireEvent("healthPack",{position : this.owner});
             }
         }
     }
-    isPlayerVisible(pos: Vec2): Vec2{
-        //Check if one player is visible, taking into account walls
 
-        // Get the new player location
-        let start = this.owner.position.clone();
-        let delta = pos.clone().sub(start);
+    private zeroPos : Vec2 = Vec2.ZERO;
+    private tilePos: Vec2 = Vec2.ZERO;
+    private colliderTileAABB : AABB = new AABB();
+    private startTileIndex : Vec2 = Vec2.ZERO;
+    private endTileIndex : Vec2 = Vec2.ZERO;
+    private bushes : OrthogonalTilemap;
 
-        // Iterate through the tilemap region until we find a collision
-        let minX = Math.min(start.x, pos.x);
-        let maxX = Math.max(start.x, pos.x);
-        let minY = Math.min(start.y, pos.y);
-        let maxY = Math.max(start.y, pos.y);
 
-        // Get the wall tilemap
-        let walls = <OrthogonalTilemap>this.owner.getScene().getLayer("Wall").getItems()[0];
+    isPlayerVisible(playerPos : Vec2) : Vec2{
+        let myPos = this.owner.position.clone(); //get position of this enemy
+        let difference = playerPos.clone().sub(myPos); //find displacement between player position and this enemy position
 
-        let minIndex = walls.getColRowAt(new Vec2(minX, minY));
-        let maxIndex = walls.getColRowAt(new Vec2(maxX, maxY));
 
-        let tileSize = walls.getTileSize();
+        /**
+         *   Say this is the tilemap
+         * 
+         *      #'s are tiles collidable or non-collidable both.
+         *      <spaces> are positions of enemy and player.
+         * 
+         *      ####################
+         *      ############### ####
+         *      ####################
+         *      ##### ##############
+         *      ####################
+         *      ####################
+         * 
+         *      To check if any tiles are collidable (blocks vision) between player and enemy, check all 
+         *      tiles that lie in the rectangle created by the two spaces. So this means the first tile to check 
+         *      will be 'S' (that is minX, minY )and the last tile to check will be 'E' (maxX, maxY)
+         * 
+         *      ####################
+         *      #####S######### ####
+         *      ####################
+         *      ##### #########E####
+         *      ####################
+         *      ####################               
+         */
 
-        for (let col = minIndex.x; col <= maxIndex.x; col++) {
-            for (let row = minIndex.y; row <= maxIndex.y; row++) {
-                if (walls.isTileCollidable(col, row)) {
-                    // Get the position of this tile
-                    let tilePos = new Vec2(col * tileSize.x + tileSize.x / 2, row * tileSize.y + tileSize.y / 2);
 
-                    // Create a collider for this tile
-                    let collider = new AABB(tilePos, tileSize.scaled(1 / 2));
+        this.startTileIndex.x = Math.min(myPos.x, playerPos.x); //x position of tile S
+        this.startTileIndex.y = Math.min(myPos.y, playerPos.y); //y position of tile S
+        this.endTileIndex.x = Math.max(myPos.x, playerPos.y);   //x position of tile E
+        this.endTileIndex.y = Math.max(myPos.x, playerPos.x);   //y position of tile E
 
-                    let hit = collider.intersectSegment(start, delta, Vec2.ZERO);
+    
 
-                    if (hit !== null && start.distanceSqTo(hit.pos) < start.distanceSqTo(pos)) {
-                        // We hit a wall, we can't see the player
+        let startTileIndex = this.bushes.getColRowAt(this.startTileIndex); //index of tile S in tilemap
+        let endTileIndex = this.bushes.getColRowAt(this.endTileIndex);     //index of tile E in tilemap
+
+        let tileSize = this.bushes.getTileSize(); //gets the size of the tile
+
+        /**
+         * Now if a tile is collidable, draw a line from one space to the other, and check if that tile (AABB),
+         *      intersects this line. If yes, The player is not visible. If no, continue to next tile. If all 
+         *      collidable tiles do not intersect with this 'line between spaces', the player is visible, nothing is 
+         *      blocking the players vision, so the player is visible! 
+         */
+
+        for(let col = startTileIndex.x; col <= endTileIndex.x; col++){  //starting from col of 'S' to col of <space>
+            for(let row = startTileIndex.y; row<=endTileIndex.y; row++){    //starting from col of <space2> to col of E
+                if(this.bushes.isTileCollidable(col,row)){
+                    this.tilePos.x = col * tileSize.x + tileSize.x / 2; //x co-ordinate of collidable tile in webpage 
+                    this.tilePos.y = row * tileSize.y + tileSize.y / 2; //y co-ordinate of collidable tile in webpage
+
+                    this.colliderTileAABB.center = this.tilePos;    //sets the center of the AABB colliding shape as the position of the collidable
+                    this.colliderTileAABB.halfSize = tileSize.scaled(0.5); //sets the half size to that of the collidable tile. 
+                                                                        //After this, the .center and .half size fields 
+                                                                        //make up the exact area the collidable area
+                                                                        //at the exact tile location.
+
+                    let hit = this.colliderTileAABB.intersectSegment(myPos,difference, this.zeroPos); //check if line segment betweem
+                                                                                                        //player and this enemy intersects
+                                                                                                        //the AABB i.e the collidable tile
+
+                    if(hit !== null && myPos.distanceSqTo(hit.pos) < myPos.distanceSqTo(playerPos)){
                         return null;
                     }
+                    
                 }
+
             }
         }
+        return playerPos;
 
-        return pos;
     }
 
-    getPlayerPosition(): Vec2 {
-        //Get the position of the player in sight
-        let pos = this.player1.position;
-        let position1 = this.isPlayerVisible(pos);
-        return position1;
+    getPlayerPosition() : Vec2{
+        return this.isPlayerVisible(this.player.position);
     }
 
-    update(deltaT: number){
+
+    update(deltaT: number): void {
         super.update(deltaT);
 
-        // This is the plan that is executed in the Active state, so whenever we don't have a plan, acquire a new one given the current statuses the enemy has
-        if (this.plan.isEmpty()) {
-            //get a new plan
-            this.plan = this.planner.plan(Custom_Statuses.REACHED_GOAL, this.possibleActions, this.currentStatus, null);
+        if(this.plan.isEmpty()){
+            //this.plan = this.planner.plan(Custom_Statuses.REACHED_GOAL, this.possibleActions, this.currentStatus, null);
         }
     }
+
 }
 
 export enum EnemyStates {
-    DEFAULT = "default",
-    ALERT = "alert",
-    TARGETING = "targeting",
+    DEFAULT = "default", //patrol or guard
+    ALERT = "alert", //alert
+    TARGETING = "targeting", //active
     PREVIOUS = "previous"
 }

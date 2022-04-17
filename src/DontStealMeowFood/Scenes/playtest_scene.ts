@@ -7,35 +7,28 @@ import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
-import Label from "../../Wolfie2D/Nodes/UIElements/Label";
-import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Navmesh from "../../Wolfie2D/Pathfinding/Navmesh";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
-import BattlerAI from "../AI/BattlerAI";
+import EnemyAI from "../AI/EnemyAI";
 import PlayerController from "../AI/PlayerController";
-import { Custom_Names } from "../GameConstants";
-import InventoryManager from "../GameSystems/InventoryManager";
-import Item from "../GameSystems/items/Item";
+import { Custom_Names, Custom_Statuses } from "../GameConstants";
 
 export default class playtest_scene extends Scene{
     private bushes : OrthogonalTilemap;
     private graph : PositionGraph;
-    private player : AnimatedSprite;
+    private player : AnimatedSprite
     private logo : Sprite
     private navGraph : PositionGraph;
-
-    private healthDisplay: Label;
-    private goalDisplay: Label;
-
-    // A list of items
-    private items: Array<Item>;
+    private enemies : Array<AnimatedSprite>;
 
     loadScene(): void {
         this.load.tilemap("playTestLevel","project_assets/tilemaps/sampleMap.json");
         this.load.object("navmesh","project_assets/data/navmesh.json");
         this.load.spritesheet("cat","project_assets/spritesheets/cat.json");
-        this.load.image("inventorySlot", "project_assets/sprites/inventory.png");
+        this.load.spritesheet("raccoon","project_assets/spritesheets/raccoon.json")
+        this.load.object("enemyData","project_assets/data/enemy.json");
+
     }
 
 
@@ -57,30 +50,36 @@ export default class playtest_scene extends Scene{
             position : new Vec2(117,503) //if tiled has location (x,y) then location here is (x/2,y/2)
         }
 
-        
         this.initializePlayer();
+
         this.createNavmesh();
+
+        this.initializeEnemies();
+
 
         this.viewport.follow(this.player);
 
-        // Add a UI for health
-        this.addUILayer("health");
-        this.healthDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "health", {position: new Vec2(25, 195), text: "Health: " + (<BattlerAI>this.player._ai).health});
-        this.healthDisplay.textColor = Color.BLACK;
-        this.healthDisplay.backgroundColor = Color.WHITE;
-
-        // Add a UI for Goals
-        this.addUILayer("objectives");
-        this.goalDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "objectives", {position: new Vec2(40, 10), text: "Objective: Playtest!"});
-        this.goalDisplay.textColor = Color.WHITE;
-        this.goalDisplay.backgroundColor = Color.BLACK;
     }
 
     updateScene(deltaT: number): void {
+        /*
+        const direction = Vec2.ZERO;
+
+        direction.x = (Input.isKeyPressed("a") ? -1 : 0) + (Input.isKeyPressed("d") ? 1 : 0);
+        direction.y = (Input.isKeyPressed("w") ? -1 : 0) + (Input.isKeyPressed("s") ? 1 : 0);
+        
+        direction.normalize();
+
+        const speed = 100 * deltaT;
+
+        const velocity = direction.scale(speed);
+
+        this.player.position.add(velocity);
+        */
+
         //this.viewport.follow(this.player);
 
-        let currHealth = (<BattlerAI>this.player._ai).health;
-        this.healthDisplay.text = "Health: " + currHealth;
+        
     }
 
     createNavmesh() : void {
@@ -109,26 +108,57 @@ export default class playtest_scene extends Scene{
         this.navManager.addNavigableEntity(Custom_Names.NAVMESH,navmesh);
 
     }
-
     initializePlayer() : void {
-        // Create Inventory
-        let inventory = new InventoryManager(this, 5, "inventorySlot", new Vec2(16, this.viewport.getCenter().y * 0.45), 2, "slots1", "items1");
-
         this.player = this.add.animatedSprite("cat","primary");
         this.player.position.set(105,488);
-        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(10,10)));
+        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(8,8)));
         this.player.addAI(PlayerController,
             {
                 speed : 100,
-                health : 100,
-                inventory : inventory,
+                health : 25,
+                inventory : null,
                 items : null,
                 inputEnabled : true,
                 range : 30
             });
 
         this.player.animation.play("IdleR");
-        (<PlayerController>this.player._ai).inventory.setActive(true);
+
+    }
+
+    initializeEnemies() : void {
+        const enemyData = this.load.getObject("enemyData");
+        //console.log(enemyData);
+
+        this.enemies = new Array(enemyData.numEnemies);
+
+        for(let i = 0; i<enemyData.numEnemies; i++){
+            let data = enemyData.enemies[i];
+            //console.log(data);
+
+            this.enemies[i] = this.add.animatedSprite(data.type,"primary");
+            this.enemies[i].position.set(data.position[0]/2, data.position[1]/2);
+            this.enemies[i].animation.play("IdleR");
+
+            this.enemies[i].addPhysics(new AABB(Vec2.ZERO, new Vec2(8,8)));
+            if(data.route){
+                data.route = data.route.map((index : number) => this.navGraph.getNodePosition(index));
+            }
+            else{
+                data.guardPosition = new Vec2(data.guardPosition[0]/2, data.guardPosition[1]/2);
+            }
+
+            let enemyOptions = {
+                defaultMode: data.mode,
+                patrolRoute: data.route,            // This only matters if they're a patroller
+                guardPosition: data.guardPosition,  // This only matters if the're a guard
+                player : this.player,
+                goal: Custom_Statuses.REACHED_GOAL,
+            }
+
+            this.enemies[i].addAI(EnemyAI,enemyOptions);
+        }
+
     }
 
 }
