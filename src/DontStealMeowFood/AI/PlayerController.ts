@@ -71,6 +71,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     private viewPortAABB : AABB;
     anime : ProjectAnimationManager;
 
+    // Choosing inventory
+    private slotPos = 0;
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
@@ -129,12 +131,31 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             
             //this.playerAnimationManager.handleInput(this.directionVector);
             
-            /*
+            
             // Check for slot change
             if (Input.isJustPressed("slot1")) {
+                this.slotPos = 0;
                 this.inventory.changeSlot(0);
             } else if (Input.isJustPressed("slot2")) {
+                this.slotPos = 1;
                 this.inventory.changeSlot(1);
+            } else if (Input.isJustPressed("slot3")) {
+                this.slotPos = 2;
+                this.inventory.changeSlot(2);
+            } else if (Input.isJustPressed("slot4")) {
+                this.slotPos = 3;
+                this.inventory.changeSlot(3);
+            } else if (Input.isJustPressed("slot5")) {
+                this.slotPos = 4;
+                this.inventory.changeSlot(4);
+            } else if (Input.didJustScroll()) {
+                if (Input.getScrollDirection() == -1) {
+                    if (--this.slotPos < 0) this.slotPos = 4;
+                    this.inventory.changeSlot(this.slotPos);
+                } else {
+                    if (++this.slotPos > 4) this.slotPos = 0;
+                    this.inventory.changeSlot(this.slotPos);
+                }
             }
 
             if (Input.isJustPressed("pickup")) {
@@ -160,7 +181,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     this.items.push(item);
                 }
             }
-            */
+            
         }
         
         //Target an enemy and attack
