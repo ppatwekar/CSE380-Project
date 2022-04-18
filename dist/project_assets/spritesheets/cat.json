@@ -123,15 +123,15 @@
 					"duration": 5
 				},
 				{
-					"index": 15,
+					"index": 12,
 					"duration": 5
 				},
 				{
-					"index": 11,
+					"index": 13,
 					"duration": 5
 				},
 				{
-					"index": 16,
+					"index": 14,
 					"duration": 5
 				}
 			]
@@ -145,15 +145,11 @@
 					"duration": 5
 				},
 				{
-					"index": 20,
+					"index": 18,
 					"duration": 5
 				},
 				{
-					"index": 17,
-					"duration": 5
-				},
-				{
-					"index": 21,
+					"index": 19,
 					"duration": 5
 				}
 			]

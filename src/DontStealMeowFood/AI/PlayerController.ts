@@ -124,6 +124,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             this.owner.move(distance);
             //super.update(deltaT);
             this.anime.update(distance);
+
+            this.updateRotation();
             
             //this.playerAnimationManager.handleInput(this.directionVector);
             
@@ -179,6 +181,29 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 }
             }
         } */
+    }
+
+    private updateRotation(){
+        let currentState = this.anime.currentState;
+        let rotate : number;
+        let angle : number;
+        if(currentState === "IdleR" || currentState === "RunR"){
+            angle = (Vec2.RIGHT.angleToCCW(Input.getGlobalMousePosition().sub(this.owner.position)));
+        }
+        else if(currentState === "IdleL" || currentState === "RunL"){
+            angle = Vec2.LEFT.angleToCCW(Input.getGlobalMousePosition().sub(this.owner.position));
+        }
+        else if(currentState === "IdleU" || currentState === "RunU"){
+            angle = Vec2.UP.angleToCCW(Input.getGlobalMousePosition().sub(this.owner.position));
+        }
+        else {
+            angle = Vec2.DOWN.angleToCCW(Input.getGlobalMousePosition().sub(this.owner.position));
+        }
+
+        angle = angle > Math.PI/4 && angle < Math.PI ? (Math.PI/4) : (angle > Math.PI && angle < 7 * Math.PI/4 ? (7 * Math.PI/4) : angle); 
+
+        this.owner.rotation = angle;
+    
     }
 
     private boundPlayerInViewPort(direction : Vec2){

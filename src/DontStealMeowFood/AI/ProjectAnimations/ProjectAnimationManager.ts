@@ -9,11 +9,14 @@ export default class ProjectAnimationManager {
     state : AnimationState;
     direction : AnimationDirection;
     owner : AnimatedSprite
+    currentState : string;
 
     constructor(owner : AnimatedSprite , animationStates :  {key : string, state : {new(parent: AnimationState) : ActualStates}}[], directionStates : {key : string, state : {new(parent : AnimationDirection) : DirectionStates}}[]){
         this.state = new AnimationState(animationStates);
         this.direction = new AnimationDirection(directionStates);
         this.owner = owner;
+        this.currentState = this.getDesciption();
+        this.play();
     }
 
     play(){
@@ -24,7 +27,11 @@ export default class ProjectAnimationManager {
     update(input : Vec2){
         this.state.updateState(input);
         this.direction.updateDirection(input);
-        this.play()
+
+        if(this.getDesciption() != this.currentState){
+            this.currentState = this.getDesciption();
+            this.play();
+        }
     }
 
 
