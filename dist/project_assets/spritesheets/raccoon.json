@@ -8,7 +8,7 @@
 	"topBuffer": 0,
 	"bottomBuffer": 0,
 	"columns": 5,
-	"rows": 5,
+	"rows": 6,
 	"animations": [
 		{
 			"name": "IdleR",
@@ -204,6 +204,62 @@
 				{
 					"index": 21,
 					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "AttackR",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 22,
+					"duration": 3
+				},
+				{
+					"index": 23,
+					"duration": 3
+				}
+			]
+		},
+		{
+			"name": "AttackL",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 24,
+					"duration": 3
+				},
+				{
+					"index": 25,
+					"duration": 3
+				}
+			]
+		},
+		{
+			"name": "AttackD",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 26,
+					"duration": 3
+				},
+				{
+					"index": 27,
+					"duration": 3
+				}
+			]
+		},
+		{
+			"name": "AttackU",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 28,
+					"duration": 3
+				},
+				{
+					"index": 29,
+					"duration": 3
 				}
 			]
 		}

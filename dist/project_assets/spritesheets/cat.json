@@ -7,8 +7,8 @@
 	"rightBuffer": 0,
 	"topBuffer": 0,
 	"bottomBuffer": 0,
-	"columns": 5,
-	"rows": 5,
+	"columns": 7,
+	"rows": 7,
 	"animations": [
 		{
 			"name": "IdleR",
@@ -29,11 +29,11 @@
 			"repeat": true,
 			"frames": [
 				{
-					"index": 6,
+					"index": 5,
 					"duration": 5
 				},
 				{
-					"index": 7,
+					"index": 6,
 					"duration": 5
 				}
 			]
@@ -42,6 +42,10 @@
 			"name": "IdleD",
 			"repeat": true,
 			"frames": [
+				{
+					"index": 10,
+					"duration": 5
+				},
 				{
 					"index": 11,
 					"duration": 5
@@ -53,10 +57,6 @@
 				{
 					"index": 13,
 					"duration": 5
-				},
-				{
-					"index": 14,
-					"duration": 5
 				}
 			]
 		},
@@ -65,15 +65,15 @@
 			"repeat": true,
 			"frames": [
 				{
+					"index": 16,
+					"duration": 5
+				},
+				{
 					"index": 17,
 					"duration": 5
 				},
 				{
 					"index": 18,
-					"duration": 5
-				},
-				{
-					"index": 19,
 					"duration": 5
 				}
 			]
@@ -119,19 +119,19 @@
 			"repeat": true,
 			"frames": [
 				{
-					"index": 11,
-					"duration": 5
-				},
-				{
-					"index": 12,
-					"duration": 5
-				},
-				{
-					"index": 13,
+					"index": 10,
 					"duration": 5
 				},
 				{
 					"index": 14,
+					"duration": 5
+				},
+				{
+					"index": 10,
+					"duration": 5
+				},
+				{
+					"index": 15,
 					"duration": 5
 				}
 			]
@@ -141,15 +141,196 @@
 			"repeat": true,
 			"frames": [
 				{
-					"index": 17,
-					"duration": 5
-				},
-				{
-					"index": 18,
+					"index": 16,
 					"duration": 5
 				},
 				{
 					"index": 19,
+					"duration": 5
+				},
+				{
+					"index": 16,
+					"duration": 5
+				},
+				{
+					"index": 20,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "Dying",
+			"repeat": false,
+			"next": "Death",
+			"frames": [
+				{
+					"index": 21,
+					"duration": 2
+				},
+				{
+					"index": 22,
+					"duration": 2
+				},
+				{
+					"index": 23,
+					"duration": 2
+				}
+			]
+		},
+		{
+			"name": "Death",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 23,
+					"duration": 2
+				}
+			]
+		},
+		{
+			"name": "MeleeR",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 24,
+					"duration": 5
+				},
+				{
+					"index": 25,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "MeleeL",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 26,
+					"duration": 5
+				},
+				{
+					"index": 27,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "MeleeD",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 28,
+					"duration": 5
+				},
+				{
+					"index": 29,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "MeleeU",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 30,
+					"duration": 5
+				},
+				{
+					"index": 31,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "RangeR",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 32,
+					"duration": 5
+				},
+				{
+					"index": 33,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "RangeL",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 34,
+					"duration": 5
+				},
+				{
+					"index": 35,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "RangeD",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 36,
+					"duration": 5
+				},
+				{
+					"index": 37,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "RangeU",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 38,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "Heal",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 40,
+					"duration": 5
+				},
+				{
+					"index": 41,
+					"duration": 5
+				},
+				{
+					"index": 42,
+					"duration": 5
+				},
+				{
+					"index": 43,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "Distract",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 44,
+					"duration": 5
+				},
+				{
+					"index": 45,
 					"duration": 5
 				}
 			]
