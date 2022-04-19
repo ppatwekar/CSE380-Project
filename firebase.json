@@ -28,6 +28,11 @@
         "source": "/benchmark2",
         "destination": "/benchmark2/dist/index.html",
         "type": 302
+      },
+      {
+        "source": "/benchmark3",
+        "destination": "/benchmark3/dist/index.html",
+        "type": 302
       }
     ]
   },
