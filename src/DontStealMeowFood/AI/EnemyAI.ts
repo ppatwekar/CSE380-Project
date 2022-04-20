@@ -244,5 +244,6 @@ export enum EnemyStates {
     DEFAULT = "default", //patrol or guard
     ALERT = "alert", //alert
     TARGETING = "targeting", //active
-    PREVIOUS = "previous"
+    PREVIOUS = "previous",
+    FOLLOWING = "FOLLOWING"
 }

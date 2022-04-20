@@ -187,7 +187,24 @@ export default class MainMenu extends Scene {
             console.log(event);
 
             if(event.type === "level1"){
-                this.sceneManager.changeToScene(playtest_scene, {});
+                let sceneOptions = {
+                    physics : {
+                        /**
+                         *      pl  ene  yoyo
+                         * pl   0    0    1
+                         * ene  0    0    1
+                         * yoyo 1    1    0
+                         */
+                        groupNames : ["player","enemy","yoyo"],
+                        collisions : 
+                        [
+                            [0,1,1],
+                            [1,0,1],
+                            [1,1,0]
+                        ]
+                    }
+                };
+                this.sceneManager.changeToScene(playtest_scene, {}, sceneOptions);
             }
 
             if(event.type === "help"){

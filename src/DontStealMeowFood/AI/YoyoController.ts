@@ -53,12 +53,14 @@ export default class YoyoController extends ControllerAI{
             case Custom_Events.YOYO_HIT_PLAYER:
                 this.owner.position = this.belongsTo.position.clone();
                 break;
+                /*
 
             case Custom_Events.YOYO_HIT_ENEMY:
                 this.hasReachedGoTo = true;
                 this.directionVec.scale(-1);
                 this.velocity = this.directionVec.scaled(this.speed);
                 break;
+                */
         }
 
     }
