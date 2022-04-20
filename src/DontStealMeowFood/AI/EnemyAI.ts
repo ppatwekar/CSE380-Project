@@ -8,7 +8,7 @@ import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import NavigationPath from "../../Wolfie2D/Pathfinding/NavigationPath";
-import { Custom_Statuses } from "../GameConstants";
+import { Custom_Events, Custom_Statuses } from "../GameConstants";
 import Weapon from "../GameSystems/items/Weapon";
 //import CommonState, { CommonStates } from "./CommonStates/CommonState";
 //import Infected from "./CommonStates/Infected";
@@ -93,6 +93,9 @@ export default class EnemyAI extends StateMachineGoapAI{
         this.bushes = <OrthogonalTilemap>this.owner.getScene().getLayer("Bushes").getItems()[0];
 
         this.addAnimations(this.owner);
+
+        this.receiver.subscribe(Custom_Events.ENEMY_DAMAGED);
+        //handle Enemy damage updates in it's states.
 
 
         //this.getPlayerPosition();

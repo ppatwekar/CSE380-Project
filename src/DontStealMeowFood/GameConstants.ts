@@ -4,7 +4,10 @@ export enum Custom_Names {
 
 export enum Custom_Events {
     SHOT_FIRED = "SHOT_FIRED",
-    UNLOAD_ASSET = "UNLOAD_ASSET"
+    UNLOAD_ASSET = "UNLOAD_ASSET",
+    YOYO_HIT_PLAYER = "YOYO_HIT_PLAYER",
+    YOYO_HIT_ENEMY = "YOYO_HIT_ENEMY",
+    ENEMY_DAMAGED = "ENEMY_DAMAGED"
 }
 
 export enum Custom_Statuses {

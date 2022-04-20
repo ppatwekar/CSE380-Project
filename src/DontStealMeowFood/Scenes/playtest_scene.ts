@@ -1,5 +1,6 @@
 import PositionGraph from "../../Wolfie2D/DataTypes/Graphs/PositionGraph";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
+import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Input from "../../Wolfie2D/Input/Input";
 import Graphic from "../../Wolfie2D/Nodes/Graphic";
@@ -15,7 +16,8 @@ import Color from "../../Wolfie2D/Utils/Color";
 import BattlerAI from "../AI/BattlerAI";
 import EnemyAI from "../AI/EnemyAI";
 import PlayerController from "../AI/PlayerController";
-import { Custom_Names, Custom_Statuses } from "../GameConstants";
+import YoyoController from "../AI/YoyoController";
+import { Custom_Events, Custom_Names, Custom_Statuses } from "../GameConstants";
 import InventoryManager from "../GameSystems/InventoryManager";
 import Item from "../GameSystems/items/Item";
 
@@ -29,6 +31,7 @@ export default class playtest_scene extends Scene{
 
     private healthDisplay: Label;
     private goalDisplay: Label;
+    private yoyo : Sprite;
 
     // A list of items
     private items: Array<Item>;
@@ -39,6 +42,7 @@ export default class playtest_scene extends Scene{
         this.load.spritesheet("raccoon","project_assets/spritesheets/raccoon.json")
         this.load.object("enemyData","project_assets/data/enemy.json");
         this.load.image("inventorySlot", "project_assets/sprites/inventory.png");
+        this.load.image("yoyo","project_assets/item/yoyo.png");
     }
 
 
@@ -66,6 +70,10 @@ export default class playtest_scene extends Scene{
 
         this.initializeEnemies();
 
+        (<PlayerController>this.player._ai).enemies = this.enemies;
+
+
+        
 
         this.viewport.follow(this.player);
 
@@ -133,6 +141,9 @@ export default class playtest_scene extends Scene{
     }
     initializePlayer() : void {
         let inventory = new InventoryManager(this, 5, "inventorySlot", new Vec2(16, this.viewport.getCenter().y * 0.45), 2, "slots1", "items1");
+
+
+
         this.player = this.add.animatedSprite("cat","primary");
         this.player.position.set(105,488);
         this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(8,8))); // Regular Player AABB
@@ -143,11 +154,33 @@ export default class playtest_scene extends Scene{
                 inventory : inventory,
                 items : null,
                 inputEnabled : true,
-                range : 30
+                range : 30,
+                enemies : this.enemies,
             });
 
         this.player.animation.play("IdleR");
         (<PlayerController>this.player._ai).inventory.setActive(true);
+        this.player.setGroup("player");
+
+
+        this.yoyo = this.add.sprite("yoyo","primary");
+        this.yoyo.visible = true;
+        //this.yoyo.addPhysics(new AABB(Vec2.ZERO, new Vec2(2,2)));
+        this.yoyo.addPhysics(new Circle(Vec2.ZERO,3));
+        this.yoyo.addAI(YoyoController,
+            {
+                speed : 3,
+                range : 80,
+                belongsTo : this.player,
+                
+            });
+
+        (<PlayerController>this.player._ai).yoyo = this.yoyo;
+        (<PlayerController>this.player._ai).yoyo.visible = false;
+        this.yoyo.setGroup("yoyo");
+        this.yoyo.setTrigger("player",Custom_Events.YOYO_HIT_PLAYER,null);
+        this.yoyo.setTrigger("enemy",Custom_Events.YOYO_HIT_ENEMY,null);
+
     }
 
     initializeEnemies() : void {
@@ -181,7 +214,10 @@ export default class playtest_scene extends Scene{
             }
 
             this.enemies[i].addAI(EnemyAI,enemyOptions);
+            this.enemies[i].setGroup("enemy");
         }
+
+        (<YoyoController>this.yoyo._ai).enemies = this.enemies;
 
     }
 

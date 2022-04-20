@@ -33,6 +33,13 @@ import Run from "./ProjectAnimations/ActualStates/Run";
 import Left from "./ProjectAnimations/DirectionStates/Left";
 import Right from "./ProjectAnimations/DirectionStates/Right";
 import Up from "./ProjectAnimations/DirectionStates/Up";
+import Debug from "../../Wolfie2D/Debug/Debug";
+import Color from "../../Wolfie2D/Utils/Color";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
+import YoyoController from "./YoyoController";
+import Graphic from "../../Wolfie2D/Nodes/Graphic";
+import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
+import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 
 
 export default class PlayerController extends StateMachineAI implements BattlerAI {
@@ -71,8 +78,14 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     private viewPortAABB : AABB;
     anime : ProjectAnimationManager;
 
+    enemies : Array<AnimatedSprite>;
+
+    yoyo : Sprite;
+
     // Choosing inventory
     private slotPos = 0;
+
+    private enemyRangeForBox : number = 100; //was 50 before.
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
@@ -93,6 +106,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.viewPortAABB = this.owner.getScene().getViewport().getView();
         //this.addAnimationStates();
         this.addAnimationStates2(this.owner);
+        this.enemies = options.enemies;
+        this.yoyo = options.yoyo;
 
     }
 
@@ -108,6 +123,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         if (this.inputEnabled && this.health > 0) { //can remove this for now. maybe not
 
 
+            if((<YoyoController>this.yoyo._ai).hasReturned()){
+            this.yoyo.visible = false;
             const distance = Vec2.ZERO;
 
             this.directionVector.y = distance.y = (Input.isPressed("up") ? -1 : 0) + (Input.isPressed("down") ? 1 : 0);
@@ -124,12 +141,31 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             distance.scale(this.speed * deltaT);
 
             this.owner.move(distance);
+            this.yoyo.position = this.owner.position.clone();
+
             //super.update(deltaT);
             this.anime.update(distance);
 
-            this.updateRotation();
+            if(this.targetEnemyAndBox && this.targetEnemyAndBox.rect){
+                this.targetEnemyAndBox.rect.destroy();
+                this.targetEnemyAndBox.rect = null;
+            }
+
+            this.checkClosestEnemies();
+
+            if(Input.isMousePressed()){
+                this.yoyo.visible = true;
+                (<YoyoController>this.yoyo._ai).moveTo(Input.getGlobalMousePosition());
+                //this.yoyo.update(deltaT);
+            }
+
+            //this.updateRotation();
             
             //this.playerAnimationManager.handleInput(this.directionVector);
+            }
+            else{
+                //this.yoyo.update(deltaT);
+            }
             
             
             // Check for slot change
@@ -160,6 +196,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
             if (Input.isJustPressed("pickup")) {
                 // Check if there is an item to pick up
+                if(this.items){
                 for (let item of this.items) {
                     if (this.owner.collisionShape.overlaps(item.sprite.boundary)) {
                         // We overlap it, try to pick it up
@@ -167,6 +204,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                         break;
                     }
                 }
+            }
             }
 
             if (Input.isJustPressed("drop")) {
@@ -202,6 +240,46 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 }
             }
         } */
+    }
+
+    //rect : Rect;
+    targetEnemyAndBox : {enemy : AnimatedSprite, rect : Rect};
+    private checkClosestEnemies(){
+        let tempArr : AnimatedSprite[] = [];
+        for(let enemy of this.enemies){
+            if(this.owner.position.distanceTo(enemy.position) <= this.enemyRangeForBox){
+                tempArr.push(enemy);
+            }
+        }
+
+        let mouseLocation = Input.getGlobalMousePosition();
+
+        if(tempArr.length >= 1){
+            let chosenEnemy = tempArr.reduce((prev,curr) => prev.position.distanceTo(mouseLocation) < curr.position.distanceTo(mouseLocation)? prev : curr);
+            let color = Color.MAGENTA;
+            color.a = 0.5
+            
+            
+            if(this.targetEnemyAndBox && this.targetEnemyAndBox.rect){
+                this.targetEnemyAndBox.rect.destroy();
+            }
+
+            this.targetEnemyAndBox = {enemy : chosenEnemy, rect : <Rect>this.owner.getScene().add.graphic(GraphicType.RECT,"primary",{position : chosenEnemy.position.clone(), size : new Vec2(20,20)}) }
+            
+            this.targetEnemyAndBox.rect.isCollidable = false;
+            this.targetEnemyAndBox.rect.color = Color.WHITE;
+            this.targetEnemyAndBox.rect.color.a = 0.5;
+            this.targetEnemyAndBox.rect.borderWidth = 5;
+            this.targetEnemyAndBox.rect.borderColor = Color.BLACK;
+
+            
+
+                
+
+        
+
+        }
+        
     }
 
     private updateRotation(){
