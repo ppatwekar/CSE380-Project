@@ -53,14 +53,14 @@ export default class YoyoController extends ControllerAI{
             case Custom_Events.YOYO_HIT_PLAYER:
                 this.owner.position = this.belongsTo.position.clone();
                 break;
-                /*
+                
 
             case Custom_Events.YOYO_HIT_ENEMY:
                 this.hasReachedGoTo = true;
-                this.directionVec.scale(-1);
+                this.directionVec = this.belongsTo.position.clone().sub(this.owner.position).normalize();
                 this.velocity = this.directionVec.scaled(this.speed);
                 break;
-                */
+                
         }
 
     }
@@ -190,11 +190,9 @@ export default class YoyoController extends ControllerAI{
             this.hasReachedGoTo = false;
         }
         else{
-            //if(this.owner.boundary.overlaps(this.belongsTo.boundary)){
-             //   console.log("touched!!")
-            //    this.owner.position = this.belongsTo.position.clone();
-            //}
-            //else{
+            
+            this.directionVec = this.belongsTo.position.clone().sub(this.owner.position).normalize();
+            this.velocity = this.directionVec.scaled(this.speed);
             this.owner.move(this.velocity);
             //}
         }

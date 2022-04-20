@@ -151,7 +151,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.targetEnemyAndBox.rect = null;
             }
 
-            this.checkClosestEnemies();
+            //this.checkClosestEnemies();
 
             if(Input.isMousePressed()){
                 this.yoyo.visible = true;
@@ -163,9 +163,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             
             //this.playerAnimationManager.handleInput(this.directionVector);
             }
-            else{
-                //this.yoyo.update(deltaT);
-            }
+
+            this.checkClosestEnemies();
             
             
             // Check for slot change
