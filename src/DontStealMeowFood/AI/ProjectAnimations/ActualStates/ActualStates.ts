@@ -16,7 +16,7 @@ export default abstract class ActualStates extends State{
 
     updateState(input : Vec2){
         if(input.equals(Vec2.ZERO)){
-            this.parent.changeState(AState.Run);
+            this.parent.changeState(AState.Idle);
         }
         else{
             this.parent.changeState(AState.Run);
