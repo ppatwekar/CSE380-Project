@@ -141,16 +141,22 @@ export default class MainMenu extends Scene {
     
             // Resolved: Give yourself credit and add your name to the about page!
             const text1 = "Story:";
-            const text2 = "Sample Story";
+            const text2 = "Vanilla the cat had been living peacefully her entire life," ;
+            const text2s = "but recently a gang of raccoons invaded her living space and stole all her cat food.";
+            const text2t = "Vanilla decides to take revenge on the raccoons and get her food back";
             const text3 = "Created by Jun Yi Lin, Tahmidul Alam, and Prathamesh Patwekar";
     
-            const line1 = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: new Vec2(center.x, center.y - 50), text: text1});
-            const line2 = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: new Vec2(center.x, center.y), text: text2});
+            const line1 = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: new Vec2(center.x, center.y - 150), text: text1});
+            const line2 = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: new Vec2(center.x, center.y - 100), text: text2});
+            const line2s = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: new Vec2(center.x, center.y - 50), text: text2s});
+            const line2t = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: new Vec2(center.x, center.y), text: text2t});
             const line3 = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: new Vec2(center.x, center.y + 50), text: text3});
     
             line1.textColor = Color.WHITE;
             line2.textColor = Color.WHITE;
-            line3.textColor = Color.WHITE;
+            line2s.textColor = Color.WHITE;
+            line2t.textColor = Color.WHITE;
+            line3.textColor = Color.YELLOW;
     
             const aboutBack = this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(center.x, center.y + 250), text: "Back"});
             aboutBack.size.set(200, 50);
@@ -159,7 +165,6 @@ export default class MainMenu extends Scene {
             aboutBack.backgroundColor = Color.TRANSPARENT;
             aboutBack.onClickEventId = "menu";
         }
-
 
         // Call the Screen Functions
         controlScreen();
@@ -182,24 +187,7 @@ export default class MainMenu extends Scene {
             console.log(event);
 
             if(event.type === "level1"){
-                let sceneOptions = {
-                    physics : {
-                        /**
-                         *      pl  ene  yoyo
-                         * pl   0    0    1
-                         * ene  0    0    1
-                         * yoyo 1    1    0
-                         */
-                        groupNames : ["player","enemy","yoyo"],
-                        collisions : 
-                        [
-                            [0,0,1],
-                            [0,0,1],
-                            [1,1,0]
-                        ]
-                    }
-                };
-                this.sceneManager.changeToScene(playtest_scene, {}, sceneOptions);
+                this.sceneManager.changeToScene(playtest_scene, {});
             }
 
             if(event.type === "help"){
