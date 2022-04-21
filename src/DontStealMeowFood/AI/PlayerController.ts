@@ -85,8 +85,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     // Choosing inventory
     private slotPos = 0;
 
-    private enemyRangeForBox : number = 100; //was 50 before.
-
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
         this.lookDirection = Vec2.ZERO;
@@ -146,13 +144,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             //super.update(deltaT);
             this.anime.update(distance);
 
-            if(this.targetEnemyAndBox && this.targetEnemyAndBox.rect){
-                this.targetEnemyAndBox.rect.destroy();
-                this.targetEnemyAndBox.rect = null;
-            }
-
-            //this.checkClosestEnemies();
-
             if(Input.isMousePressed()){
                 this.yoyo.visible = true;
                 (<YoyoController>this.yoyo._ai).moveTo(Input.getGlobalMousePosition());
@@ -164,7 +155,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             //this.playerAnimationManager.handleInput(this.directionVector);
             }
 
-            this.checkClosestEnemies();
+            
             
             
             // Check for slot change
@@ -241,45 +232,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         } */
     }
 
-    //rect : Rect;
-    targetEnemyAndBox : {enemy : AnimatedSprite, rect : Rect};
-    private checkClosestEnemies(){
-        let tempArr : AnimatedSprite[] = [];
-        for(let enemy of this.enemies){
-            if(this.owner.position.distanceTo(enemy.position) <= this.enemyRangeForBox){
-                tempArr.push(enemy);
-            }
-        }
-
-        let mouseLocation = Input.getGlobalMousePosition();
-
-        if(tempArr.length >= 1){
-            let chosenEnemy = tempArr.reduce((prev,curr) => prev.position.distanceTo(mouseLocation) < curr.position.distanceTo(mouseLocation)? prev : curr);
-            let color = Color.MAGENTA;
-            color.a = 0.5
-            
-            
-            if(this.targetEnemyAndBox && this.targetEnemyAndBox.rect){
-                this.targetEnemyAndBox.rect.destroy();
-            }
-
-            this.targetEnemyAndBox = {enemy : chosenEnemy, rect : <Rect>this.owner.getScene().add.graphic(GraphicType.RECT,"primary",{position : chosenEnemy.position.clone(), size : new Vec2(20,20)}) }
-            
-            this.targetEnemyAndBox.rect.isCollidable = false;
-            this.targetEnemyAndBox.rect.color = Color.WHITE;
-            this.targetEnemyAndBox.rect.color.a = 0.5;
-            this.targetEnemyAndBox.rect.borderWidth = 5;
-            this.targetEnemyAndBox.rect.borderColor = Color.BLACK;
-
-            
-
-                
-
-        
-
-        }
-        
-    }
+    
 
     private updateRotation(){
         let currentState = this.anime.currentState;

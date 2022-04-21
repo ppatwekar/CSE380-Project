@@ -94,7 +94,7 @@ export default class EnemyAI extends StateMachineGoapAI{
 
         this.addAnimations(this.owner);
 
-        this.receiver.subscribe(Custom_Events.ENEMY_DAMAGED);
+        this.receiver.subscribe(Custom_Events.HIT_ENEMY);
         //handle Enemy damage updates in it's states.
 
 
@@ -128,6 +128,10 @@ export default class EnemyAI extends StateMachineGoapAI{
                 //this.emitter.fireEvent("healthPack",{position : this.owner});
             }
         }
+    }
+
+    isAssassinated(){
+        
     }
 
     private zeroPos : Vec2 = Vec2.ZERO;

@@ -1,0 +1,25 @@
+{
+    "numWeapons": 2,
+    "weapons": [
+        {
+            "weaponType": "slice",
+            "name": "knife",
+            "displayName": "Knife",
+            "animationSprite": "slice",
+            "spriteKey": "knife",
+            "damage": 1,
+            "cooldown": 350,
+            "useVolume": 0
+        },
+        {
+            "weaponType": "yoyoGun",
+            "name": "yoyo",
+            "displayName": "YoYo",
+            "spriteKey": "yoyo",
+            "damage": 3,
+            "cooldown": 250,
+            "useVolume": 650,
+            "color": "#FFEEDD"
+        }
+    ]
+}
