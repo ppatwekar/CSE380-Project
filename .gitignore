@@ -15,3 +15,5 @@ dist/*
 
 !bundle.js
 !index.html
+*.log
+*.cache
