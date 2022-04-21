@@ -10,6 +10,11 @@ export default class HighLight {
     protected targetEnemyAndBox : {enemy : AnimatedSprite, rect : Rect};
 
     checkClosestEnemies(enemies: Array<AnimatedSprite>, player: AnimatedSprite){
+        if(this.targetEnemyAndBox && this.targetEnemyAndBox.rect){
+            this.targetEnemyAndBox.rect.destroy();
+            this.targetEnemyAndBox.rect = null;
+        }
+
         let tempArr : AnimatedSprite[] = [];
         for(let enemy of enemies){
             if(player.position.distanceTo(enemy.position) <= this.enemyRangeForBox){
