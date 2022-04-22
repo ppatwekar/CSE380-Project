@@ -136,6 +136,8 @@ export default class GameLevel extends Scene {
         (<PlayerController>this.player._ai).yoyo = this.yoyo;
         (<PlayerController>this.player._ai).yoyo.visible = false;
         this.yoyo.setGroup("yoyo");
+        this.yoyo.setTrigger("enemy",Custom_Events.YOYO_HIT_ENEMY,null);
+        this.yoyo.setTrigger("player",Custom_Events.YOYO_HIT_PLAYER,null);
         
     }
 

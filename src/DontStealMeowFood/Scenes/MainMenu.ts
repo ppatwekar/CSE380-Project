@@ -191,16 +191,16 @@ export default class MainMenu extends Scene {
                     physics : {
                         /**
                          *      pl  ene  yoyo
-                         * pl   0    0    1
-                         * ene  0    0    1
+                         * pl   0    1    1
+                         * ene  1    0    1
                          * yoyo 1    1    0
                          */
                         groupNames : ["player","enemy","yoyo"],
                         collisions : 
                         [
-                            [0,1,1],
-                            [1,0,1],
-                            [1,1,0]
+                            [0,1,0],
+                            [1,0,0],
+                            [0,0,0]
                         ]
                     }
                 };
