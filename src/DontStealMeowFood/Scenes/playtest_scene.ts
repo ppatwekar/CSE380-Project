@@ -16,12 +16,12 @@ import Color from "../../Wolfie2D/Utils/Color";
 import BattlerAI from "../AI/BattlerAI";
 import EnemyAI from "../AI/EnemyAI";
 import PlayerController from "../AI/PlayerController";
-import YoyoController from "../AI/YoyoController";
 import { Custom_Events, Custom_Names, Custom_Statuses } from "../GameConstants";
 import InventoryManager from "../GameSystems/InventoryManager";
 import Item from "../GameSystems/items/Item";
 import HighLight from "../GameSystems/HighLight";
 import GameLevel from "./GameLevel";
+import BattleManager from "../GameSystems/BattleManager";
 
 export default class playtest_scene extends GameLevel{
     private bushes : OrthogonalTilemap;
@@ -41,6 +41,7 @@ export default class playtest_scene extends GameLevel{
         this.load.object("enemyData","project_assets/data/enemy.json");
         this.load.image("inventorySlot", "project_assets/sprites/inventory.png");
         this.load.image("yoyo","project_assets/item/yoyo.png");
+        this.load.object("weaponData","project_assets/data/weaponData.json");
     }
 
 
@@ -52,16 +53,26 @@ export default class playtest_scene extends GameLevel{
         let tilemapSize : Vec2 = this.bushes.size.scaled(0.5);
         this.viewport.setBounds(0,0,tilemapSize.x,tilemapSize.y);
 
+        
+
         // let center = this.viewport.getCenter();
 
         // let options = {
         //     size : new Vec2(32,32),
         //     position : new Vec2(117,503) //if tiled has location (x,y) then location here is (x/2,y/2)
+
         // }
+        this.initializeWeapons();
         super.startScene();
         this.createNavmesh();
 
         this.initializeEnemies();
+
+        this.battleManager = new BattleManager();
+        this.battleManager.setPlayers([<BattlerAI>this.player._ai]);
+        this.battleManager.setEnemies(this.enemies.map(enemy => <BattlerAI>enemy._ai));
+
+        (<PlayerController>this.player._ai).weapon = this.createWeapon("yoyo");
 
         (<PlayerController>this.player._ai).enemies = this.enemies;
         this.h1 = new HighLight();
@@ -136,7 +147,7 @@ export default class playtest_scene extends GameLevel{
             this.enemies[i].setGroup("enemy");
         }
 
-        (<YoyoController>this.yoyo._ai).enemies = this.enemies;
+        //(<YoyoController>this.yoyo._ai).enemies = this.enemies;
 
     }
 

@@ -36,10 +36,11 @@ import Up from "./ProjectAnimations/DirectionStates/Up";
 import Debug from "../../Wolfie2D/Debug/Debug";
 import Color from "../../Wolfie2D/Utils/Color";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
-import YoyoController from "./YoyoController";
 import Graphic from "../../Wolfie2D/Nodes/Graphic";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
+import Timer from "../../Wolfie2D/Timing/Timer";
+import Yoyo2 from "../GameSystems/Items/WeaponTypes/Yoyo2";
 
 
 export default class PlayerController extends StateMachineAI implements BattlerAI {
@@ -82,6 +83,10 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
     yoyo : Sprite;
 
+    weapon : Weapon;
+
+    yoyoHasReturned : boolean;
+
     // Choosing inventory
     private slotPos = 0;
 
@@ -106,12 +111,23 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.addAnimationStates2(this.owner);
         this.enemies = options.enemies;
         this.yoyo = options.yoyo;
+        this.weapon = options.weapon;
+        this.yoyoHasReturned = true;
+        this.receiver.subscribe(Custom_Events.YOYO_RETURNED);
 
     }
 
     activate(options: Record<string, any>): void { }
 
-    handleEvent(event: GameEvent): void { }
+    handleEvent(event: GameEvent): void {
+        switch(event.type){
+            case Custom_Events.YOYO_RETURNED:
+                {
+                    this.yoyoHasReturned = true;
+                }
+        }
+
+     }
 
     // TODO
     update(deltaT: number): void {
@@ -121,8 +137,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         if (this.inputEnabled && this.health > 0) { //can remove this for now. maybe not
 
 
-            if((<YoyoController>this.yoyo._ai).hasReturned()){
-            this.yoyo.visible = false;
+            //if((<YoyoController>this.yoyo._ai).hasReturned()){
+            //this.yoyo.visible = false;
             const distance = Vec2.ZERO;
 
             this.directionVector.y = distance.y = (Input.isPressed("up") ? -1 : 0) + (Input.isPressed("down") ? 1 : 0);
@@ -139,21 +155,29 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             distance.scale(this.speed * deltaT);
 
             this.owner.move(distance);
-            this.yoyo.position = this.owner.position.clone();
+            //this.yoyo.position = this.owner.position.clone();
 
             //super.update(deltaT);
             this.anime.update(distance);
 
-            if(Input.isMousePressed()){
-                this.yoyo.visible = true;
-                (<YoyoController>this.yoyo._ai).moveTo(Input.getGlobalMousePosition());
-                //this.yoyo.update(deltaT);
+            if(!this.yoyoHasReturned){
+                this.fireYoyo();
             }
 
-            //this.updateRotation();
-            
-            //this.playerAnimationManager.handleInput(this.directionVector);
+            if(Input.isMousePressed()){
+                if(this.yoyoHasReturned){
+                    this.yoyoMousePos = Input.getGlobalMousePosition();
+                    this.fireYoyo();
+                    this.yoyoHasReturned = false;
+                }
+                //this.weapon.use(null,"player",Input.getGlobalMousePosition());
             }
+
+            //(<Yoyo2>this.weapon).
+           // this.weapon.type
+            //use event queue to catch event that yoyo returned.
+
+            
 
             
             
@@ -230,6 +254,11 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 }
             }
         } */
+    }
+
+    yoyoMousePos : Vec2;
+    private fireYoyo() : void{
+        this.weapon.use(null,"player",this.yoyoMousePos);
     }
 
     

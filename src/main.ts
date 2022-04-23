@@ -2,6 +2,9 @@ import Game from "./Wolfie2D/Loop/Game";
 // import MainMenu from "./Homework5/Scenes/MainMenu";
 import playtest_scene from "./DontStealMeowFood/Scenes/playtest_scene";
 import MainMenu from "./DontStealMeowFood/Scenes/MainMenu";
+import WeaponTemplateRegistry from "./DontStealMeowFood/Registry/WeaponRegistry";
+import RegistryManager from "./Wolfie2D/Registry/RegistryManager";
+import WeaponTypeRegistry from "./DontStealMeowFood/Registry/WeaponTypeRegistry";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){
@@ -31,6 +34,15 @@ import MainMenu from "./DontStealMeowFood/Scenes/MainMenu";
 
     // Create a game with the options specified
     const game = new Game(options);
+
+    let weaponTemplateRegistry = new WeaponTemplateRegistry();
+    RegistryManager.addCustomRegistry("weaponTemplates", weaponTemplateRegistry);
+    
+    let weaponTypeRegistry = new WeaponTypeRegistry();
+    RegistryManager.addCustomRegistry("weaponTypes", weaponTypeRegistry);
+
+
+    
 
     // Start our game
     // game.start(playtest_scene, {});
