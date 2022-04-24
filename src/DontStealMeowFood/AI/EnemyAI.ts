@@ -108,6 +108,7 @@ export default class EnemyAI extends StateMachineGoapAI{
 
     damage(damage : number){
         this.currentHealth -= damage;
+        console.log("Enemy took Damage! Remaining Health: " + this.currentHealth);
 
         //if health is less than or equal to maxHealth assigned
         if(this.currentHealth <= Math.floor(this.maxHealth/2)){
@@ -120,7 +121,7 @@ export default class EnemyAI extends StateMachineGoapAI{
             this.owner.setAIActive(false,{}); 
             this.owner.isCollidable = false;
             this.owner.visible = false;
-            this.emitter.fireEvent("enemyDied",{enemy : this.owner});
+            this.emitter.fireEvent(Custom_Events.ENEMY_DEATH ,{enemy : this.owner});
 
             if(Math.random() < 0.2){ 
                 //spawn a health pack or something else like cat food or water

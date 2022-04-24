@@ -89,7 +89,7 @@ export default class GameLevel extends Scene {
 
     protected addUI(){
         this.addUILayer("health");
-        this.healthDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "health", {position: new Vec2(25, 195), text: "Health: " + (<BattlerAI>this.player._ai).health});
+        this.healthDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "health", {position: new Vec2(this.viewport.getCenter().x * 0.05, this.viewport.getCenter().y * 0.485), text: "Health: " + (<BattlerAI>this.player._ai).health});
         this.healthDisplay.textColor = Color.BLACK;
         this.healthDisplay.backgroundColor = Color.WHITE;
 

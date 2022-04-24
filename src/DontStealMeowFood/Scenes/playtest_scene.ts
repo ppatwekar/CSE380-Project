@@ -141,6 +141,7 @@ export default class playtest_scene extends GameLevel{
                 guardPosition: data.guardPosition,  // This only matters if the're a guard
                 player : this.player,
                 goal: Custom_Statuses.REACHED_GOAL,
+                health: 10
             }
 
             this.enemies[i].addAI(EnemyAI,enemyOptions);
