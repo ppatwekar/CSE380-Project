@@ -18,7 +18,18 @@ export default class AnimationState extends StateMachine{
         return (<ActualStates>this.currentState).getDescription();
     }
 
-    updateState(input : Vec2){
+    updateState(input : Vec2, changeState? : string){
+        if(changeState){
+            if(this.currentState !== this.stateMap.get(changeState)){
+                this.stack.push(this.currentState);
+                this.changeState(changeState);
+            }
+        }
+        else{
+            if(this.currentState !== this.stateMap.get(AState.Idle) && this.currentState !== this.stateMap.get(AState.Run)){
+                this.changeState(AState.Previous);
+            }
+        }
          (<ActualStates>this.currentState).updateState(input);
     }
 }

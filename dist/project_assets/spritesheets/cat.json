@@ -189,7 +189,7 @@
 		},
 		{
 			"name": "MeleeR",
-			"repeat": false,
+			"repeat": true,
 			"frames": [
 				{
 					"index": 24,
@@ -203,7 +203,7 @@
 		},
 		{
 			"name": "MeleeL",
-			"repeat": false,
+			"repeat": true,
 			"frames": [
 				{
 					"index": 26,
@@ -217,7 +217,7 @@
 		},
 		{
 			"name": "MeleeD",
-			"repeat": false,
+			"repeat": true,
 			"frames": [
 				{
 					"index": 28,
@@ -231,7 +231,7 @@
 		},
 		{
 			"name": "MeleeU",
-			"repeat": false,
+			"repeat": true,
 			"frames": [
 				{
 					"index": 30,

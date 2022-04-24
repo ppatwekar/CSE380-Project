@@ -24,8 +24,8 @@ export default class ProjectAnimationManager {
         this.owner.animation.play(currentAnimation);
     }
 
-    update(input : Vec2){
-        this.state.updateState(input);
+    update(input : Vec2, changeState? : string){
+        this.state.updateState(input,changeState);
         this.direction.updateDirection(input);
 
         if(this.getDesciption() != this.currentState){

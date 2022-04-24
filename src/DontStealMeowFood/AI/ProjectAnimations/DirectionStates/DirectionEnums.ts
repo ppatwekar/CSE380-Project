@@ -7,5 +7,7 @@ export enum Direction{
 
 export enum AState{
     Idle = "Idle",
-    Run = "Run"
+    Run = "Run",
+    Melee = "Melee",
+    Previous = "previous"
 }

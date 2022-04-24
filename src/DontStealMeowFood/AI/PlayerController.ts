@@ -41,6 +41,8 @@ import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import Yoyo2 from "../GameSystems/Items/WeaponTypes/Yoyo2";
+import Attack from "./ProjectAnimations/ActualStates/Melee";
+import Melee from "./ProjectAnimations/ActualStates/Melee";
 
 
 export default class PlayerController extends StateMachineAI implements BattlerAI {
@@ -90,6 +92,10 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     // Choosing inventory
     private slotPos = 0;
 
+    //In different actions like attacking etc, set this field to respective state.
+    currentAnimationState : string;
+
+
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
         this.lookDirection = Vec2.ZERO;
@@ -137,28 +143,33 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         if (this.inputEnabled && this.health > 0) { //can remove this for now. maybe not
 
 
-            //if((<YoyoController>this.yoyo._ai).hasReturned()){
-            //this.yoyo.visible = false;
             const distance = Vec2.ZERO;
 
             this.directionVector.y = distance.y = (Input.isPressed("up") ? -1 : 0) + (Input.isPressed("down") ? 1 : 0);
             this.directionVector.x = distance.x = (Input.isPressed("left") ? -1 : 0) + (Input.isPressed("right") ? 1 : 0);
 
-            //here, check where the animatedSprite is w.r.t the viewPort. Check if AABB size and stuff
-            //i.e if distance from animatedSprite to viewport edge is less than or equal the half size, then do not move 
-            //the AnimatedSprite in that direction. But it can move in other direction
-            //for example if animatedSprite is touching right edge, check if directionVector.x == 1. If so, make it 0
-            //otherwise if it is -1 or 0 (only other options) then no worries. Same for the y - coordinate.
+        
             this.boundPlayerInViewPort(distance);
 
             distance.normalize();
             distance.scale(this.speed * deltaT);
 
             this.owner.move(distance);
-            //this.yoyo.position = this.owner.position.clone();
 
-            //super.update(deltaT);
-            this.anime.update(distance);
+
+            /*
+            if(Input.isKeyPressed("k")){
+                this.currentAnimationState = AState.Melee;
+            }
+
+            if(Input.isKeyPressed("p")){
+                this.currentAnimationState = null;
+            }
+
+            */
+            this.anime.update(distance, this.currentAnimationState);
+            //this.testAnimation(distance);
+            
 
             if(!this.yoyoHasReturned){
                 this.fireYoyo();
@@ -349,7 +360,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
     addAnimationStates2(owner : AnimatedSprite){
         this.anime = new ProjectAnimationManager(owner,
-            [{key : AState.Idle, state : Idle},{key: AState.Run, state : Run}],
+            [{key : AState.Idle, state : Idle},{key: AState.Run, state : Run},{key : AState.Melee, state : Melee}],
             [{key : Direction.D, state : Down},{key : Direction.L, state : Left},{key : Direction.R, state : Right},{key : Direction.U, state : Up}]);
         
     }
