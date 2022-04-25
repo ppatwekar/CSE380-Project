@@ -92,7 +92,7 @@ export default class Yoyo2 extends WeaponType{
                             let node = this.sceneGraph.getNode(event.data.get("node"));
                             let other = this.sceneGraph.getNode(event.data.get("other"));
 
-                            node === this.owner ? this.enemiesHit.push(other) : this.enemiesHit.push(node);
+                            node === this.owner ? this.addToEnemiesHit(other) : this.addToEnemiesHit(node);
 
                             this.hasReachedGoTo = true;
                             this.directionVec = this.belongsTo.position.clone().sub(this.owner.position).normalize();
@@ -102,6 +102,15 @@ export default class Yoyo2 extends WeaponType{
                 }
             }
         }
+    }
+
+    addToEnemiesHit(node : CanvasNode){
+        for(let enemy of this.enemiesHit){
+            if(enemy.id == node.id){
+                return;
+            }
+        }
+        this.enemiesHit.push(node);
     }
     
 
@@ -138,8 +147,10 @@ export default class Yoyo2 extends WeaponType{
         //that is the passsed parameter then return true, else false
         //check GameNode.id maybe.
 
-        for(let enemy of this.enemiesHit){
-            if(enemy.id == node.id){
+        for(let i = 0; i<this.enemiesHit.length; i++){
+            if(this.enemiesHit[i].id == node.id){
+                //delete that enemy
+                this.enemiesHit.splice(i,1);
                 return true;
             }
         }
