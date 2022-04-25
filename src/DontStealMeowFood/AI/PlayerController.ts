@@ -120,7 +120,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.weapon = options.weapon;
         this.yoyoHasReturned = true;
         this.receiver.subscribe(Custom_Events.YOYO_RETURNED);
-
+        this.receiver.subscribe(Custom_Events.IN_CINEMATIC);
     }
 
     activate(options: Record<string, any>): void { }
@@ -131,6 +131,18 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 {
                     this.yoyoHasReturned = true;
                 }
+                break;
+            case Custom_Events.IN_CINEMATIC:
+                {
+                    if (event.data.get("inCinematic")) {
+                        // In Cinematic
+                        this.inventory.hideInventory();
+                    } else {
+                        console.log("Showing>");
+                        this.inventory.showInventory();
+                    }
+                }
+                break;
         }
 
      }

@@ -18,6 +18,7 @@ import Weapon from "../GameSystems/items/Weapon";
 import WeaponType from "../GameSystems/items/WeaponTypes/WeaponType";
 import RegistryManager from "../../Wolfie2D/Registry/RegistryManager";
 import BattleManager from "../GameSystems/BattleManager";
+import Input from "../../Wolfie2D/Input/Input";
 
 export default class GameLevel extends Scene {
     protected playerSpawn: Vec2; 
@@ -27,6 +28,7 @@ export default class GameLevel extends Scene {
     protected healthDisplay: Label;
     protected goalDisplay: Label;
     protected battleManager : BattleManager;
+    protected inCinematic: boolean = false;
 
     protected nextLevel: new (...args: any) => GameLevel;
     
@@ -54,7 +56,8 @@ export default class GameLevel extends Scene {
                 case Custom_Events.ENEMY_DEATH:
                     {
                         let asset = this.sceneGraph.getNode(event.data.get("enemy")._id);
-                        asset.destroy();
+                        // asset.destroy();
+                        console.log("Enemy Died!");
                     }
                     break;
                 case Custom_Events.HEAL:
@@ -82,10 +85,25 @@ export default class GameLevel extends Scene {
                         }
                     }
                     break;
+                case Custom_Events.IN_CINEMATIC:
+                    {
+                        this.inCinematic = event.data.get("inCinematic");
+                        if (this.inCinematic) {
+                            this.goalDisplay.visible = false;
+                            this.healthDisplay.visible = false;
+                        } else {
+                            this.goalDisplay.visible = true;
+                            this.healthDisplay.visible = true;
+                        }
+                    }
+                    break;
             }
         }
         let currHealth = (<BattlerAI>this.player._ai).health;
         this.healthDisplay.text = "Health: " + currHealth;
+        if (Input.isKeyJustPressed("escape")) {
+            this.emitter.fireEvent(Custom_Events.IN_CINEMATIC, {inCinematic: !this.inCinematic});
+        }
     }
 
     protected setGoal(text: string, textColor = Color.WHITE, backgroundColor = Color.BLACK) : void {
@@ -174,7 +192,8 @@ export default class GameLevel extends Scene {
             Custom_Events.PLAYER_DAMAGED,
             Custom_Events.PLAYER_DEATH,
             Custom_Events.PAUSE_EVENT,
-            Custom_Events.COMPLETE_OBJECTIVE
+            Custom_Events.COMPLETE_OBJECTIVE,
+            Custom_Events.IN_CINEMATIC
         ]);
     }
 
