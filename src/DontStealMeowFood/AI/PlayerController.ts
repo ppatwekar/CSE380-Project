@@ -175,7 +175,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.fireYoyo();
             }
 
-            if(Input.isJustPressed("attackInput") || Input.isMouseJustPressed(0)){
+            if(Input.isJustPressed("attackInput") || (Input.isMousePressed(0) && !Input.isMousePressed(2))){
                 if(this.yoyoHasReturned){
                     this.yoyoMousePos = Input.getGlobalMousePosition();
                     this.fireYoyo();

@@ -5,19 +5,20 @@ import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
+import Label from "../../Wolfie2D/Nodes/UIElements/Label";
+import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Navmesh from "../../Wolfie2D/Pathfinding/Navmesh";
+import Color from "../../Wolfie2D/Utils/Color";
 import BattlerAI from "../AI/BattlerAI";
 import EnemyAI from "../AI/EnemyAI";
 import PlayerController from "../AI/PlayerController";
 import { Custom_Names, Custom_Statuses } from "../GameConstants";
-import Item from "../GameSystems/items/Item";
-import HighLight from "../GameSystems/HighLight";
-import GameLevel from "./GameLevel";
 import BattleManager from "../GameSystems/BattleManager";
-import Label from "../../Wolfie2D/Nodes/UIElements/Label";
-import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import HighLight from "../GameSystems/HighLight";
+import Item from "../GameSystems/items/Item";
+import GameLevel from "./GameLevel";
 
-export default class playtest_scene extends GameLevel{
+export default class Level1_Scene extends GameLevel {
     private bushes : OrthogonalTilemap;
     private graph : PositionGraph;
     private logo : Sprite
@@ -26,23 +27,23 @@ export default class playtest_scene extends GameLevel{
     // A list of items
     private items: Array<Item>;
     protected h1 : HighLight;
-    
+
     loadScene(): void {
-        this.load.tilemap("playTestLevel","project_assets/tilemaps/sampleMap.json");
-        this.load.object("navmesh","project_assets/data/navmesh.json");
+        this.load.tilemap("level1","project_assets/tilemaps/level1_tilemap/TutorialLevel.json");
+        this.load.object("navmesh","project_assets/data/level1_data/navmesh.json");
         this.load.spritesheet("cat","project_assets/spritesheets/cat.json");
         this.load.spritesheet("raccoon","project_assets/spritesheets/raccoon.json")
-        this.load.object("enemyData","project_assets/data/enemy.json");
+        this.load.object("enemyData","project_assets/data/level1_data/enemy.json");
         this.load.image("inventorySlot", "project_assets/sprites/inventory.png");
         this.load.image("yoyo","project_assets/item/yoyo.png");
         this.load.object("weaponData","project_assets/data/weaponData.json");
     }
 
-
     startScene(): void {
-        this.playerSpawn = Vec2.ZERO;
-        let tilemapLayers = this.add.tilemap("playTestLevel", new Vec2(0.5,0.5));
+        this.playerSpawn = new Vec2(288/2, 1760/2);
+        let tilemapLayers = this.add.tilemap("level1", new Vec2(0.5,0.5));
         this.bushes = <OrthogonalTilemap>tilemapLayers[1].getItems()[0];
+        console.log(this.bushes.size);
 
         let tilemapSize : Vec2 = this.bushes.size.scaled(0.5);
         this.viewport.setBounds(0,0,tilemapSize.x,tilemapSize.y);
@@ -71,13 +72,13 @@ export default class playtest_scene extends GameLevel{
         (<PlayerController>this.player._ai).enemies = this.enemies;
         this.h1 = new HighLight();
 
-        this.setGoal("Objective: Playtest!");
+        this.setGoal("Find the Exit!", Color.BLACK, Color.WHITE);
     }
-    
 
     updateScene(deltaT: number): void {
         super.updateScene(deltaT);
         this.h1.checkClosestEnemies(this.enemies, this.player);
+        // console.log(this.player.position.x +  ", y: " + this.player.position.y);
     }
 
     createNavmesh() : void {
@@ -106,8 +107,6 @@ export default class playtest_scene extends GameLevel{
         this.navManager.addNavigableEntity(Custom_Names.NAVMESH,navmesh);
 
     }
-    
-    
 
     initializeEnemies() : void {
         const enemyData = this.load.getObject("enemyData");

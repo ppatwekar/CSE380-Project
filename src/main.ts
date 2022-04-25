@@ -13,7 +13,7 @@ import WeaponTypeRegistry from "./DontStealMeowFood/Registry/WeaponTypeRegistry"
 
     // Set up options for our game
     let options = {
-        canvasSize: {x: window.innerWidth * 0.9, y: window.innerHeight * 0.9},          // The size of the game
+        canvasSize: {x: 1200, y: 800},          // The size of the game
         clearColor: {r: 34, g: 32, b: 52},   // The color the game clears to
         inputs: [
             {name: "left", keys: ["a"]},
@@ -27,7 +27,8 @@ import WeaponTypeRegistry from "./DontStealMeowFood/Registry/WeaponTypeRegistry"
             {name: "slot3", keys: ["3"]},
             {name: "slot4", keys: ["4"]},
             {name: "slot5", keys: ["5"]},
-            {name: "attackInput", keys: ["space"]}
+            {name: "attackInput", keys: ["space"]},
+            {name: "pauseInput", keys: ["escape"]}
         ],
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want

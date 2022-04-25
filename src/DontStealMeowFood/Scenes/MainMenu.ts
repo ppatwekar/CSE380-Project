@@ -6,6 +6,7 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
+import Level1_Scene from "./level1_scene";
 import playtest_scene from "./playtest_scene";
 
 export default class MainMenu extends Scene {
@@ -93,11 +94,11 @@ export default class MainMenu extends Scene {
             l1.backgroundColor = Color.GREEN;
             l1.onClickEventId = "level1";
 
-            const l2 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l1.position.x + xMar + l, l1.position.y), text : "LOCKED"});
+            const l2 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l1.position.x + xMar + l, l1.position.y), text : "Level 2"});
             l2.size.set(l,w);
             l2.borderColor = Color.WHITE;
-            l2.backgroundColor = Color.TRANSPARENT;
-            l2.onClickEventId = ""; // TODO
+            l2.backgroundColor = Color.GREEN;
+            l2.onClickEventId = "level2"; // TODO
 
             const l3 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l2.position.x + xMar + l, l2.position.y), text : "LOCKED"});
             l3.size.set(l,w);
@@ -174,6 +175,7 @@ export default class MainMenu extends Scene {
         /* Receivers */
         this.receiver.subscribe("menu");
         this.receiver.subscribe("level1");
+        this.receiver.subscribe("level2");
         this.receiver.subscribe("control");
         this.receiver.subscribe("levels");
         this.receiver.subscribe("help");
@@ -205,6 +207,25 @@ export default class MainMenu extends Scene {
                     }
                 };
                 this.sceneManager.changeToScene(playtest_scene, {}, sceneOptions);
+            } else if(event.type === "level2"){
+                let sceneOptions = {
+                    physics : {
+                        /**
+                         *      pl  ene  yoyo
+                         * pl   0    1    1
+                         * ene  1    0    1
+                         * yoyo 1    1    0
+                         */
+                        groupNames : ["player","enemy","yoyo"],
+                        collisions : 
+                        [
+                            [0,1,0],
+                            [1,0,0],
+                            [0,0,0]
+                        ]
+                    }
+                };
+                this.sceneManager.changeToScene(Level1_Scene, {}, sceneOptions);
             }
 
             if(event.type === "help"){

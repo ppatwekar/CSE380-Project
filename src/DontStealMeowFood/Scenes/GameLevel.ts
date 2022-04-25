@@ -53,7 +53,8 @@ export default class GameLevel extends Scene {
                     break;
                 case Custom_Events.ENEMY_DEATH:
                     {
-                        console.log("Enemy died!");
+                        let asset = this.sceneGraph.getNode(event.data.get("enemy")._id);
+                        asset.destroy();
                     }
                     break;
                 case Custom_Events.HEAL:
@@ -87,6 +88,12 @@ export default class GameLevel extends Scene {
         this.healthDisplay.text = "Health: " + currHealth;
     }
 
+    protected setGoal(text: string, textColor = Color.WHITE, backgroundColor = Color.BLACK) : void {
+        this.goalDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "objectives", {position: new Vec2(40, 10), text: text});
+        this.goalDisplay.textColor = textColor;
+        this.goalDisplay.backgroundColor = backgroundColor;
+    }
+
     protected addUI(){
         this.addUILayer("health");
         this.healthDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "health", {position: new Vec2(this.viewport.getCenter().x * 0.05, this.viewport.getCenter().y * 0.485), text: "Health: " + (<BattlerAI>this.player._ai).health});
@@ -95,9 +102,9 @@ export default class GameLevel extends Scene {
 
         // Add a UI for Goals
         this.addUILayer("objectives");
-        this.goalDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "objectives", {position: new Vec2(40, 10), text: "Objective: Playtest!"});
-        this.goalDisplay.textColor = Color.WHITE;
-        this.goalDisplay.backgroundColor = Color.BLACK;
+        // this.goalDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "objectives", {position: new Vec2(40, 10), text: "Objective: Playtest!"});
+        // this.goalDisplay.textColor = Color.WHITE;
+        // this.goalDisplay.backgroundColor = Color.BLACK;
     }
 
     initializePlayer() : void{

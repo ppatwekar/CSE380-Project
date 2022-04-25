@@ -97,7 +97,6 @@ export default class Yoyo2 extends WeaponType{
                             this.hasReachedGoTo = true;
                             this.directionVec = this.belongsTo.position.clone().sub(this.owner.position).normalize();
                             this.velocity = this.directionVec.scaled(this.speed);
-                            console.log("HIT!!");
                         }
                 }
             }

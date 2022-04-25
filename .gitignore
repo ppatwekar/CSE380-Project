@@ -9,7 +9,7 @@ dist/*
 
 # Include the built-in asset folder
 !dist/builtin/
-
+dww
 ### IF YOU ARE MAKING A PROJECT, YOU MAY WANT TO UNCOMMENT THIS LINE ###
 !dist/project_assets/
 
@@ -17,3 +17,10 @@ dist/*
 !index.html
 *.log
 *.cache
+
+# This is customizing the maps
+map_raw_files/
+
+# We don't need to reupload them... Just use gulp to make it
+bundle.js
+*.psd
