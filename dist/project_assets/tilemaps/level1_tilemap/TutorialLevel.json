@@ -243,7 +243,7 @@
         {
          "columns":8,
          "firstgid":1,
-         "image":"..\/..\/map_raw_files\/Level_Blocks.png",
+         "image":"./Level_Blocks.png",
          "imageheight":256,
          "imagewidth":256,
          "margin":0,
