@@ -17,7 +17,7 @@ export default class HighLight {
 
         let tempArr : AnimatedSprite[] = [];
         for(let enemy of enemies){
-            if(player.position.distanceTo(enemy.position) <= this.enemyRangeForBox){
+            if(player.position.distanceTo(enemy.position) <= this.enemyRangeForBox && enemy.visible){
                 tempArr.push(enemy);
             }
         }
