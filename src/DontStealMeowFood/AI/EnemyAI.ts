@@ -78,9 +78,9 @@ export default class EnemyAI extends StateMachineGoapAI{
 
         this.goal = options.goal;
 
-        this.currentStatus = []; //options.status;
+        this.currentStatus = options.status;
 
-        this.possibleActions = []; //options.actions;
+        this.possibleActions = options.actions;
 
         this.plan = new Stack<GoapAction>();
 
@@ -97,7 +97,7 @@ export default class EnemyAI extends StateMachineGoapAI{
         //handle Enemy damage updates in it's states.
 
 
-        //this.getPlayerPosition();
+        this.getPlayerPosition();
 
 
     }
@@ -147,7 +147,7 @@ export default class EnemyAI extends StateMachineGoapAI{
         super.update(deltaT);
 
         if(this.plan.isEmpty()){
-            //this.plan = this.planner.plan(Custom_Statuses.REACHED_GOAL, this.possibleActions, this.currentStatus, null);
+            this.plan = this.planner.plan(Custom_Statuses.REACHED_GOAL, this.possibleActions, this.currentStatus, null);
         }
     }
 

@@ -17,6 +17,9 @@ import BattleManager from "../GameSystems/BattleManager";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
+import AttackAction from "../AI/EnemyActions/Attack";
+import Move from "../AI/EnemyActions/Move";
+import Retreat from "../AI/EnemyActions/Retreat";
 
 export default class playtest_scene extends GameLevel{
     private bushes : OrthogonalTilemap;
@@ -60,6 +63,7 @@ export default class playtest_scene extends GameLevel{
         // }
         this.initializeWeapons();
         super.startScene();
+        this.viewport.setZoomLevel(1);
         this.createNavmesh();
 
         this.initializeEnemies();
@@ -134,15 +138,22 @@ export default class playtest_scene extends GameLevel{
                 data.guardPosition = new Vec2(data.guardPosition[0]/2, data.guardPosition[1]/2);
             }
 
+            let statusArray: Array<string> = [];            
+            let actionsDef = [new AttackAction(3, [Custom_Statuses.IN_RANGE], [Custom_Statuses.REACHED_GOAL]),
+            new Move(4, [], [Custom_Statuses.IN_RANGE], {inRange: 100}),
+            new Retreat(1, [Custom_Statuses.LOW_HEALTH, Custom_Statuses.CAN_RETREAT], [Custom_Statuses.REACHED_GOAL], {retreatDistance: 200})
+            ];
+
             let enemyOptions = {
                 defaultMode: data.mode,
-                patrolRoute: data.route,            // This only matters if they're a patroller
+                patrolRoute: data.route, // This only matters if they're a patroller
                 guardPosition: data.guardPosition,  // This only matters if the're a guard
                 player : this.player,
                 goal: Custom_Statuses.REACHED_GOAL,
+                status: statusArray,
+                actions: actionsDef,
                 health: 10
-            }
-
+            }    
             this.enemies[i].addAI(EnemyAI,enemyOptions);
             this.enemies[i].setGroup("enemy");
         }

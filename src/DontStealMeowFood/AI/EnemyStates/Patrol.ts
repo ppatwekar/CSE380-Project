@@ -29,20 +29,28 @@ export default class Patrol extends EnemyState{
 
     }
     update(deltaT: number): void {
-        /*
+        
         this.parent.lastPlayerPos = this.parent.getPlayerPosition();
         if(this.parent.lastPlayerPos !== null){
             this.finished(EnemyStates.TARGETING);
         }
         else{
+            // if(this.currentPath.isDone()){
+            //     this.currentPath = this.getNextPath();
+            //     this.owner.moveOnPath(this.parent.speed * deltaT, this.currentPath);
+            //     //this.owner.rotation = Vec2.UP.angleToCCW(this.currentPath.getMoveDirection(this.owner));
+            // }
             if(this.currentPath.isDone()){
                 this.currentPath = this.getNextPath();
+            } else {
                 this.owner.moveOnPath(this.parent.speed * deltaT, this.currentPath);
+                this.parent.anime.update(this.currentPath.getMoveDirection(this.owner));
                 //this.owner.rotation = Vec2.UP.angleToCCW(this.currentPath.getMoveDirection(this.owner));
             }
         }
-        */
+        
 
+        /* ONLY PATROLS!
         if(this.currentPath.isDone()){
             this.currentPath = this.getNextPath();
         } else {
@@ -50,6 +58,7 @@ export default class Patrol extends EnemyState{
             this.parent.anime.update(this.currentPath.getMoveDirection(this.owner));
             //this.owner.rotation = Vec2.UP.angleToCCW(this.currentPath.getMoveDirection(this.owner));
         }
+        */
     }
     onExit(): Record<string, any> {
         return this.retObj;
