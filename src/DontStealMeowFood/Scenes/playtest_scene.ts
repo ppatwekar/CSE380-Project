@@ -16,6 +16,7 @@ import GameLevel from "./GameLevel";
 import BattleManager from "../GameSystems/BattleManager";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 export default class playtest_scene extends GameLevel{
     private bushes : OrthogonalTilemap;
@@ -36,6 +37,7 @@ export default class playtest_scene extends GameLevel{
         this.load.image("inventorySlot", "project_assets/sprites/inventory.png");
         this.load.image("yoyo","project_assets/item/yoyo.png");
         this.load.object("weaponData","project_assets/data/weaponData.json");
+        this.load.audio("level1_music", "project_assets/music/theme_music.mp3");
     }
 
 
@@ -72,6 +74,7 @@ export default class playtest_scene extends GameLevel{
         this.h1 = new HighLight();
 
         this.setGoal("Objective: Playtest!");
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1_music", loop: true, holdReference: true});
     }
     
 

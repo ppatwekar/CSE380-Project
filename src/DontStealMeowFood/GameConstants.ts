@@ -15,7 +15,8 @@ export enum Custom_Events {
     PAUSE_EVENT = "PAUSE_EVENT",
     COMPLETE_OBJECTIVE = "COMPLETE_OBJECTIVE",
     YOYO_RETURNED = "YOYO_RETURNED",
-    IN_CINEMATIC = "IN_CINEMATIC"
+    IN_CINEMATIC = "IN_CINEMATIC",
+    PLAY_SOUND = "PLAY_SOUND"
 }
 
 export enum Custom_Statuses {

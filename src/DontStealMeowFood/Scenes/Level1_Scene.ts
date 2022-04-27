@@ -1,6 +1,7 @@
 import PositionGraph from "../../Wolfie2D/DataTypes/Graphs/PositionGraph";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
@@ -12,7 +13,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import BattlerAI from "../AI/BattlerAI";
 import EnemyAI from "../AI/EnemyAI";
 import PlayerController from "../AI/PlayerController";
-import { Custom_Names, Custom_Statuses } from "../GameConstants";
+import { Custom_Events, Custom_Names, Custom_Statuses } from "../GameConstants";
 import BattleManager from "../GameSystems/BattleManager";
 import HighLight from "../GameSystems/HighLight";
 import Item from "../GameSystems/items/Item";
@@ -37,6 +38,7 @@ export default class Level1_Scene extends GameLevel {
         this.load.image("inventorySlot", "project_assets/sprites/inventory.png");
         this.load.image("yoyo","project_assets/item/yoyo.png");
         this.load.object("weaponData","project_assets/data/weaponData.json");
+        this.load.audio("level1_music", "project_assets/music/theme_music.mp3");
     }
 
     startScene(): void {
@@ -59,6 +61,7 @@ export default class Level1_Scene extends GameLevel {
         // }
         this.initializeWeapons();
         super.startScene();
+        this.viewport.setZoomLevel(3);
         this.createNavmesh();
 
         this.initializeEnemies();
@@ -73,6 +76,7 @@ export default class Level1_Scene extends GameLevel {
         this.h1 = new HighLight();
 
         this.setGoal("Find the Exit!", Color.BLACK, Color.WHITE);
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1_music", loop: true, holdReference: true});
     }
 
     updateScene(deltaT: number): void {
