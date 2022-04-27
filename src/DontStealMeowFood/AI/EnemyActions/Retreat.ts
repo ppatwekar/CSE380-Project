@@ -23,7 +23,7 @@ export default class Retreat extends GoapAction {
 
     
     performAction(statuses: Array<string>, actor: StateMachineGoapAI, deltaT: number, target?: StateMachineGoapAI): Array<string> {
-        
+        console.log("enemy retreat");
         if(this.checkPreconditions(statuses)){
             let enemy = <EnemyAI>actor;
             

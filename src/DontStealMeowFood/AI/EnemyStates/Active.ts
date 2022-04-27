@@ -26,6 +26,7 @@ export default class Active extends EnemyState{
         this.retObj = {target : this.parent.lastPlayerPos};
         this.parent.path = this.owner.getScene().getNavigationManager().getPath(Custom_Names.NAVMESH, this.owner.position, this.parent.lastPlayerPos, true);
     }
+
     handleInput(event: GameEvent): void { }
 
     pickRetreatPath(pathToPlayer: NavigationPath){
@@ -41,7 +42,7 @@ export default class Active extends EnemyState{
             this.parent.playerPos = this.parent.getPlayerPosition();
 
             if(this.parent.playerPos !== null){
-                this.parent.path = this.owner.getScene().getNavigationManager().getPath(Custom_Names.NAVMESH,this.owner.position,this.parent.lastPlayerPos);
+                this.parent.path = this.owner.getScene().getNavigationManager().getPath(Custom_Names.NAVMESH,this.owner.position,this.parent.lastPlayerPos, true);
                 this.pickRetreatPath(this.parent.path);
                 this.parent.lastPlayerPos = this.parent.playerPos;
                 this.exitTimer.start();

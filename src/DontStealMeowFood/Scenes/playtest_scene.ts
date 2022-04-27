@@ -139,8 +139,8 @@ export default class playtest_scene extends GameLevel{
             }
 
             let statusArray: Array<string> = [];            
-            let actionsDef = [new AttackAction(3, [Custom_Statuses.IN_RANGE], [Custom_Statuses.REACHED_GOAL]),
-            new Move(4, [], [Custom_Statuses.IN_RANGE], {inRange: 100}),
+            let actionsDef = [new AttackAction(3, [Custom_Statuses.IN_RANGE], [Custom_Statuses.REACHED_GOAL], {inRange: 16}),
+            new Move(4, [], [Custom_Statuses.IN_RANGE], {inRange: 32}),
             new Retreat(1, [Custom_Statuses.LOW_HEALTH, Custom_Statuses.CAN_RETREAT], [Custom_Statuses.REACHED_GOAL], {retreatDistance: 200})
             ];
 
@@ -152,6 +152,8 @@ export default class playtest_scene extends GameLevel{
                 goal: Custom_Statuses.REACHED_GOAL,
                 status: statusArray,
                 actions: actionsDef,
+                inRange: 32,
+                vision: 128,
                 health: 10
             }    
             this.enemies[i].addAI(EnemyAI,enemyOptions);

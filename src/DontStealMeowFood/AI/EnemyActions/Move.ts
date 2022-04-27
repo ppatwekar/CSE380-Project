@@ -21,6 +21,7 @@ export default class Move extends GoapAction {
     }
 
     performAction(statuses: Array<string>, actor: StateMachineGoapAI, deltaT: number, target?: StateMachineGoapAI): Array<string> {
+        console.log("enemy moving");
         if (this.checkPreconditions(statuses)){
             //Check distance from player
             let enemy = <EnemyAI>actor;

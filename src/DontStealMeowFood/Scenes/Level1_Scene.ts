@@ -18,6 +18,9 @@ import BattleManager from "../GameSystems/BattleManager";
 import HighLight from "../GameSystems/HighLight";
 import Item from "../GameSystems/items/Item";
 import GameLevel from "./GameLevel";
+import AttackAction from "../AI/EnemyActions/Attack";
+import Move from "../AI/EnemyActions/Move";
+import Retreat from "../AI/EnemyActions/Retreat";
 
 export default class Level1_Scene extends GameLevel {
     private bushes : OrthogonalTilemap;
@@ -134,15 +137,22 @@ export default class Level1_Scene extends GameLevel {
                 data.guardPosition = new Vec2(data.guardPosition[0]/2, data.guardPosition[1]/2);
             }
 
+            let statusArray: Array<string> = [];            
+            let actionsDef = [new AttackAction(3, [Custom_Statuses.IN_RANGE], [Custom_Statuses.REACHED_GOAL], {inRange: 16}),
+            new Move(4, [], [Custom_Statuses.IN_RANGE], {inRange: 32}),
+            new Retreat(1, [Custom_Statuses.LOW_HEALTH, Custom_Statuses.CAN_RETREAT], [Custom_Statuses.REACHED_GOAL], {retreatDistance: 200})
+            ];
+
             let enemyOptions = {
                 defaultMode: data.mode,
-                patrolRoute: data.route,            // This only matters if they're a patroller
+                patrolRoute: data.route, // This only matters if they're a patroller
                 guardPosition: data.guardPosition,  // This only matters if the're a guard
                 player : this.player,
                 goal: Custom_Statuses.REACHED_GOAL,
+                status: statusArray,
+                actions: actionsDef,
                 health: 10
-            }
-
+            }    
             this.enemies[i].addAI(EnemyAI,enemyOptions);
             this.enemies[i].setGroup("enemy");
         }

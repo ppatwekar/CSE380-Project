@@ -32,7 +32,7 @@ export default class Visiblity{
                     this.colliderTileAABB.center = this.tilePos;
                     this.colliderTileAABB.halfSize = tileSize.scaled(0.5);
 
-                    let hit = this.colliderTileAABB.intersectSegment(pos2,difference, this.zeroPos); //check if line segment betweem
+                    let hit = this.colliderTileAABB.intersectSegment(pos2, difference, this.zeroPos); //check if line segment betweem
 
                     if(hit !== null && pos2.distanceSqTo(hit.pos) < pos2.distanceSqTo(pos1)){
                         return null;

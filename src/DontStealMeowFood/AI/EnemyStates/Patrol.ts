@@ -31,6 +31,7 @@ export default class Patrol extends EnemyState{
     update(deltaT: number): void {
         
         this.parent.lastPlayerPos = this.parent.getPlayerPosition();
+        //console.log("pos", this.parent.lastPlayerPos);
         if(this.parent.lastPlayerPos !== null){
             this.finished(EnemyStates.TARGETING);
         }

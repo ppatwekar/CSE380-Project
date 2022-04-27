@@ -39,7 +39,7 @@ export default class EnemyAI extends StateMachineGoapAI{
 
     playerPos : Vec2;
 
-    lastPlayerPos : Vec2;
+    lastPlayerPos : Vec2 = null;
 
     attackRange : number;
 
@@ -50,6 +50,8 @@ export default class EnemyAI extends StateMachineGoapAI{
     retreatPath : NavigationPath; //if we want the retreat option
 
     anime : ProjectAnimationManager;
+
+    vision : number;
 
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
@@ -74,13 +76,15 @@ export default class EnemyAI extends StateMachineGoapAI{
 
         this.player = options.player;
 
-        //this.inRange = options.inRange;
+        this.inRange = options.inRange;
 
         this.goal = options.goal;
 
         this.currentStatus = options.status;
 
         this.possibleActions = options.actions;
+
+        this.vision = options.vision;
 
         this.plan = new Stack<GoapAction>();
 
@@ -95,7 +99,6 @@ export default class EnemyAI extends StateMachineGoapAI{
 
         this.receiver.subscribe(Custom_Events.HIT_ENEMY);
         //handle Enemy damage updates in it's states.
-
 
         this.getPlayerPosition();
 
@@ -139,17 +142,19 @@ export default class EnemyAI extends StateMachineGoapAI{
 
     getPlayerPosition() : Vec2{
         //return this.isPlayerVisible(this.player.position);
-        return Visiblity.positionsVisible(this.owner.position.clone(),this.player.position.clone(),this.bushes);
+        
+        return Visiblity.positionsVisible(this.player.position.clone(),this.owner.position.clone(),this.bushes);
     }
 
 
     update(deltaT: number): void {
         super.update(deltaT);
-
         if(this.plan.isEmpty()){
             this.plan = this.planner.plan(Custom_Statuses.REACHED_GOAL, this.possibleActions, this.currentStatus, null);
         }
     }
+
+    
 
     addAnimations(owner : AnimatedSprite){
 
