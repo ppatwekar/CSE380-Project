@@ -103,6 +103,7 @@ export default class GameLevel extends Scene {
         this.healthDisplay.text = "Health: " + currHealth;
         if (Input.isKeyJustPressed("escape")) {
             this.emitter.fireEvent(Custom_Events.IN_CINEMATIC, {inCinematic: !this.inCinematic});
+            this.emitter.fireEvent(Custom_Events.PAUSE_EVENT);
         }
     }
 

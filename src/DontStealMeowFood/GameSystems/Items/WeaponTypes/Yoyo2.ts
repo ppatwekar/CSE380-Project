@@ -51,15 +51,16 @@ export default class Yoyo2 extends WeaponType{
         this.directionVec = Vec2.ZERO;
         this.beenInitialisedBefore = false;
         this.enemiesHit = [];
-        
-
+        this.reciever = new Receiver();
+        this.reciever.subscribe(Custom_Events.YOYO_HIT_ENEMY);
+        this.emitter = new Emitter();
     }
 
     //acts like update()
     doAnimation(attacker : GameNode, direction : Vec2): void {
         //do the whole go back and stuff basically "update" here
         //acts like moveTo
-        this.checkEnemiesHit();
+        
         
 
         if(!this.hasReachedGoTo && this.hasReachedPlayer){
@@ -78,6 +79,7 @@ export default class Yoyo2 extends WeaponType{
             }
 
         }
+        this.checkEnemiesHit();
         this.update();
         
     }
@@ -125,13 +127,9 @@ export default class Yoyo2 extends WeaponType{
             this.owner.setGroup("yoyo");
             this.owner.setTrigger("enemy", Custom_Events.YOYO_HIT_ENEMY, null);
             this.owner.position = this.belongsTo.position.clone();
-            this.reciever = new Receiver();
-            this.reciever.subscribe(Custom_Events.YOYO_HIT_ENEMY);
             this.collidableMap = <OrthogonalTilemap>scene.getLayer("Bushes").getItems()[0];
             this.sceneGraph = scene.getSceneGraph();
             this.beenInitialisedBefore = true;
-            this.emitter = new Emitter();
-
             return [this.owner];
         }
 

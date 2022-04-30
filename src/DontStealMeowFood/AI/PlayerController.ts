@@ -95,8 +95,12 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     //In different actions like attacking etc, set this field to respective state.
     currentAnimationState : string;
 
+    // Checks if we are paused
+    private isPaused: boolean;
+
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
+        this.isPaused = false;
         this.owner = owner;
         this.lookDirection = Vec2.ZERO;
         this.speed = options.speed;
@@ -106,6 +110,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         this.items = options.items;
         this.inventory = options.inventory;
+        this.inventory.showInventory();
 
         this.receiver = new Receiver();
 
@@ -121,6 +126,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.yoyoHasReturned = true;
         this.receiver.subscribe(Custom_Events.YOYO_RETURNED);
         this.receiver.subscribe(Custom_Events.IN_CINEMATIC);
+        this.receiver.subscribe(Custom_Events.PAUSE_EVENT);
     }
 
     activate(options: Record<string, any>): void { }
@@ -143,6 +149,11 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     }
                 }
                 break;
+            case Custom_Events.PAUSE_EVENT:
+                {
+                    this.isPaused = !this.isPaused;
+                }
+                break;
         }
 
      }
@@ -152,7 +163,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         while(this.receiver.hasNextEvent()){
             this.handleEvent(this.receiver.getNextEvent());
         }
-        if (this.inputEnabled && this.health > 0) { //can remove this for now. maybe not
+        if (this.inputEnabled && this.health > 0 && !this.isPaused) { //can remove this for now. maybe not
 
 
             const distance = Vec2.ZERO;
@@ -282,31 +293,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     yoyoMousePos : Vec2;
     private fireYoyo() : void{
         this.weapon.use(null,"player",this.yoyoMousePos);
-    }
-
-    
-
-    private updateRotation(){
-        let currentState = this.anime.currentState;
-        let rotate : number;
-        let angle : number;
-        if(currentState === "IdleR" || currentState === "RunR"){
-            angle = (Vec2.RIGHT.angleToCCW(Input.getGlobalMousePosition().sub(this.owner.position)));
-        }
-        else if(currentState === "IdleL" || currentState === "RunL"){
-            angle = Vec2.LEFT.angleToCCW(Input.getGlobalMousePosition().sub(this.owner.position));
-        }
-        else if(currentState === "IdleU" || currentState === "RunU"){
-            angle = Vec2.UP.angleToCCW(Input.getGlobalMousePosition().sub(this.owner.position));
-        }
-        else {
-            angle = Vec2.DOWN.angleToCCW(Input.getGlobalMousePosition().sub(this.owner.position));
-        }
-
-        angle = angle > Math.PI/4 && angle < Math.PI ? (Math.PI/4) : (angle > Math.PI && angle < 7 * Math.PI/4 ? (7 * Math.PI/4) : angle); 
-
-        this.owner.rotation = angle;
-    
     }
 
     private boundPlayerInViewPort(direction : Vec2){
