@@ -63,7 +63,7 @@ export default class playtest_scene extends GameLevel{
         // }
         this.initializeWeapons();
         super.startScene();
-        this.viewport.setZoomLevel(1);
+        this.viewport.setZoomLevel(4);
         this.createNavmesh();
 
         this.initializeEnemies();
@@ -75,6 +75,8 @@ export default class playtest_scene extends GameLevel{
         (<PlayerController>this.player._ai).weapon = this.createWeapon("yoyo");
 
         (<PlayerController>this.player._ai).enemies = this.enemies;
+
+        this.initializeEnemyWeapons();
         this.h1 = new HighLight();
 
         this.setGoal("Objective: Playtest!");
@@ -112,6 +114,16 @@ export default class playtest_scene extends GameLevel{
         let navmesh = new Navmesh(this.navGraph);
         this.navManager.addNavigableEntity(Custom_Names.NAVMESH,navmesh);
 
+    }
+
+    initializeEnemyWeapons() : void{
+        const enemyData = this.load.getObject("enemyData");
+        for(let i = 0; i<this.enemies.length; i++){
+            let data = enemyData.enemies[i];
+            let weapon = this.createWeapon(data.weapon);
+            weapon.sprite.visible = false;
+            (<EnemyAI>this.enemies[i]._ai).weapon = weapon;
+        }
     }
     
     

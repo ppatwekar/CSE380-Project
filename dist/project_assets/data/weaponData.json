@@ -1,5 +1,5 @@
 {
-    "numWeapons": 1,
+    "numWeapons": 2,
     "weapons": [
         {
             "weaponType": "yoyo",
@@ -12,6 +12,18 @@
             "color": "#FFEEDD",
             "speed" : 3,
             "range" : 80
+        },
+        {
+            "weaponType" : "raccClaw",
+            "name" : "raccClaw",
+            "displayName" : "raccClaw",
+            "damage" : 1,
+            "cooldown" : 2000,
+            "spriteKey" : "raccoon",
+            "useVolume" : 650
+
+
         }
+    
     ]
 }

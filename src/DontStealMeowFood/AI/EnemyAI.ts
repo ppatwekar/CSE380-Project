@@ -16,6 +16,8 @@ import Alert from "./EnemyStates/Alert";
 import Guard from "./EnemyStates/Guard";
 import Patrol from "./EnemyStates/Patrol";
 import Idle from "./ProjectAnimations/ActualStates/Idle";
+import Melee from "./ProjectAnimations/ActualStates/Melee";
+import RaccoonMelee from "./ProjectAnimations/ActualStates/RaccoonMelee";
 import Run from "./ProjectAnimations/ActualStates/Run";
 import { AState, Direction } from "./ProjectAnimations/DirectionStates/DirectionEnums";
 import Down from "./ProjectAnimations/DirectionStates/Down";
@@ -152,6 +154,16 @@ export default class EnemyAI extends StateMachineGoapAI{
         if(this.plan.isEmpty()){
             this.plan = this.planner.plan(Custom_Statuses.REACHED_GOAL, this.possibleActions, this.currentStatus, null);
         }
+        this.anime.update(this.currentAnimatiionMoveDirection, this.currentAnimationActualState);
+        
+    }
+
+    currentAnimationActualState : AState;
+    currentAnimatiionMoveDirection : Vec2 = Vec2.ZERO;
+
+    setAnimation(direction : Vec2, changeState?: AState){
+        this.currentAnimatiionMoveDirection = direction;
+        this.currentAnimationActualState = changeState;
     }
 
     
@@ -159,7 +171,7 @@ export default class EnemyAI extends StateMachineGoapAI{
     addAnimations(owner : AnimatedSprite){
 
         this.anime = new ProjectAnimationManager(owner,
-            [{key : AState.Idle, state : Idle},{key: AState.Run, state : Run}],
+            [{key : AState.Idle, state : Idle},{key: AState.Run, state : Run}, {key : AState.Attack, state : RaccoonMelee}],
             [{key : Direction.D, state : Down},{key : Direction.L, state : Left},{key : Direction.R, state : Right},{key : Direction.U, state : Up}]);
       
 

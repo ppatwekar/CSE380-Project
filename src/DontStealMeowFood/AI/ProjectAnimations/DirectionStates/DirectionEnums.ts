@@ -9,5 +9,6 @@ export enum AState{
     Idle = "Idle",
     Run = "Run",
     Melee = "Melee",
-    Previous = "previous"
+    Previous = "previous",
+    Attack = "Attack"
 }

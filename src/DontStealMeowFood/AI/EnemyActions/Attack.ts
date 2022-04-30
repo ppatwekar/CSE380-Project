@@ -4,6 +4,7 @@ import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Emitter from "../../../Wolfie2D/Events/Emitter";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import EnemyAI from "../EnemyAI";
+import { AState } from "../ProjectAnimations/DirectionStates/DirectionEnums";
 
 export default class AttackAction extends GoapAction {
     protected emitter: Emitter;
@@ -27,13 +28,15 @@ export default class AttackAction extends GoapAction {
                 return null;
             }
 
+            //enemy.setAnimation(enemy.currentAnimatiionMoveDirection,AState.Attack);
+
             //Randomize attack direction, gives the enemy gun users stormtrooper aim
             let dir = enemy.getPlayerPosition().clone().sub(enemy.owner.position).normalize();
             dir.rotateCCW(Math.PI / 4 * Math.random() - Math.PI/8);
-            if(enemy.weapon && enemy.weapon.use(enemy.owner, "enemy", dir)){
+            if(enemy.weapon){
                 // If we fired, face that direction
-                enemy.owner.rotation = Vec2.UP.angleToCCW(dir);
-            }
+                //enemy.owner.rotation = Vec2.UP.angleToCCW(dir);
+                enemy.weapon.use(enemy.owner, "enemy", dir);            }
             
             return this.effects;
         }

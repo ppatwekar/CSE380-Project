@@ -209,7 +209,7 @@
 		},
 		{
 			"name": "AttackR",
-			"repeat": false,
+			"repeat": true,
 			"frames": [
 				{
 					"index": 22,
@@ -223,7 +223,7 @@
 		},
 		{
 			"name": "AttackL",
-			"repeat": false,
+			"repeat": true,
 			"frames": [
 				{
 					"index": 24,
@@ -237,7 +237,7 @@
 		},
 		{
 			"name": "AttackD",
-			"repeat": false,
+			"repeat": true,
 			"frames": [
 				{
 					"index": 26,
@@ -251,7 +251,7 @@
 		},
 		{
 			"name": "AttackU",
-			"repeat": false,
+			"repeat": true,
 			"frames": [
 				{
 					"index": 28,

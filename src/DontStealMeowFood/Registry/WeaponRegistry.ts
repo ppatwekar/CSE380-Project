@@ -1,5 +1,6 @@
 import Registry from "../../Wolfie2D/Registry/Registries/Registry";
 import ResourceManager from "../../Wolfie2D/ResourceManager/ResourceManager";
+import RaccoonClaw from "../GameSystems/Items/WeaponTypes/RaccoonClaw";
 // import Slice from "../GameSystems/items/WeaponTypes/Slice";
 import WeaponType from "../GameSystems/items/WeaponTypes/WeaponType";
 import Yoyo2 from "../GameSystems/Items/WeaponTypes/Yoyo2";
@@ -20,6 +21,7 @@ export default class WeaponTemplateRegistry extends Registry<WeaponConstructor> 
         // Register default types
         // this.registerItem("slice", Slice);
         this.registerItem("yoyo",Yoyo2);
+        this.registerItem("raccClaw",RaccoonClaw);
     }
 
     // We don't need this for this assignment

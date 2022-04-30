@@ -5,48 +5,55 @@
             "position" : [679,1439],
             "mode" : "patrol",
             "route" : [6,7,8,9,4],
-            "type" : "raccoon"
+            "type" : "raccoon",
+            "weapon" : "raccClaw"
         },
         {
             "position" : [491,1586],
             "mode" : "patrol",
             "route" : [9,4,5,6,7,8],
-            "type" : "raccoon"
+            "type" : "raccoon",
+            "weapon" : "raccClaw"
 
         },
         {
             "position" : [1553,595],
             "mode" : "patrol",
             "route" : [11,12,13,10],
-            "type" : "raccoon"
+            "type" : "raccoon",
+            "weapon" : "raccClaw"
 
         },
         {
             "position" : [1836,1002],
             "mode" : "patrol",
             "route" : [13,10,11,12],
-            "type" : "raccoon"
+            "type" : "raccoon",
+            "weapon" : "raccClaw"
 
         },
         {
             "position" : [266,100],
             "mode" : "patrol",
             "route" : [17,18,19],
-            "type" : "raccoon"
+            "type" : "raccoon",
+            "weapon" : "raccClaw"
 
         },
         {
             "position" : [1819,107],
             "mode" : "patrol",
             "route" : [14,15,16],
-            "type" : "raccoon"
+            "type" : "raccoon",
+            "weapon" : "raccClaw"
 
         },
         {
             "position" : [1695,1909],
             "mode" : "patrol",
             "route" : [20,21,22],
-            "type" : "raccoon"
+            "type" : "raccoon",
+            "weapon" : "raccClaw"
 
         }
 
