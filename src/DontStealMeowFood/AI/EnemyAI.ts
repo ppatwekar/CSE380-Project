@@ -25,6 +25,7 @@ import Left from "./ProjectAnimations/DirectionStates/Left";
 import Right from "./ProjectAnimations/DirectionStates/Right";
 import Up from "./ProjectAnimations/DirectionStates/Up";
 import ProjectAnimationManager from "./ProjectAnimations/ProjectAnimationManager";
+import EnemyVision from "../GameSystems/EnemyVision";
 
 export default class EnemyAI extends StateMachineGoapAI{
     owner : AnimatedSprite;
@@ -144,8 +145,8 @@ export default class EnemyAI extends StateMachineGoapAI{
 
     getPlayerPosition() : Vec2{
         //return this.isPlayerVisible(this.player.position);
-        
-        return Visiblity.positionsVisible(this.player.position.clone(),this.owner.position.clone(), this.vision, this.bushes);
+        return EnemyVision.positionsVisible(this.player.position.clone(),this.owner.position.clone(), this.vision, this.anime.direction, this.bushes);
+        //return Visiblity.positionsVisible(this.player.position.clone(),this.owner.position.clone(), this.vision, this.bushes);
     }
 
 

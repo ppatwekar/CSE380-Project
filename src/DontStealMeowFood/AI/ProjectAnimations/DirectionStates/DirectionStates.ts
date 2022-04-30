@@ -10,6 +10,7 @@ export default abstract class DirectionStates extends State{
         super(parent);
         this.description = description;
     }
+    
     getDescription(){
         return this.description;
     }
