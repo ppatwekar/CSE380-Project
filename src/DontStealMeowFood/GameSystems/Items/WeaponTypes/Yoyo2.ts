@@ -66,7 +66,7 @@ export default class Yoyo2 extends WeaponType{
         if(!this.hasReachedGoTo && this.hasReachedPlayer){
             this.owner.position = this.belongsTo.position.clone();
 
-            if(Visiblity.positionsVisible(this.owner.position.clone(),direction,this.range,this.collidableMap)){
+            if(Visiblity.positionsVisible(this.owner.position.clone(),direction,-1,this.collidableMap)){
                 this.owner.position = this.belongsTo.position.clone();
                 this.owner.visible = true;
                 this.goTo = direction.clone();

@@ -40,9 +40,10 @@ export default class Visiblity{
                 }
             }
         }
-        
+        if (vision == -1) return pos1;
+
         let d = pos1.distanceSqTo(pos2);
-        if(d<vision){
+        if(d <= Math.pow(vision, 2)){
             return pos1;
         }else{
             return null;
