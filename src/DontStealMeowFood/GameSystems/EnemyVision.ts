@@ -16,38 +16,10 @@ export default class EnemyVision{
     static positionsVisible(pos1 : Vec2, pos2 : Vec2, vision: number, direction: AnimationDirection, collidableMap : OrthogonalTilemap) : Vec2 {
         let difference = pos1.clone().sub(pos2);
         //pos1 = playerPos; pos2 = myPos
-        let side = direction.getDescription();
         let d = pos1.distanceTo(pos2);
-
-        switch(side){
-            case Direction.D:
-                {
-                    if(pos2.y>pos1.y){
-                        return null;
-                    }
-                    break;
-                }
-            case Direction.U:
-                {
-                    if(pos2.y<pos1.y){
-                        return null;
-                    }
-                    break;
-                }
-            case Direction.R:
-                {
-                    if(pos2.x>pos1.x){
-                        return null;
-                    }
-                    break;
-                }
-            case Direction.L:
-                {
-                    if(pos2.x<pos1.x){
-                        return null;
-                    }
-                    break;
-                }
+        
+        if(this.isPlayerBehind(pos1, pos2, direction)){
+            return null;
         }
 
         this.startTileIndex.x = Math.min(pos1.x, pos2.x);
@@ -84,5 +56,41 @@ export default class EnemyVision{
         }else{
             return null;
         }
+    }
+
+    static isPlayerBehind(pos1 : Vec2, pos2 : Vec2,direction: AnimationDirection){
+        let side = direction.getDescription();
+
+        switch(side){
+            case Direction.D:
+                {
+                    if(pos2.y>pos1.y){
+                        return true;
+                    }
+                    break;
+                }
+            case Direction.U:
+                {
+                    if(pos2.y<pos1.y){
+                        return true;
+                    }
+                    break;
+                }
+            case Direction.R:
+                {
+                    if(pos2.x>pos1.x){
+                        return true;
+                    }
+                    break;
+                }
+            case Direction.L:
+                {
+                    if(pos2.x<pos1.x){
+                        return true;
+                    }
+                    break;
+                }
+        }
+        return false;//player is not behind
     }
 }
