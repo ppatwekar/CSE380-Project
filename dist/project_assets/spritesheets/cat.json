@@ -16,11 +16,11 @@
 			"frames": [
 				{
 					"index": 0,
-					"duration": 5
+					"duration": 10
 				},
 				{
 					"index": 1,
-					"duration": 5
+					"duration": 10
 				}
 			]
 		},
@@ -30,11 +30,11 @@
 			"frames": [
 				{
 					"index": 5,
-					"duration": 5
+					"duration": 10
 				},
 				{
 					"index": 6,
-					"duration": 5
+					"duration": 10
 				}
 			]
 		},
