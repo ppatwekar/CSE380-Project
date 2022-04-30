@@ -9,7 +9,7 @@ export default class Visiblity{
     private static tilePos: Vec2 = Vec2.ZERO;
     private static colliderTileAABB : AABB = new AABB();
 
-    static positionsVisible(pos1 : Vec2, pos2 : Vec2, collidableMap : OrthogonalTilemap) : Vec2 {
+    static positionsVisible(pos1 : Vec2, pos2 : Vec2, vision: number, collidableMap : OrthogonalTilemap) : Vec2 {
         let difference = pos1.clone().sub(pos2);
         //pos1 = playerPos; pos2 = myPos
 
@@ -41,6 +41,11 @@ export default class Visiblity{
             }
         }
         
-        return  pos1;
+        let d = pos1.distanceSqTo(pos2);
+        if(d<vision){
+            return pos1;
+        }else{
+            return null;
+        }
     }
 }

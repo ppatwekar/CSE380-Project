@@ -145,7 +145,7 @@ export default class EnemyAI extends StateMachineGoapAI{
     getPlayerPosition() : Vec2{
         //return this.isPlayerVisible(this.player.position);
         
-        return Visiblity.positionsVisible(this.player.position.clone(),this.owner.position.clone(),this.bushes);
+        return Visiblity.positionsVisible(this.player.position.clone(),this.owner.position.clone(),this.vision,this.bushes);
     }
 
 

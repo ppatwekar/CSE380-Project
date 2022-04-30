@@ -60,13 +60,13 @@ export default class Yoyo2 extends WeaponType{
     doAnimation(attacker : GameNode, direction : Vec2): void {
         //do the whole go back and stuff basically "update" here
         //acts like moveTo
-        
+
         
 
         if(!this.hasReachedGoTo && this.hasReachedPlayer){
             this.owner.position = this.belongsTo.position.clone();
 
-            if(Visiblity.positionsVisible(this.owner.position.clone(),direction,this.collidableMap)){
+            if(Visiblity.positionsVisible(this.owner.position.clone(),direction,this.range,this.collidableMap)){
                 this.owner.position = this.belongsTo.position.clone();
                 this.owner.visible = true;
                 this.goTo = direction.clone();

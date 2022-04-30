@@ -150,6 +150,10 @@ export default class playtest_scene extends GameLevel{
                 data.guardPosition = new Vec2(data.guardPosition[0]/2, data.guardPosition[1]/2);
             }
 
+            
+            let enemyVision = 96;
+            
+
             let statusArray: Array<string> = [];            
             let actionsDef = [new AttackAction(3, [Custom_Statuses.IN_RANGE], [Custom_Statuses.REACHED_GOAL], {inRange: 16}),
             new Move(4, [], [Custom_Statuses.IN_RANGE], {inRange: 32}),
@@ -165,7 +169,7 @@ export default class playtest_scene extends GameLevel{
                 status: statusArray,
                 actions: actionsDef,
                 inRange: 32,
-                vision: 128,
+                vision: enemyVision,
                 health: 10
             }    
             this.enemies[i].addAI(EnemyAI,enemyOptions);
