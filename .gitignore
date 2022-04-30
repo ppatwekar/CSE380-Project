@@ -12,8 +12,6 @@ dist/*
 dww
 ### IF YOU ARE MAKING A PROJECT, YOU MAY WANT TO UNCOMMENT THIS LINE ###
 !dist/project_assets/
-
-!bundle.js
 !index.html
 *.log
 *.cache
