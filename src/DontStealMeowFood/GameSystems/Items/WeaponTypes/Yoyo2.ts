@@ -125,7 +125,6 @@ export default class Yoyo2 extends WeaponType{
             this.owner.visible = true;
             this.owner.addPhysics(new Circle(Vec2.ZERO,3));
             this.owner.setGroup("yoyo");
-            this.owner.setTrigger("enemy", Custom_Events.YOYO_HIT_ENEMY, null);
             this.owner.position = this.belongsTo.position.clone();
             this.collidableMap = <OrthogonalTilemap>scene.getLayer("Bushes").getItems()[0];
             this.sceneGraph = scene.getSceneGraph();

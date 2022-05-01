@@ -9,7 +9,7 @@ import Navmesh from "../../Wolfie2D/Pathfinding/Navmesh";
 import BattlerAI from "../AI/BattlerAI";
 import EnemyAI from "../AI/EnemyAI";
 import PlayerController from "../AI/PlayerController";
-import { Custom_Names, Custom_Statuses } from "../GameConstants";
+import { Custom_Events, Custom_Names, Custom_Statuses } from "../GameConstants";
 import Item from "../GameSystems/items/Item";
 import HighLight from "../GameSystems/HighLight";
 import GameLevel from "./GameLevel";
@@ -174,6 +174,7 @@ export default class playtest_scene extends GameLevel{
             }    
             this.enemies[i].addAI(EnemyAI,enemyOptions);
             this.enemies[i].setGroup("enemy");
+            this.enemies[i].setTrigger("yoyo",Custom_Events.YOYO_HIT_ENEMY,null);
         }
 
         //(<YoyoController>this.yoyo._ai).enemies = this.enemies;
