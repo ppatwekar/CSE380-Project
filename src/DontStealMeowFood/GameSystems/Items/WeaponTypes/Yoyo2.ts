@@ -176,6 +176,8 @@ export default class Yoyo2 extends WeaponType{
                     this.velocity = this.directionVec.scaled(this.speed);
                 }
                 else{
+                    this.velocity = this.directionVec.scaled(this.speed);
+
                     this.owner.move(this.velocity); //.scale is being called again and again so speed keeps increasing.
                 }
             }
