@@ -6,6 +6,9 @@ import { Custom_Names, Custom_Statuses } from "../../GameConstants";
 import EnemyAI from "../EnemyAI";
 import EnemyState from "./EnemyState";
 import {EnemyStates} from "../EnemyAI";
+import GoapAction from "../../../Wolfie2D/DataTypes/Interfaces/GoapAction";
+import AttackAction from "../EnemyActions/Attack";
+import RaccoonStoner from "../../GameSystems/Items/WeaponTypes/RaccoonStoner";
 
 export default class Active extends EnemyState{
 
@@ -25,6 +28,8 @@ export default class Active extends EnemyState{
         this.retObj = {};
         this.retObj = {target : this.parent.lastPlayerPos};
         this.parent.path = this.owner.getScene().getNavigationManager().getPath(Custom_Names.NAVMESH, this.owner.position, this.parent.lastPlayerPos, true);
+
+        
     }
 
     handleInput(event: GameEvent): void { }
@@ -35,7 +40,6 @@ export default class Active extends EnemyState{
 
        this.parent.retreatPath = this.owner.getScene().getNavigationManager().getPath(Custom_Names.NAVMESH, this.owner.position,endpt,true);
     }
-
     update(deltaT: number): void {
         if(this.pollTimer.isStopped()){
             this.pollTimer.start();
@@ -57,6 +61,7 @@ export default class Active extends EnemyState{
             else{
                 this.finished(EnemyStates.DEFAULT);
             }
+            
         }
 
         if(this.parent.playerPos != null){
@@ -70,7 +75,7 @@ export default class Active extends EnemyState{
         }
 
         let nextAction = this.parent.plan.peek();
-
+ 
         let result = nextAction.performAction(this.parent.currentStatus,this.parent,deltaT);
 
         if(result !== null){
@@ -99,6 +104,8 @@ export default class Active extends EnemyState{
                 this.parent.plan.pop();
             }
         }
+
+        
 
 
     }

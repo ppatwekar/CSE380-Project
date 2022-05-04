@@ -192,17 +192,19 @@ export default class MainMenu extends Scene {
                 let sceneOptions = {
                     physics : {
                         /**
-                         *      pl  ene  yoyo
-                         * pl   0    1    1
-                         * ene  1    0    1
-                         * yoyo 1    1    0
+                         *        pl  ene  yoyo  stone
+                         * pl     0    1    0     1
+                         * ene    1    0    0     1
+                         * yoyo   0    0    0     0
+                         * stone  1    1    0     0
                          */
-                        groupNames : ["player","enemy","yoyo"],
+                        groupNames : ["player","enemy","yoyo","stone"],
                         collisions : 
                         [
-                            [0,1,0],
-                            [1,0,0],
-                            [0,0,0]
+                            [0,1,0,1],
+                            [1,0,0,1],
+                            [0,0,0,0],
+                            [1,1,0,0]
                         ]
                     }
                 };
@@ -219,9 +221,10 @@ export default class MainMenu extends Scene {
                         groupNames : ["player","enemy","yoyo"],
                         collisions : 
                         [
-                            [0,1,0],
-                            [1,0,0],
-                            [0,0,0]
+                            [0,1,0,1],
+                            [1,0,0,1],
+                            [0,0,0,0],
+                            [1,1,0,0]
                         ]
                     }
                 };

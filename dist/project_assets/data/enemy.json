@@ -13,7 +13,7 @@
             "mode" : "patrol",
             "route" : [9,4,5,6,7,8],
             "type" : "raccoon",
-            "weapon" : "raccClaw"
+            "weapon" : "raccStone"
 
         },
         {
@@ -29,7 +29,7 @@
             "mode" : "patrol",
             "route" : [13,10,11,12],
             "type" : "raccoon",
-            "weapon" : "raccClaw"
+            "weapon" : "raccStone"
 
         },
         {
@@ -45,7 +45,7 @@
             "mode" : "patrol",
             "route" : [14,15,16],
             "type" : "raccoon",
-            "weapon" : "raccClaw"
+            "weapon" : "raccStone"
 
         },
         {

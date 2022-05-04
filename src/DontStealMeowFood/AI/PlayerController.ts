@@ -13,18 +13,6 @@ import BattlerAI from "./BattlerAI";
 import PlayerAnimationManager  from "./ProjectAnimations/ProjectAnimationManager";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import StateMachineAI from "../../Wolfie2D/AI/StateMachineAI";
-//import IdleD from "./PlayerCat/AnimationStates/IdleD";
-//import IdleL from "./PlayerCat/AnimationStates/IdleL";
-//import IdleR from "./PlayerCat/AnimationStates/IdleR";
-//import State from "../../Wolfie2D/DataTypes/State/State";
-//import IdleU from "./PlayerCat/AnimationStates/IdleU";
-//import RunR from "./PlayerCat/AnimationStates/RunR";
-//import RunL from "./PlayerCat/AnimationStates/RunL";
-//import RunD from "./PlayerCat/AnimationStates/RunD";
-//import RunU from "./PlayerCat/AnimationStates/RunU";
-//import AnimationState from "./PlayerCat/AnimationState";
-//import StateMachine from "../../Wolfie2D/DataTypes/State/StateMachine";
-//import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import ProjectAnimationManager from "./ProjectAnimations/ProjectAnimationManager";
 import { AState, Direction } from "./ProjectAnimations/DirectionStates/DirectionEnums";
 import Idle from "./ProjectAnimations/ActualStates/Idle";
@@ -127,6 +115,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.receiver.subscribe(Custom_Events.YOYO_RETURNED);
         this.receiver.subscribe(Custom_Events.IN_CINEMATIC);
         this.receiver.subscribe(Custom_Events.PAUSE_EVENT);
+        this.owner.setTrigger("stone",Custom_Events.STONE_HIT_PLAYER,null);
     }
 
     activate(options: Record<string, any>): void { }

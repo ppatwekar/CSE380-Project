@@ -21,6 +21,7 @@ export default class Alert extends EnemyState{
     onEnter(options: Record<string, any>): void {
         this.alertTimer.start();
         this.path = this.owner.getScene().getNavigationManager().getPath(Custom_Names.NAVMESH,this.owner.position,options.target,true);
+        this.parent.setAnimation(this.path.getMoveDirection(this.parent.owner),null);
 
     }
     handleInput(event: GameEvent): void {

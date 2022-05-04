@@ -16,11 +16,15 @@ export default class AttackAction extends GoapAction {
         this.effects = effects;
     }
 
+    /**
+     * Once the enemy goes out of Attacking, if the weapon is a stone, send out an event saying enemy out of attacking and in handle events, disable all active stones.
+     */
+
     performAction(statuses: Array<string>, actor: StateMachineGoapAI, deltaT: number, target?: StateMachineGoapAI): Array<string> {
         //Check if preconditions are met for this action to be performed
-        console.log("perform attack")
+        //console.log("perform attack")
         if (this.checkPreconditions(statuses)){
-            console.log("precondition", this.preconditions);
+            //console.log("precondition", this.preconditions);
             let enemy = <EnemyAI>actor;
 
             //If the player is out of sight, don't bother attacking

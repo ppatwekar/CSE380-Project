@@ -3,6 +3,7 @@ import GoapAction from "../../../Wolfie2D/DataTypes/Interfaces/GoapAction";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Emitter from "../../../Wolfie2D/Events/Emitter";
 import NavigationPath from "../../../Wolfie2D/Pathfinding/NavigationPath";
+import RaccoonStoner from "../../GameSystems/Items/WeaponTypes/RaccoonStoner";
 import EnemyAI from "../EnemyAI";
 
 export default class Move extends GoapAction {
@@ -21,10 +22,11 @@ export default class Move extends GoapAction {
     }
 
     performAction(statuses: Array<string>, actor: StateMachineGoapAI, deltaT: number, target?: StateMachineGoapAI): Array<string> {
-        console.log("enemy moving");
+        //console.log("enemy moving");
         if (this.checkPreconditions(statuses)){
             //Check distance from player
             let enemy = <EnemyAI>actor;
+            this.inRange = enemy.weapon.type instanceof RaccoonStoner ? 100 : 32; //best way I found to assign range to different weapons without changing too much code
             let playerPos = enemy.lastPlayerPos;
             let distance = enemy.owner.position.distanceTo(playerPos);
 
@@ -36,7 +38,7 @@ export default class Move extends GoapAction {
             //Otherwise move on path
             this.path = enemy.path;
             //enemy.owner.rotation = Vec2.UP.angleToCCW(this.path.getMoveDirection(enemy.owner));
-            enemy.setAnimation(this.path.getMoveDirection(enemy.owner));
+            enemy.setAnimation(this.path.getMoveDirection(enemy.owner),null);
             enemy.owner.moveOnPath(enemy.speed * deltaT, this.path);
             return null;
         }

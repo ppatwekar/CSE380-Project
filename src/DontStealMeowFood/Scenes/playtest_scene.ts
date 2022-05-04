@@ -20,6 +20,7 @@ import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import AttackAction from "../AI/EnemyActions/Attack";
 import Move from "../AI/EnemyActions/Move";
 import Retreat from "../AI/EnemyActions/Retreat";
+import StoneController from "../GameSystems/Items/WeaponTypes/StoneController";
 
 export default class playtest_scene extends GameLevel{
     private bushes : OrthogonalTilemap;
@@ -30,6 +31,7 @@ export default class playtest_scene extends GameLevel{
     // A list of items
     private items: Array<Item>;
     protected h1 : HighLight;
+    stoneController : StoneController;
     
     loadScene(): void {
         this.load.tilemap("playTestLevel","project_assets/tilemaps/sampleMap.json");
@@ -41,6 +43,7 @@ export default class playtest_scene extends GameLevel{
         this.load.image("yoyo","project_assets/item/yoyo.png");
         this.load.object("weaponData","project_assets/data/weaponData.json");
         this.load.audio("level1_music", "project_assets/music/theme_music.mp3");
+        this.load.image("stone","project_assets/item/Stone.png");
     }
 
 
@@ -81,12 +84,24 @@ export default class playtest_scene extends GameLevel{
 
         this.setGoal("Objective: Playtest!");
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1_music", loop: true, holdReference: true});
+
+        let weaponData = this.load.getObject("weaponData");
+
+        this.stoneController = new StoneController(this,weaponData.weapons[2].speed); 
     }
+
+
+
     
 
     updateScene(deltaT: number): void {
         super.updateScene(deltaT);
         this.h1.checkClosestEnemies(this.enemies, this.player);
+        this.stoneController.update();
+    }
+
+    getStonePool() : StoneController{
+        return this.stoneController;
     }
 
     createNavmesh() : void {
@@ -156,7 +171,7 @@ export default class playtest_scene extends GameLevel{
 
             let statusArray: Array<string> = [];            
             let actionsDef = [new AttackAction(3, [Custom_Statuses.IN_RANGE], [Custom_Statuses.REACHED_GOAL], {inRange: 16}),
-            new Move(4, [], [Custom_Statuses.IN_RANGE], {inRange: 32}),
+            new Move(4, [], [Custom_Statuses.IN_RANGE], {inRange: 100}), //100
             new Retreat(1, [Custom_Statuses.LOW_HEALTH, Custom_Statuses.CAN_RETREAT], [Custom_Statuses.REACHED_GOAL], {retreatDistance: 200})
             ];
 
@@ -168,7 +183,7 @@ export default class playtest_scene extends GameLevel{
                 goal: Custom_Statuses.REACHED_GOAL,
                 status: statusArray,
                 actions: actionsDef,
-                inRange: 32,
+                inRange: 128, //128
                 vision: enemyVision,
                 health: 10
             }    

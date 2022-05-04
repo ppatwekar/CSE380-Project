@@ -1,5 +1,5 @@
 {
-    "numWeapons": 2,
+    "numWeapons": 3,
     "weapons": [
         {
             "weaponType": "yoyo",
@@ -21,6 +21,19 @@
             "cooldown" : 2000,
             "spriteKey" : "raccoon",
             "useVolume" : 650
+
+
+        },
+        {
+            "weaponType" : "raccStone",
+            "name" : "raccStone",
+            "displayName" : "raccStone",
+            "damage" : 4,
+            "cooldown" : 1000,
+            "spriteKey" : "stone",
+            "useVolume" : 650,
+            "speed" : 4,
+            "numStones" : 5
 
 
         }

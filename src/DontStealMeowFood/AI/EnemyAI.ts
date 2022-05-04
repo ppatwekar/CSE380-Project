@@ -26,6 +26,7 @@ import Right from "./ProjectAnimations/DirectionStates/Right";
 import Up from "./ProjectAnimations/DirectionStates/Up";
 import ProjectAnimationManager from "./ProjectAnimations/ProjectAnimationManager";
 import EnemyVision from "../GameSystems/EnemyVision";
+import PlayerController from "./PlayerController";
 
 export default class EnemyAI extends StateMachineGoapAI{
     owner : AnimatedSprite;
@@ -100,10 +101,10 @@ export default class EnemyAI extends StateMachineGoapAI{
 
         this.addAnimations(this.owner);
 
-        this.receiver.subscribe(Custom_Events.HIT_ENEMY);
         //handle Enemy damage updates in it's states.
 
         this.getPlayerPosition();
+
 
 
     }
@@ -149,13 +150,15 @@ export default class EnemyAI extends StateMachineGoapAI{
 
 
     update(deltaT: number): void {
+        
         super.update(deltaT);
         if(this.plan.isEmpty()){
             this.plan = this.planner.plan(Custom_Statuses.REACHED_GOAL, this.possibleActions, this.currentStatus, null);
         }
-        this.anime.update(this.currentAnimatiionMoveDirection, this.currentAnimationActualState);
-        
+        this.anime.update(this.currentAnimatiionMoveDirection, this.currentAnimationActualState);        
     }
+
+    
 
     currentAnimationActualState : AState;
     currentAnimatiionMoveDirection : Vec2 = Vec2.ZERO;
