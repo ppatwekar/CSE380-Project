@@ -19,6 +19,12 @@ import WeaponType from "../GameSystems/items/WeaponTypes/WeaponType";
 import RegistryManager from "../../Wolfie2D/Registry/RegistryManager";
 import BattleManager from "../GameSystems/BattleManager";
 import Input from "../../Wolfie2D/Input/Input";
+import PositionGraph from "../../Wolfie2D/DataTypes/Graphs/PositionGraph";
+import Navmesh from "../../Wolfie2D/Pathfinding/Navmesh";
+import StoneController from "../GameSystems/Items/WeaponTypes/StoneController";
+import AttackAction from "../AI/EnemyActions/Attack";
+import Move from "../AI/EnemyActions/Move";
+import Retreat from "../AI/EnemyActions/Retreat";
 
 export default class GameLevel extends Scene {
     protected playerSpawn: Vec2; 
@@ -29,6 +35,11 @@ export default class GameLevel extends Scene {
     protected goalDisplay: Label;
     protected battleManager : BattleManager;
     protected inCinematic: boolean = false;
+    protected navGraph : PositionGraph;
+    protected stoneController : StoneController;
+    protected enemies : Array<AnimatedSprite>;
+     
+
 
     protected nextLevel: new (...args: any) => GameLevel;
     
@@ -221,6 +232,106 @@ export default class GameLevel extends Scene {
             RegistryManager.getRegistry("weaponTypes").registerItem(weapon.name, weaponType)
 
     }
+
+    
+
+    
+}
+
+
+createNavmesh(key : string) : void {
+    let graphLayer = this.addLayer("graph");
+    graphLayer.setHidden(true);
+
+    let navmeshData = this.load.getObject(key);
+
+    this.navGraph = new PositionGraph();
+
+    for(let node of navmeshData["nodes"]){
+        let position : Vec2 = new Vec2(node[0]/2,node[1]/2);
+
+        this.navGraph.addPositionedNode(position);
+
+        this.add.graphic(GraphicType.POINT, "graph", {position: position});
+    }
+
+    for(let edge of navmeshData["edges"]){
+        this.navGraph.addEdge(edge[0],edge[1]);
+
+        this.add.graphic(GraphicType.LINE,"graph",{start : this.navGraph.getNodePosition(edge[0]), end : this.navGraph.getNodePosition(edge[1])});
+    }
+
+    let navmesh = new Navmesh(this.navGraph);
+    this.navManager.addNavigableEntity(Custom_Names.NAVMESH,navmesh);
+
+}
+
+
+initializeEnemyWeapons(enemies :AnimatedSprite[]) : void{
+    const enemyData = this.load.getObject("enemyData");
+    for(let i = 0; i<enemies.length; i++){
+        let data = enemyData.enemies[i];
+        let weapon = this.createWeapon(data.weapon);
+        weapon.sprite.visible = false;
+        (<EnemyAI>enemies[i]._ai).weapon = weapon;
+    }
+}
+
+getStonePool() : StoneController{
+    return this.stoneController;
+}
+
+initializeEnemies(data : Record<string,any>) : void {
+    const enemyData = data;
+    //console.log(enemyData);
+
+    this.enemies = new Array(enemyData.numEnemies);
+
+    for(let i = 0; i<enemyData.numEnemies; i++){
+        let data = enemyData.enemies[i];
+        //console.log(data);
+
+        this.enemies[i] = this.add.animatedSprite(data.type,"primary");
+        this.enemies[i].position.set(data.position[0]/2, data.position[1]/2);
+        this.enemies[i].animation.play("IdleR");
+
+        this.enemies[i].addPhysics(new AABB(Vec2.ZERO, new Vec2(8,8)));
+        if(data.route){
+            data.route = data.route.map((index : number) => this.navGraph.getNodePosition(index));
+        }
+        else{
+            data.guardPosition = new Vec2(data.guardPosition[0]/2, data.guardPosition[1]/2);
+        }
+
+        
+        let enemyVision = 96;
+        
+
+        let statusArray: Array<string> = [];            
+        let actionsDef = [new AttackAction(3, [Custom_Statuses.IN_RANGE], [Custom_Statuses.REACHED_GOAL], {inRange: 16}),
+        new Move(4, [], [Custom_Statuses.IN_RANGE], {inRange: 100}), //100
+        new Retreat(1, [Custom_Statuses.LOW_HEALTH, Custom_Statuses.CAN_RETREAT], [Custom_Statuses.REACHED_GOAL], {retreatDistance: 200})
+        ];
+
+        let enemyOptions = {
+            defaultMode: data.mode,
+            patrolRoute: data.route, // This only matters if they're a patroller
+            guardPosition: data.guardPosition,  // This only matters if the're a guard
+            player : this.player,
+            goal: Custom_Statuses.REACHED_GOAL,
+            status: statusArray,
+            actions: actionsDef,
+            inRange: 128, //128
+            vision: enemyVision,
+            health: 10
+        }    
+        this.enemies[i].addAI(EnemyAI,enemyOptions);
+        this.enemies[i].setGroup("enemy");
+        this.enemies[i].setTrigger("yoyo",Custom_Events.YOYO_HIT_ENEMY,null);
+    }
+
+    //(<YoyoController>this.yoyo._ai).enemies = this.enemies;
+
 }
 
     

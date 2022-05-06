@@ -26,8 +26,7 @@ export default class Level1_Scene extends GameLevel {
     private bushes : OrthogonalTilemap;
     private graph : PositionGraph;
     private logo : Sprite
-    private navGraph : PositionGraph;
-    private enemies : Array<AnimatedSprite>;
+    //private enemies : Array<AnimatedSprite>;
     // A list of items
     private items: Array<Item>;
     protected h1 : HighLight;
@@ -65,9 +64,9 @@ export default class Level1_Scene extends GameLevel {
         this.initializeWeapons();
         super.startScene();
         this.viewport.setZoomLevel(3);
-        this.createNavmesh();
+        this.createNavmesh("navmesh");
 
-        this.initializeEnemies();
+        this.initializeEnemies(this.load.getObject("enemyData"));
 
         this.battleManager = new BattleManager();
         this.battleManager.setPlayers([<BattlerAI>this.player._ai]);
@@ -88,77 +87,8 @@ export default class Level1_Scene extends GameLevel {
         // console.log(this.player.position.x +  ", y: " + this.player.position.y);
     }
 
-    createNavmesh() : void {
-        let graphLayer = this.addLayer("graph");
-        graphLayer.setHidden(true);
+    
 
-        let navmeshData = this.load.getObject("navmesh");
-
-        this.navGraph = new PositionGraph();
-
-        for(let node of navmeshData["nodes"]){
-            let position : Vec2 = new Vec2(node[0]/2,node[1]/2);
-
-            this.navGraph.addPositionedNode(position);
-
-            this.add.graphic(GraphicType.POINT, "graph", {position: position});
-        }
-
-        for(let edge of navmeshData["edges"]){
-            this.navGraph.addEdge(edge[0],edge[1]);
-
-            this.add.graphic(GraphicType.LINE,"graph",{start : this.navGraph.getNodePosition(edge[0]), end : this.navGraph.getNodePosition(edge[1])});
-        }
-
-        let navmesh = new Navmesh(this.navGraph);
-        this.navManager.addNavigableEntity(Custom_Names.NAVMESH,navmesh);
-
-    }
-
-    initializeEnemies() : void {
-        const enemyData = this.load.getObject("enemyData");
-        //console.log(enemyData);
-
-        this.enemies = new Array(enemyData.numEnemies);
-
-        for(let i = 0; i<enemyData.numEnemies; i++){
-            let data = enemyData.enemies[i];
-            //console.log(data);
-
-            this.enemies[i] = this.add.animatedSprite(data.type,"primary");
-            this.enemies[i].position.set(data.position[0]/2, data.position[1]/2);
-            this.enemies[i].animation.play("IdleR");
-
-            this.enemies[i].addPhysics(new AABB(Vec2.ZERO, new Vec2(8,8)));
-            if(data.route){
-                data.route = data.route.map((index : number) => this.navGraph.getNodePosition(index));
-            }
-            else{
-                data.guardPosition = new Vec2(data.guardPosition[0]/2, data.guardPosition[1]/2);
-            }
-
-            let statusArray: Array<string> = [];            
-            let actionsDef = [new AttackAction(3, [Custom_Statuses.IN_RANGE], [Custom_Statuses.REACHED_GOAL], {inRange: 16}),
-            new Move(4, [], [Custom_Statuses.IN_RANGE], {inRange: 32}),
-            new Retreat(1, [Custom_Statuses.LOW_HEALTH, Custom_Statuses.CAN_RETREAT], [Custom_Statuses.REACHED_GOAL], {retreatDistance: 200})
-            ];
-
-            let enemyOptions = {
-                defaultMode: data.mode,
-                patrolRoute: data.route, // This only matters if they're a patroller
-                guardPosition: data.guardPosition,  // This only matters if the're a guard
-                player : this.player,
-                goal: Custom_Statuses.REACHED_GOAL,
-                status: statusArray,
-                actions: actionsDef,
-                health: 10
-            }    
-            this.enemies[i].addAI(EnemyAI,enemyOptions);
-            this.enemies[i].setGroup("enemy");
-        }
-
-        //(<YoyoController>this.yoyo._ai).enemies = this.enemies;
-
-    }
+    
 
 }

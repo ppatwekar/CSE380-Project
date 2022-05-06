@@ -26,7 +26,9 @@ export default class Move extends GoapAction {
         if (this.checkPreconditions(statuses)){
             //Check distance from player
             let enemy = <EnemyAI>actor;
-            this.inRange = enemy.weapon.type instanceof RaccoonStoner ? 100 : 32; //best way I found to assign range to different weapons without changing too much code
+            if(enemy.weapon){
+                this.inRange = enemy.weapon.type instanceof RaccoonStoner ? 100 : 32; //best way I found to assign range to different weapons without changing too much code
+            }
             let playerPos = enemy.lastPlayerPos;
             let distance = enemy.owner.position.distanceTo(playerPos);
 

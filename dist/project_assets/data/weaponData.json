@@ -36,6 +36,17 @@
             "numStones" : 5
 
 
+        },
+        {
+            "weaponType" : "raccHitHard",
+            "name" : "raccHitHard",
+            "displayName" : "raccHitHard",
+            "damage" : 15,
+            "cooldown" : 900,
+            "spriteKey" : "raccoon",
+            "useVolume" : 650,
+            "speed" : 4,
+            "numStones" : 5
         }
     
     ]
