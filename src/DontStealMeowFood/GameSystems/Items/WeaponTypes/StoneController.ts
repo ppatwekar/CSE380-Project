@@ -1,6 +1,7 @@
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import Receiver from "../../../../Wolfie2D/Events/Receiver";
 import CanvasNode from "../../../../Wolfie2D/Nodes/CanvasNode";
+import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../../../Wolfie2D/Nodes/Sprites/Sprite";
 import Scene from "../../../../Wolfie2D/Scene/Scene";
 import { Custom_Events } from "../../../GameConstants";
@@ -71,6 +72,12 @@ export default class StoneController{
 
             let nodeIndex = this.isAStone(node);
             let otherIndex = this.isAStone(other);
+
+            if(node instanceof AnimatedSprite || other instanceof AnimatedSprite){
+                //console.log("Checked from StoneController.")
+            }
+
+            
 
             let stoneIndex = nodeIndex > -1 ? nodeIndex : otherIndex;
             this.deactivateStone(stoneIndex);

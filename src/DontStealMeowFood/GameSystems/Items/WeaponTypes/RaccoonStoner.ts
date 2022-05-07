@@ -23,20 +23,25 @@ export default class RaccoonStoner extends WeaponType{
     private speed : number;
     emitter : Emitter;
     stonePool : StoneController;
-    
+    private internalCooldown : Timer;
+    coolDownTime : number;
 
     initialize(options: Record<string, any>): void {
         this.damage = options.damage;
         this.spriteKey = options.spriteKey;
         this.displayName = options.displayName;
-        this.cooldown = options.cooldown; //will be set to zero as we want doAnimation be called every frame 
+        this.cooldown = 0; //will be set to zero as we want doAnimation be called every frame 
                                           //so we can update the positions of all other 'visible' rocks 
                                           //and we maintain an internal cooldown timer for shooting rocks.
         this.speed = options.speed;
+        this.coolDownTime = options.cooldown;
 
     }
     doAnimation(attacker : GameNode, direction : Vec2): void {
-        this.stonePool.launchStone(attacker.position.clone(),direction.clone());
+        if(this.internalCooldown.isStopped()){
+            this.internalCooldown.start();
+            this.stonePool.launchStone(attacker.position.clone(),direction.clone());
+        }
     }
 
 
@@ -51,6 +56,7 @@ export default class RaccoonStoner extends WeaponType{
             this.reciever.subscribe([Custom_Events.STONE_HIT_PLAYER]);
             this.emitter = new Emitter();
             this.stonePool = scene.getStonePool();
+            this.internalCooldown = new Timer(this.coolDownTime);
 
 
             this.hasBeenInitialisedBefore = true;
@@ -63,7 +69,7 @@ export default class RaccoonStoner extends WeaponType{
             let event = this.reciever.getNextEvent();
             
             if(event.type === Custom_Events.STONE_HIT_PLAYER){
-                console.log("stone hit player!");
+                //console.log("stone hit player!");
                 this.playerWasHit = true; 
             } 
         }
@@ -81,13 +87,17 @@ export default class RaccoonStoner extends WeaponType{
         let copy = this.playerWasHit;
         this.playerWasHit = false;
 
+        if(copy){
+            console.log("Checked in Raccoon Stoner.")
+        }
+
 
         return copy;
         
     }
     clone(): WeaponType {
         let newType = new RaccoonStoner();
-        newType.initialize({damage : this.damage, spriteKey : this.spriteKey, displayName : this.displayName, cooldown : this.cooldown, speed : this.speed});
+        newType.initialize({damage : this.damage, spriteKey : this.spriteKey, displayName : this.displayName, cooldown : this.coolDownTime, speed : this.speed});
         return newType;
     }
     

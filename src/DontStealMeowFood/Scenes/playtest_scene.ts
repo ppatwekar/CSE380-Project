@@ -90,9 +90,9 @@ export default class playtest_scene extends GameLevel{
 
 
     updateScene(deltaT: number): void {
+        this.stoneController.update();
         super.updateScene(deltaT);
         this.h1.checkClosestEnemies(this.enemies, this.player);
-        this.stoneController.update();
     }
 
     

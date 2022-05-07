@@ -24,7 +24,7 @@ export default class RaccoonClaw extends WeaponType{
         return [];
     }
     hits(node: GameNode, ...args: any): boolean {
-        return false;
+        return true;
     }
     clone(): WeaponType {
         let newType = new RaccoonClaw();
