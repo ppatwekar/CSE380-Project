@@ -25,6 +25,8 @@ import StoneController from "../GameSystems/Items/WeaponTypes/StoneController";
 import AttackAction from "../AI/EnemyActions/Attack";
 import Move from "../AI/EnemyActions/Move";
 import Retreat from "../AI/EnemyActions/Retreat";
+import RaccoonStoner from "../GameSystems/Items/WeaponTypes/RaccoonStoner";
+import GameEvent from "../../Wolfie2D/Events/GameEvent";
 
 export default class GameLevel extends Scene {
     protected playerSpawn: Vec2; 
@@ -55,67 +57,79 @@ export default class GameLevel extends Scene {
     }
 
     updateScene(deltaT: number): void{
-        while(this.receiver.hasNextEvent()){
-            let event = this.receiver.getNextEvent();
-            
-            switch(event.type){
-                case Custom_Events.HIT_ENEMY:
-                    {
-                        console.log("Hit!");
-                    }
-                    break;
-                case Custom_Events.ENEMY_DEATH:
-                    {
-                        let asset = this.sceneGraph.getNode(event.data.get("enemy")._id);
-                        // asset.destroy();
-                        console.log("Enemy Died!");
-                    }
-                    break;
-                case Custom_Events.HEAL:
-                    {
-                        console.log("Healing!");
-                    }
-                    break;
-                case Custom_Events.PLAYER_DAMAGED:
-                    {
-                        console.log("Player damaged!");
-                    }
-                    break;
-                case Custom_Events.PLAYER_DEATH:
-                    {
-                        console.log("Player died!");
-                    }
-                    break;
-                case Custom_Events.COMPLETE_OBJECTIVE:
-                    {
-                        if(this.nextLevel){
-                            let sceneOptions = {
-                                // TODO
-                            }
-                            this.sceneManager.changeToScene(this.nextLevel, {}, sceneOptions);
-                        }
-                    }
-                    break;
-                case Custom_Events.IN_CINEMATIC:
-                    {
-                        this.inCinematic = event.data.get("inCinematic");
-                        if (this.inCinematic) {
-                            this.goalDisplay.visible = false;
-                            this.healthDisplay.visible = false;
-                        } else {
-                            this.goalDisplay.visible = true;
-                            this.healthDisplay.visible = true;
-                        }
-                    }
-                    break;
-            }
-        }
+        this.handleAllEvents();
+        
         let currHealth = (<BattlerAI>this.player._ai).health;
         this.healthDisplay.text = "Health: " + currHealth;
         if (Input.isKeyJustPressed("escape")) {
             this.emitter.fireEvent(Custom_Events.IN_CINEMATIC, {inCinematic: !this.inCinematic});
             this.emitter.fireEvent(Custom_Events.PAUSE_EVENT);
         }
+    }
+
+    handleAllEvents(){
+
+        while(this.receiver.hasNextEvent()){
+            let event = this.receiver.getNextEvent();
+            this.handleEvent(event);
+            
+        }
+
+    }
+
+    handleEvent(event : GameEvent){
+        switch(event.type){
+            case Custom_Events.HIT_ENEMY:
+                {
+                    console.log("Hit!");
+                }
+                break;
+            case Custom_Events.ENEMY_DEATH:
+                {
+                    let asset = this.sceneGraph.getNode(event.data.get("enemy")._id);
+                    // asset.destroy();
+                    console.log("Enemy Died!");
+                }
+                break;
+            case Custom_Events.HEAL:
+                {
+                    console.log("Healing!");
+                }
+                break;
+            case Custom_Events.PLAYER_DAMAGED:
+                {
+                    console.log("Player damaged!");
+                }
+                break;
+            case Custom_Events.PLAYER_DEATH:
+                {
+                    console.log("Player died!");
+                }
+                break;
+            case Custom_Events.COMPLETE_OBJECTIVE:
+                {
+                    if(this.nextLevel){
+                        let sceneOptions = {
+                            // TODO
+                        }
+                        this.sceneManager.changeToScene(this.nextLevel, {}, sceneOptions);
+                    }
+                }
+                break;
+            case Custom_Events.IN_CINEMATIC:
+                {
+                    this.inCinematic = event.data.get("inCinematic");
+                    if (this.inCinematic) {
+                        this.goalDisplay.visible = false;
+                        this.healthDisplay.visible = false;
+                    } else {
+                        this.goalDisplay.visible = true;
+                        this.healthDisplay.visible = true;
+                    }
+                }
+                break;
+        }
+
     }
 
     protected setGoal(text: string, textColor = Color.WHITE, backgroundColor = Color.BLACK) : void {
@@ -274,6 +288,7 @@ initializeEnemyWeapons(enemies :AnimatedSprite[]) : void{
         let weapon = this.createWeapon(data.weapon);
         weapon.sprite.visible = false;
         (<EnemyAI>enemies[i]._ai).weapon = weapon;
+        (<EnemyAI>enemies[i]._ai).inRange = weapon.type instanceof RaccoonStoner ? 128 : 32;
     }
 }
 
@@ -321,9 +336,10 @@ initializeEnemies(data : Record<string,any>) : void {
             goal: Custom_Statuses.REACHED_GOAL,
             status: statusArray,
             actions: actionsDef,
-            inRange: 128, //128
+            inRange: 32, //128
             vision: enemyVision,
-            health: 10
+            health: 10,
+            custID : data.custID
         }    
         this.enemies[i].addAI(EnemyAI,enemyOptions);
         this.enemies[i].setGroup("enemy");

@@ -19,7 +19,9 @@ export enum Custom_Events {
     PLAY_SOUND = "PLAY_SOUND",
     STONE_HIT_PLAYER = "STONE_HIT_PLAYER",
     STONE_HIT_ENEMY = "STONE_HIT_ENEMY",
-    STONE_FIRED = "STONE_FIRED"
+    STONE_FIRED = "STONE_FIRED",
+    HIT_FAULTY_YOYO = "HIT_FAULTY_YOYO",
+    HIT_FAULTY_STONE = "HIT_FAULTY_STONE"
 }
 
 export enum Custom_Statuses {

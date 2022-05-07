@@ -1,5 +1,5 @@
 {
-    "numWeapons": 3,
+    "numWeapons": 4,
     "weapons": [
         {
             "weaponType": "yoyo",
@@ -42,7 +42,7 @@
             "name" : "raccHitHard",
             "displayName" : "raccHitHard",
             "damage" : 15,
-            "cooldown" : 900,
+            "cooldown" : 500,
             "spriteKey" : "raccoon",
             "useVolume" : 650,
             "speed" : 4,

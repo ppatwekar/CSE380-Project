@@ -24,6 +24,7 @@ export default class WeaponTemplateRegistry extends Registry<WeaponConstructor> 
         this.registerItem("yoyo",Yoyo2);
         this.registerItem("raccClaw",RaccoonClaw);
         this.registerItem("raccStone",RaccoonStoner);
+        this.registerItem("raccHitHard",RaccoonStoner);
     }
 
     // We don't need this for this assignment

@@ -7,6 +7,7 @@ import Layer from "../../Wolfie2D/Scene/Layer";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import Level1_Scene from "./level1_scene";
+import Level_Prisoner from "./Level_Prisoner";
 import playtest_scene from "./playtest_scene";
 
 export default class MainMenu extends Scene {
@@ -100,11 +101,11 @@ export default class MainMenu extends Scene {
             l2.backgroundColor = Color.GREEN;
             l2.onClickEventId = "level2"; // TODO
 
-            const l3 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l2.position.x + xMar + l, l2.position.y), text : "LOCKED"});
+            const l3 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l2.position.x + xMar + l, l2.position.y), text : "Level 3"});
             l3.size.set(l,w);
             l3.borderColor = Color.WHITE;
-            l3.backgroundColor = Color.TRANSPARENT;
-            l3.onClickEventId = "";
+            l3.backgroundColor = Color.GREEN;
+            l3.onClickEventId = "level3";
 
             const l4 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l1.position.x , l1.position.y + w + 4 * yMar), text : "LOCKED"});
             l4.size.set(l,w);
@@ -173,12 +174,9 @@ export default class MainMenu extends Scene {
         helpScreen();
 
         /* Receivers */
-        this.receiver.subscribe("menu");
-        this.receiver.subscribe("level1");
-        this.receiver.subscribe("level2");
-        this.receiver.subscribe("control");
-        this.receiver.subscribe("levels");
-        this.receiver.subscribe("help");
+        this.receiver.subscribe(["menu","level1","level2","level3","control","levels","help"]);
+
+        
     }
 
     // TODO: ADD LEVELS
@@ -202,7 +200,7 @@ export default class MainMenu extends Scene {
                         collisions : 
                         [
                             [0,1,0,1],
-                            [1,0,0,1],
+                            [1,1,0,1],
                             [0,0,0,0],
                             [1,1,0,0]
                         ]
@@ -218,17 +216,41 @@ export default class MainMenu extends Scene {
                          * ene  1    0    1
                          * yoyo 1    1    0
                          */
-                        groupNames : ["player","enemy","yoyo"],
+                        groupNames : ["player","enemy","yoyo","stone"],
                         collisions : 
                         [
                             [0,1,0,1],
-                            [1,0,0,1],
+                            [1,1,0,1],
                             [0,0,0,0],
                             [1,1,0,0]
                         ]
                     }
                 };
                 this.sceneManager.changeToScene(Level1_Scene, {}, sceneOptions);
+            }
+            else if(event.type === "level3"){
+                let sceneOptions = {
+                    physics : {
+                        /**
+                         *      pl  ene  yoyo
+                         * pl   0    1    1
+                         * ene  1    0    1
+                         * yoyo 1    1    0
+                         */
+                        groupNames : ["player","enemy","yoyo","stone","faultyTile"],
+                        collisions : 
+                        [
+                            [0,1,0,1,1],
+                            [1,1,0,1,1],
+                            [0,0,0,0,0],
+                            [1,1,0,0,0],
+                            [1,1,0,0,0]
+                        ]
+                    }
+                };
+                this.sceneManager.changeToScene(Level_Prisoner, {}, sceneOptions);
+                
+
             }
 
             if(event.type === "help"){

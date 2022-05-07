@@ -1,38 +1,54 @@
 {
-    "numEnemies" : 5,
+    "numEnemies" : 7,
     "enemies" : [
         {
             "position" : [478,1602],
             "mode" : "patrol",
-            "route" : [0,1],
+            "route" : [0, 1],
             "type" : "raccoon",
             "weapon" : "raccClaw"
         },
         {
-            "position" : [374,1948],
-            "mode" : "guard",
-            "guardPosition" : [374,1948],
+            "position" : [374, 1948],
+            "mode" : "patrol",
+            "route" : [3,4,5,6,7,8,9],
             "type" : "raccoon",
-            "weapon" : "raccHitHard"
+            "weapon" : "raccHitHard",
+            "custID" : "strongEnemy1"
         },
         {
-            "position" : [1156,2838],
-            "mode" : "guard",
-            "guardPosition" : [1156,2838],
+            "position" : [878,1904],
+            "mode" : "patrol",
+            "route" : [6,7,8,9,3,4,5],
             "type" : "raccoon",
-            "weapon" : "raccClaw"
+            "weapon" : "raccHitHard",
+            "custID" : "strongEnemy2"
         },
         {
-            "position" : [1374,2848],
-            "mode" : "guard",
-            "guardPosition" : [1374,2848],
+            "position" : [1168,2772],
+            "mode" : "patrol",
+            "route" : [10,11,12,13],
             "type" : "raccoon",
             "weapon" : "raccStone"
         },
         {
-            "position" : [1258,2764],
-            "mode" : "guard",
-            "guardPosition" : [1258,2764],
+            "position" : [1168,2874],
+            "mode" : "patrol",
+            "route" : [11,12,13,10],
+            "type" : "raccoon",
+            "weapon" : "raccClaw"
+        },
+        {
+            "position" : [1332,2872],
+            "mode" : "patrol",
+            "route" : [12,13,10,11],
+            "type" : "raccoon",
+            "weapon" : "raccStone"
+        },
+        {
+            "position" : [1332,2764],
+            "mode" : "patrol",
+            "route" : [13,10,11,12],
             "type" : "raccoon",
             "weapon" : "raccClaw"
         }

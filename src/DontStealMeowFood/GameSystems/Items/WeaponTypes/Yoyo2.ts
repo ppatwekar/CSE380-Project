@@ -52,7 +52,7 @@ export default class Yoyo2 extends WeaponType{
         this.beenInitialisedBefore = false;
         this.enemiesHit = [];
         this.reciever = new Receiver();
-        this.reciever.subscribe(Custom_Events.YOYO_HIT_ENEMY);
+        this.reciever.subscribe([Custom_Events.YOYO_HIT_ENEMY,Custom_Events.HIT_FAULTY_YOYO]);
         this.emitter = new Emitter();
     }
 
@@ -96,6 +96,12 @@ export default class Yoyo2 extends WeaponType{
 
                             node === this.owner ? this.addToEnemiesHit(other) : this.addToEnemiesHit(node);
 
+                            this.hasReachedGoTo = true;
+                            this.directionVec = this.belongsTo.position.clone().sub(this.owner.position).normalize();
+                            this.velocity = this.directionVec.scaled(this.speed);
+                        }
+                    case Custom_Events.HIT_FAULTY_YOYO:
+                        {
                             this.hasReachedGoTo = true;
                             this.directionVec = this.belongsTo.position.clone().sub(this.owner.position).normalize();
                             this.velocity = this.directionVec.scaled(this.speed);

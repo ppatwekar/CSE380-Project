@@ -57,11 +57,13 @@ export default class EnemyAI extends StateMachineGoapAI{
 
     vision : number;
 
+    custID : string;
+
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
 
-        if(options.defaultMode === "Guard"){
+        if(options.defaultMode === "guard"){
             this.addState(EnemyStates.DEFAULT, new Guard(this,this.owner,options.guardPosition));
         }
         else {
@@ -104,6 +106,8 @@ export default class EnemyAI extends StateMachineGoapAI{
         //handle Enemy damage updates in it's states.
 
         this.getPlayerPosition();
+
+        this.custID = options.custID;
 
 
 

@@ -17,7 +17,7 @@ export default class StoneController{
         this.speed = speed;
         this.initializePools();
         this.reciever = new Receiver();
-        this.reciever.subscribe([Custom_Events.STONE_HIT_ENEMY,Custom_Events.STONE_HIT_PLAYER]);
+        this.reciever.subscribe([Custom_Events.STONE_HIT_ENEMY,Custom_Events.STONE_HIT_PLAYER, Custom_Events.HIT_FAULTY_STONE]);
     }
 
     initializePools() : void{
