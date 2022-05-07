@@ -30,6 +30,9 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
 import MainMenu from "./MainMenu";
 import GameOver from "./GameOver";
+import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
+import Layer from "../../Wolfie2D/Scene/Layer";
+import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 
 export default class GameLevel extends Scene {
     protected playerSpawn: Vec2; 
@@ -44,12 +47,21 @@ export default class GameLevel extends Scene {
     protected stoneController : StoneController;
     protected enemies : Array<AnimatedSprite>;
     protected audioManagerCtx: AudioManager;
-     
+    
+    /* Pause Layer */
+    protected isPaused: boolean;
+
+    /* Pause Manager */
+    private pauseLayer: Layer;
+    private control: Layer;
+    private help: Layer;
+
+    protected mainLayer: Layer;
 
     protected nextLevel: new (...args: any) => GameLevel;
     
     startScene(): void{
-        this.addLayer("primary",10);
+        this.mainLayer = this.addLayer("primary",10);
 
         this.viewport.setZoomLevel(4);
 
@@ -58,11 +70,14 @@ export default class GameLevel extends Scene {
         this.addUI();
         this.audioManagerCtx = AudioManager.getInstance();
         AudioManager.setVolume(AudioChannelType.MUSIC, 0.1);
+
+        /* Pause layer */
+        this.initPause();
+        this.isPaused = false;
     }
 
     updateScene(deltaT: number): void{
         this.handleAllEvents();
-        
         let currHealth = (<BattlerAI>this.player._ai).health;
         this.healthDisplay.text = "Health: " + currHealth;
         if (Input.isKeyJustPressed("escape")) {
@@ -133,8 +148,46 @@ export default class GameLevel extends Scene {
                     }
                 }
                 break;
+            case Custom_Events.PAUSE_EVENT:
+                {
+                    this.isPaused = !this.isPaused;
+                    if (this.isPaused) {
+                        this.showPause();
+                    } else {
+                        console.log("Ushow!");
+                        this.unshowPause();
+                    }
+                }
+                break;
+            case "pauseMenu":
+                {
+                    this.showPause();
+                    break;
+                }
+            case "controls":
+                {
+                    this.showControls();
+                }
+                break;
+            case "help":
+                {
+                    this.showHelp();
+                }
+                break;
+            case "mainMenu":
+                {
+                    this.sceneManager.changeToScene(MainMenu);
+                }
+                break;
+            case "resume":
+                console.log("SEEING RESUME!");
+                this.emitter.fireEvent(Custom_Events.PAUSE_EVENT);
+                break;
         }
 
+        if (event.type === "resume") {
+            console.log("SEEING RESUME WITH IF...");
+        }
     }
 
     protected gameover(): void{
@@ -226,7 +279,12 @@ export default class GameLevel extends Scene {
             Custom_Events.PLAYER_DEATH,
             Custom_Events.PAUSE_EVENT,
             Custom_Events.COMPLETE_OBJECTIVE,
-            Custom_Events.IN_CINEMATIC
+            Custom_Events.IN_CINEMATIC,
+            "pauseMenu",
+            "controls",
+            "help",
+            "mainMenu",
+            "resume"
         ]);
     }
 
@@ -357,5 +415,162 @@ initializeEnemies(data : Record<string,any>) : void {
 
 }
 
+initPause() {
+        /* Add a pauseMenu Layer */
+        const layerName = "pauseMenu";
+        this.pauseLayer = this.addUILayer(layerName);
+        this.pauseLayer.setDepth(105);
+        // let l = <Rect>this.add.graphic(GraphicType.RECT, layerName, {position: new Vec2(this.viewport.getCenter().x / this.viewport.getZoomLevel(), this.viewport.getCenter().y / this.viewport.getZoomLevel()), size: this.viewport.getHalfSize().clone().scale(1.85)});
+        // l.setColor(Color.BLACK);
+        // l.alpha = 1;
+    
+        let resume = <Button>this.add.uiElement(UIElementType.BUTTON, layerName, {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 50)), text: "Resume"});
+        resume.onClickEventId = "resume";
+
+        let control = <Label>this.add.uiElement(UIElementType.LABEL, layerName, {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 0)), text: "Controls"});
+        control.onClickEventId = "controls";
+
+        let helpButton = <Label>this.add.uiElement(UIElementType.LABEL, layerName, {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, -25)), text: "Help"});
+        helpButton.onClickEventId = "help";
+
+        let menu = <Label>this.add.uiElement(UIElementType.LABEL, layerName, {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, -50)), text: "Main Menu"});
+        menu.onClickEventId = "mainMenu";
+
+        resume.backgroundColor = control.backgroundColor = helpButton.backgroundColor = menu.backgroundColor = Color.BLACK;
+        resume.textColor = control.textColor = helpButton.textColor = menu.textColor = Color.WHITE;
+
+        resume.onClick = () => {
+            console.log("CLICKED RESUME!");
+        }
+        resume.onEnter = () => {
+            console.log("ENTERED RESUME");
+            resume.backgroundColor = Color.WHITE;
+            resume.textColor = Color.BLACK;
+        };
+        resume.onLeave = () => {
+            resume.backgroundColor = Color.BLACK;
+            resume.textColor = Color.WHITE;
+        };
+
+        control.onEnter = () => {
+            control.backgroundColor = Color.WHITE;
+            control.textColor = Color.BLACK;
+        };
+        control.onLeave = () => {
+            control.backgroundColor = Color.BLACK;
+            control.textColor = Color.WHITE;
+        };
+
+        helpButton.onEnter = () => {
+            helpButton.backgroundColor = Color.WHITE;
+            helpButton.textColor = Color.BLACK;
+        };
+        helpButton.onLeave = () => {
+            helpButton.backgroundColor = Color.BLACK;
+            helpButton.textColor = Color.WHITE;
+        };
+
+        menu.onEnter = () => {
+            menu.backgroundColor = Color.WHITE;
+            menu.textColor = Color.BLACK;
+        };
+        menu.onLeave = () => {
+            menu.backgroundColor = Color.BLACK;
+            menu.textColor = Color.WHITE;
+        };
+
+        this.controlsScreen();
+        this.helpScreen();
+
+        this.unshowPause();
+}
+
+controlsScreen() {
+    this.control = this.addUILayer("control");
+    this.control.setHidden(true);
+    
+    const controlHeader = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 300)), text: "Controls"});
+    controlHeader.textColor = Color.WHITE;
+
+    const controls1 = "WASD | Move";
+    const controls2 = "E | Item Pick Up";
+    const controls3 = "Q | Drop Current Item";
+    const controls4 = "1/2/3/4/5 or Mouse Wheel Up/Down | Equip Inventory Item";
+
+    const cline1 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 100)), text: controls1});
+    const cline2 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 50)), text: controls2});
+    const cline3 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()), text: controls3});
+    const cline4 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, -50)), text: controls4});
+
+    cline1.textColor = cline2.textColor = cline3.textColor = cline4.textColor = Color.WHITE;
+
+    // Back Button
+    const controlBack = this.add.uiElement(UIElementType.BUTTON, "control", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(-25, 0)), text: "Back"});
+    controlBack.size.set(200, 50);
+    controlBack.borderWidth = 2;
+    controlBack.borderColor = Color.WHITE;
+    controlBack.backgroundColor = Color.TRANSPARENT;
+    controlBack.onClickEventId = "pauseMenu";
+}
+
+helpScreen() {
+    this.help = this.addUILayer("help");
+    this.help.setHidden(true);
+
+    const aboutHeader = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 250)), text: "Help"});
+    aboutHeader.textColor = Color.WHITE;
+
+    // Resolved: Give yourself credit and add your name to the about page!
+    const text1 = "Story:";
+    const text2 = "Vanilla the cat had been living peacefully her entire life," ;
+    const text2s = "but recently a gang of raccoons invaded her living space and stole all her cat food.";
+    const text2t = "Vanilla decides to take revenge on the raccoons and get her food back";
+    const text3 = "Created by Jun Yi Lin, Tahmidul Alam, and Prathamesh Patwekar";
+
+    const line1 = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 150)), text: text1});
+    const line2 = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 100)), text: text2});
+    const line2s = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 50)), text: text2s});
+    const line2t = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()), text: text2t});
+    const line3 = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, -50)), text: text3});
+
+    line1.textColor = Color.WHITE;
+    line2.textColor = Color.WHITE;
+    line2s.textColor = Color.WHITE;
+    line2t.textColor = Color.WHITE;
+    line3.textColor = Color.YELLOW;
+
+    const aboutBack = this.add.uiElement(UIElementType.BUTTON, "help", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(-25, 0)), text: "Back"});
+    aboutBack.size.set(200, 50);
+    aboutBack.borderWidth = 2;
+    aboutBack.borderColor = Color.WHITE;
+    aboutBack.backgroundColor = Color.TRANSPARENT;
+    aboutBack.onClickEventId = "pauseMenu";
+}
+
+showPause() {
+    this.mainLayer.setHidden(true);
+    this.pauseLayer.enable();
+    this.pauseLayer.setHidden(false);
+    this.control.setHidden(true);
+    this.help.setHidden(true);
+}
+unshowPause() {
+    // console.log("UNSHOW!");
+    this.control.setHidden(true);
+    this.help.setHidden(true);
+    this.pauseLayer.setHidden(true);
+    this.pauseLayer.disable();
+    this.mainLayer.setHidden(false);
+}
+showControls() {
+    this.pauseLayer.setHidden(true);
+    this.control.setHidden(false);
+    this.help.setHidden(true);
+}
+showHelp() {
+    this.pauseLayer.setHidden(true);
+    this.control.setHidden(true);
+    this.help.setHidden(false);
+}
     
 }
