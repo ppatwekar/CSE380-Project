@@ -21,6 +21,7 @@ import AttackAction from "../AI/EnemyActions/Attack";
 import Move from "../AI/EnemyActions/Move";
 import Retreat from "../AI/EnemyActions/Retreat";
 import StoneController from "../GameSystems/Items/WeaponTypes/StoneController";
+import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
 
 export default class playtest_scene extends GameLevel{
     private bushes : OrthogonalTilemap;
@@ -80,11 +81,11 @@ export default class playtest_scene extends GameLevel{
         this.h1 = new HighLight();
 
         this.setGoal("Objective: Playtest!");
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1_music", loop: true, holdReference: true});
+        this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: "level1_music", loop: true, holdReference: true});
 
         let weaponData = this.load.getObject("weaponData");
 
-        this.stoneController = new StoneController(this,weaponData.weapons[2].speed); 
+        this.stoneController = new StoneController(this,weaponData.weapons[2].speed);
     }
 
 

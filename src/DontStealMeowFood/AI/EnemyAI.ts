@@ -27,6 +27,7 @@ import Up from "./ProjectAnimations/DirectionStates/Up";
 import ProjectAnimationManager from "./ProjectAnimations/ProjectAnimationManager";
 import EnemyVision from "../GameSystems/EnemyVision";
 import PlayerController from "./PlayerController";
+import GameEvent from "../../Wolfie2D/Events/GameEvent";
 
 export default class EnemyAI extends StateMachineGoapAI{
     owner : AnimatedSprite;
@@ -59,6 +60,7 @@ export default class EnemyAI extends StateMachineGoapAI{
 
     custID : string;
 
+    protected isPaused: boolean;
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
@@ -109,7 +111,11 @@ export default class EnemyAI extends StateMachineGoapAI{
 
         this.custID = options.custID;
 
+        this.isPaused = false;
 
+        this.receiver.subscribe([
+            Custom_Events.PAUSE_EVENT
+        ]);
 
     }
 
@@ -152,14 +158,28 @@ export default class EnemyAI extends StateMachineGoapAI{
         return EnemyVision.positionsVisible(this.player.position.clone(),this.owner.position.clone(), this.vision, this.anime.direction, this.bushes);
     }
 
+    handleEvent(event: GameEvent): void {
+        switch(event.type) {
+            case Custom_Events.PAUSE_EVENT:
+                {
+                    this.isPaused = !this.isPaused;
+                    break;
+                }
+        }
+    }
+
 
     update(deltaT: number): void {
-        
-        super.update(deltaT);
-        if(this.plan.isEmpty()){
-            this.plan = this.planner.plan(Custom_Statuses.REACHED_GOAL, this.possibleActions, this.currentStatus, null);
+        while (this.receiver.hasNextEvent()) {
+            this.handleEvent(this.receiver.getNextEvent());
         }
-        this.anime.update(this.currentAnimatiionMoveDirection, this.currentAnimationActualState);        
+        if (!this.isPaused) {
+            super.update(deltaT);
+            if(this.plan.isEmpty()){
+                this.plan = this.planner.plan(Custom_Statuses.REACHED_GOAL, this.possibleActions, this.currentStatus, null);
+            }
+            this.anime.update(this.currentAnimatiionMoveDirection, this.currentAnimationActualState);
+        }     
     }
 
     

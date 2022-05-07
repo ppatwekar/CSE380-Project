@@ -27,6 +27,7 @@ import Move from "../AI/EnemyActions/Move";
 import Retreat from "../AI/EnemyActions/Retreat";
 import RaccoonStoner from "../GameSystems/Items/WeaponTypes/RaccoonStoner";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
+import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
 
 export default class GameLevel extends Scene {
     protected playerSpawn: Vec2; 
@@ -40,6 +41,7 @@ export default class GameLevel extends Scene {
     protected navGraph : PositionGraph;
     protected stoneController : StoneController;
     protected enemies : Array<AnimatedSprite>;
+    protected audioManagerCtx: AudioManager;
      
 
 
@@ -53,7 +55,8 @@ export default class GameLevel extends Scene {
         this.initializePlayer();
         this.subscribeToEvents();
         this.addUI();
-
+        this.audioManagerCtx = AudioManager.getInstance();
+        AudioManager.setVolume(AudioChannelType.MUSIC, 0.1);
     }
 
     updateScene(deltaT: number): void{
