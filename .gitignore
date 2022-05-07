@@ -21,4 +21,5 @@ dist/project_assets/map_raw_files
 
 # We don't need to reupload them... Just use gulp to make it
 bundle.js
+dist/bundle.js
 *.zip
