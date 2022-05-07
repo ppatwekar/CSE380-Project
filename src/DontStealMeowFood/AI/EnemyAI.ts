@@ -147,8 +147,8 @@ export default class EnemyAI extends StateMachineGoapAI{
         }
     }
 
-    isAssassinated(){
-        
+    isAssassinated(node: GameNode){
+        console.log("assassinated");
     }
 
     private bushes : OrthogonalTilemap;

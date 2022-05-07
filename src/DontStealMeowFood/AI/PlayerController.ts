@@ -115,6 +115,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.receiver.subscribe(Custom_Events.YOYO_RETURNED);
         this.receiver.subscribe(Custom_Events.IN_CINEMATIC);
         this.receiver.subscribe(Custom_Events.PAUSE_EVENT);
+        this.receiver.subscribe(Custom_Events.PLAYER_DEATH);
         this.owner.setTrigger("stone",Custom_Events.STONE_HIT_PLAYER,null);
     }
 
@@ -143,6 +144,12 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     this.isPaused = !this.isPaused;
                 }
                 break;
+            case Custom_Events.PLAYER_DEATH:
+                {
+                    console.log("player paused");
+                    this.isPaused = true;
+                }
+                break;
         }
 
      }
@@ -151,6 +158,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     update(deltaT: number): void {
         while(this.receiver.hasNextEvent()){
             this.handleEvent(this.receiver.getNextEvent());
+        }
+        if(this.health<=0){
+            this.emitter.fireEvent(Custom_Events.PLAYER_DEATH);
         }
         if (this.inputEnabled && this.health > 0 && !this.isPaused) { //can remove this for now. maybe not
 
@@ -200,9 +210,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
            // this.weapon.type
             //use event queue to catch event that yoyo returned.
 
-            
-
-            
             
             
             // Check for slot change

@@ -28,6 +28,8 @@ import Retreat from "../AI/EnemyActions/Retreat";
 import RaccoonStoner from "../GameSystems/Items/WeaponTypes/RaccoonStoner";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
+import MainMenu from "./MainMenu";
+import GameOver from "./GameOver";
 
 export default class GameLevel extends Scene {
     protected playerSpawn: Vec2; 
@@ -43,7 +45,6 @@ export default class GameLevel extends Scene {
     protected enemies : Array<AnimatedSprite>;
     protected audioManagerCtx: AudioManager;
      
-
 
     protected nextLevel: new (...args: any) => GameLevel;
     
@@ -107,6 +108,7 @@ export default class GameLevel extends Scene {
             case Custom_Events.PLAYER_DEATH:
                 {
                     console.log("Player died!");
+                    this.gameover();
                 }
                 break;
             case Custom_Events.COMPLETE_OBJECTIVE:
@@ -133,6 +135,11 @@ export default class GameLevel extends Scene {
                 break;
         }
 
+    }
+
+    protected gameover(): void{
+        console.log("change scene to gameover");
+        this.sceneManager.changeToScene(GameOver);
     }
 
     protected setGoal(text: string, textColor = Color.WHITE, backgroundColor = Color.BLACK) : void {
@@ -181,9 +188,6 @@ export default class GameLevel extends Scene {
         this.player.setGroup("player");
 
         this.viewport.follow(this.player);
-
-        
-
 
         // this.yoyo = this.add.sprite("yoyo","primary");
         // this.yoyo.visible = true;
