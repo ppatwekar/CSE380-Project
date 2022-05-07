@@ -6,6 +6,7 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
+import GameOver from "./GameOver";
 import Level1_Scene from "./level1_scene";
 import Level_Prisoner from "./Level_Prisoner";
 import playtest_scene from "./playtest_scene";
@@ -35,7 +36,7 @@ export default class MainMenu extends Scene {
         }
        
         // Add Start Button and give it an event to emit on press
-        createButton(new Vec2(center.x, center.y - 100), "level1");
+        createButton(new Vec2(center.x, center.y - 150), "level1");
         
         // Add Controls button
         // const control = this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: new Vec2(center.x, center.y - 300), text: "Controls"});
@@ -43,13 +44,15 @@ export default class MainMenu extends Scene {
         // control.borderColor = Color.WHITE;
         // control.backgroundColor = Color.TRANSPARENT;
         // control.onClickEventId = "control";
-        createButton(new Vec2(center.x, center.y), "control");
+        createButton(new Vec2(center.x, center.y-50), "control");
 
         // Add Levels button
-        createButton(new Vec2(center.x, center.y + 100), "levels");
+        createButton(new Vec2(center.x, center.y + 50), "levels");
 
         // Add Help Button
-        createButton(new Vec2(center.x, center.y + 200), "help");
+        createButton(new Vec2(center.x, center.y + 150), "help");
+
+        createButton(new Vec2(center.x, center.y + 250), "end");
 
         /* Control Screen */
         let controlScreen = () => {
@@ -174,7 +177,7 @@ export default class MainMenu extends Scene {
         helpScreen();
 
         /* Receivers */
-        this.receiver.subscribe(["menu","level1","level2","level3","control","levels","help"]);
+        this.receiver.subscribe(["menu","level1","level2","level3","control","levels","help", "end"]);
 
         
     }
@@ -272,6 +275,10 @@ export default class MainMenu extends Scene {
             if(event.type === "levels"){
                 this.mainMenu.setHidden(true);
                 this.levels.setHidden(false);
+            }
+
+            if(event.type === "end"){
+                this.sceneManager.changeToScene(GameOver);
             }
 
         }
