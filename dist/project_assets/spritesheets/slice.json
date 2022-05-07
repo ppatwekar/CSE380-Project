@@ -1,0 +1,39 @@
+{
+    "name": "slice",
+    "spriteSheetImage": "slice.png",
+    "spriteWidth": 16,
+    "spriteHeight": 16,
+    "columns": 3,
+    "rows": 3,
+    "durationType": "time",
+    "animations": [
+        {
+            "name": "NORMAL",
+            "frame": [{
+                "index": 0,
+                "duration": 1
+            }]
+        },
+        {
+            "name": "Slice",
+            "frame": [
+                {
+                    "index": 1,
+                    "duration": 2
+                },
+                {
+                    "index": 2,
+                    "duration": 3
+                },
+                {
+                    "index": 3,
+                    "duration": 4
+                },
+                {
+                    "index": 0,
+                    "duration": 2
+                }
+            ]
+        }
+    ]
+}
