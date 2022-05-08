@@ -105,7 +105,7 @@ export default class InventoryManager {
     setActive(active: boolean) {
         if (active){
             this.inventorySlots.forEach(slot => slot.alpha = 1.0);
-            this.selectedSlot.visible = false;
+            // this.selectedSlot.visible = false;
         }
         else{
             this.inventorySlots.forEach(slot => slot.alpha = 0.5);
