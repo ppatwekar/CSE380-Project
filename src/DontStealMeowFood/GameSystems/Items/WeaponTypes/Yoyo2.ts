@@ -99,12 +99,14 @@ export default class Yoyo2 extends WeaponType{
                             this.hasReachedGoTo = true;
                             this.directionVec = this.belongsTo.position.clone().sub(this.owner.position).normalize();
                             this.velocity = this.directionVec.scaled(this.speed);
+                            break;
                         }
                     case Custom_Events.HIT_FAULTY_YOYO:
                         {
                             this.hasReachedGoTo = true;
                             this.directionVec = this.belongsTo.position.clone().sub(this.owner.position).normalize();
                             this.velocity = this.directionVec.scaled(this.speed);
+                            break;
                         }
                 }
             }
@@ -152,6 +154,13 @@ export default class Yoyo2 extends WeaponType{
         // if the node in the event, corresponds to the GameNode 
         //that is the passsed parameter then return true, else false
         //check GameNode.id maybe.
+
+        for(let i = 0; i<this.enemiesHit.length;i++){
+            if(!this.enemiesHit[i].hasPhysics){
+                this.enemiesHit.splice(i,1);
+                i--;
+            }
+        }
 
         let index = -1;
 

@@ -138,6 +138,7 @@ export default class EnemyAI extends StateMachineGoapAI{
             this.owner.setAIActive(false,{}); 
             this.owner.isCollidable = false;
             this.owner.visible = false;
+            this.owner.removePhysics();
             this.emitter.fireEvent(Custom_Events.ENEMY_DEATH ,{enemy : this.owner});
 
             if(Math.random() < 0.2){ 
