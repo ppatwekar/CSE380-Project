@@ -36,6 +36,7 @@ export default class playtest_scene extends GameLevel{
         this.load.object("navmesh","project_assets/data/navmesh.json");
         this.load.object("enemyData","project_assets/data/enemy.json");
         this.load.object("weaponData","project_assets/data/weaponData.json");
+        this.load.object("items","project_assets/data/items.json");
     }
 
 
@@ -79,6 +80,10 @@ export default class playtest_scene extends GameLevel{
         let weaponData = this.load.getObject("weaponData");
 
         this.stoneController = new StoneController(this,weaponData.weapons[2].speed);
+
+        this.spawnItems(this.load.getObject("items"));
+
+
     }
 
 

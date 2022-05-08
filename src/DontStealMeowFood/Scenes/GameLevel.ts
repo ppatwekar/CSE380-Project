@@ -41,7 +41,7 @@ import Food from "../GameSystems/Items/Food";
 export default class GameLevel extends Scene {
     protected playerSpawn: Vec2; 
     protected player : AnimatedSprite;
-    protected items : Array<Item>;
+    protected items : Array<Item> = new Array();
     protected yoyo : Sprite;
     protected healthDisplay: Label;
     protected goalDisplay: Label;
@@ -70,6 +70,8 @@ export default class GameLevel extends Scene {
         this.load.image("inventorySlot", "project_assets/sprites/inventory.png");
         this.load.image("yoyo","project_assets/item/yoyo.png");
         this.load.image("stone","project_assets/item/Stone.png");
+        this.load.image("healthpack","project_assets/item/Healthpack.png");
+        this.load.image("catFood","project_assets/item/CatFood.png");
 
     }
 
@@ -235,7 +237,7 @@ export default class GameLevel extends Scene {
                 speed : 100,
                 health : 100,
                 inventory : inventory,
-                items : null,
+                items : this.items,
                 inputEnabled : true,
                 range : 30,
                 weapon : weapon
