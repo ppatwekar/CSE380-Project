@@ -35,11 +35,13 @@ import Layer from "../../Wolfie2D/Scene/Layer";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import PauseManager from "../GameSystems/PauseManager";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
+import Healthpack from "../GameSystems/items/Healthpack";
+import Food from "../GameSystems/Items/Food";
 
 export default class GameLevel extends Scene {
     protected playerSpawn: Vec2; 
     protected player : AnimatedSprite;
-
+    protected items : Array<Item>;
     protected yoyo : Sprite;
     protected healthDisplay: Label;
     protected goalDisplay: Label;
@@ -55,9 +57,6 @@ export default class GameLevel extends Scene {
 
     /* Pause Manager */
     protected pauseManager: PauseManager;
-    private pauseLayer: Layer;
-    private control: Layer;
-    private help: Layer;
     protected menuState: string;
 
     protected mainLayer: Layer;
@@ -66,6 +65,12 @@ export default class GameLevel extends Scene {
     
     loadScene(): void {
         this.load.audio("level1_music", "project_assets/music/theme_music.mp3");
+        this.load.spritesheet("cat","project_assets/spritesheets/cat.json");
+        this.load.spritesheet("raccoon","project_assets/spritesheets/raccoon.json")
+        this.load.image("inventorySlot", "project_assets/sprites/inventory.png");
+        this.load.image("yoyo","project_assets/item/yoyo.png");
+        this.load.image("stone","project_assets/item/Stone.png");
+
     }
 
     startScene(): void{
@@ -92,7 +97,6 @@ export default class GameLevel extends Scene {
         let currHealth = (<BattlerAI>this.player._ai).health;
         this.healthDisplay.text = "Health: " + currHealth;
         if (Input.isKeyJustPressed("escape")) {
-            // this.emitter.fireEvent(Custom_Events.IN_CINEMATIC, {inCinematic: !this.inCinematic});
             this.emitter.fireEvent(Custom_Events.PAUSE_EVENT, {ignoreClick: this.isPaused});
         }
         if (Input.isMouseJustPressed(0) && !Input.isMouseJustPressed(2)) {
@@ -211,11 +215,8 @@ export default class GameLevel extends Scene {
         this.healthDisplay.textColor = Color.BLACK;
         this.healthDisplay.backgroundColor = Color.WHITE;
 
-        // Add a UI for Goals
         this.addUILayer("objectives");
-        // this.goalDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "objectives", {position: new Vec2(40, 10), text: "Objective: Playtest!"});
-        // this.goalDisplay.textColor = Color.WHITE;
-        // this.goalDisplay.backgroundColor = Color.BLACK;
+        
     }
 
     initializePlayer() : void{
@@ -246,22 +247,6 @@ export default class GameLevel extends Scene {
 
         this.viewport.follow(this.player);
 
-        // this.yoyo = this.add.sprite("yoyo","primary");
-        // this.yoyo.visible = true;
-        // this.yoyo.addPhysics(new Circle(Vec2.ZERO,3));
-        // this.yoyo.addAI(YoyoController,
-        //     {
-        //         speed : 3,
-        //         range : 80,
-        //         belongsTo : this.player,
-                
-        //     });
-
-        // (<PlayerController>this.player._ai).yoyo = this.yoyo;
-        // (<PlayerController>this.player._ai).yoyo.visible = false;
-        // this.yoyo.setGroup("yoyo");
-        // this.yoyo.setTrigger("enemy",Custom_Events.YOYO_HIT_ENEMY,null);
-        // this.yoyo.setTrigger("player",Custom_Events.YOYO_HIT_PLAYER,null);
         
     }
 
@@ -271,6 +256,35 @@ export default class GameLevel extends Scene {
         let sprite = this.add.sprite(weaponType.spriteKey, "primary");
 
         return new Weapon(sprite, weaponType, this.battleManager);
+    }
+
+    createHealthpack(position: Vec2): void {
+        let sprite = this.add.sprite("healthpack", "primary");
+        let healthpack = new Healthpack(sprite)
+        healthpack.moveSprite(position);
+        this.items.push(healthpack);
+    }
+
+    createFood(position : Vec2): void{
+        let sprite = this.add.sprite("catFood","primary");
+        let food = new Food(sprite);
+        food.moveSprite(position);
+        this.items.push(food);
+        
+    }
+
+    spawnItems(data : Record<string,any>, layer? : string){
+        for(let item of data.items){
+            if(item.type === "healthpack"){
+                // Create a healthpack
+                this.createHealthpack(new Vec2(item.position[0]/2, item.position[1]/2));
+            }
+            else{
+                this.createFood(new Vec2(item.position[0]/2, item.position[1]/2));
+            }
+        }
+        
+
     }
 
 
@@ -410,7 +424,6 @@ export default class GameLevel extends Scene {
             this.enemies[i].setTrigger("yoyo",Custom_Events.YOYO_HIT_ENEMY,null);
         }
 
-        //(<YoyoController>this.yoyo._ai).enemies = this.enemies;
 
     } 
 }

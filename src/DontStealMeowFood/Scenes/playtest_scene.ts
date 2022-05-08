@@ -27,20 +27,15 @@ export default class playtest_scene extends GameLevel{
     private graph : PositionGraph;
     private logo : Sprite
     // A list of items
-    private items: Array<Item>;
     protected h1 : HighLight;
+    private totalCatFoods : number;
     
     loadScene(): void {
         super.loadScene();
         this.load.tilemap("playTestLevel","project_assets/tilemaps/sampleMap.json");
         this.load.object("navmesh","project_assets/data/navmesh.json");
-        this.load.spritesheet("cat","project_assets/spritesheets/cat.json");
-        this.load.spritesheet("raccoon","project_assets/spritesheets/raccoon.json")
         this.load.object("enemyData","project_assets/data/enemy.json");
-        this.load.image("inventorySlot", "project_assets/sprites/inventory.png");
-        this.load.image("yoyo","project_assets/item/yoyo.png");
         this.load.object("weaponData","project_assets/data/weaponData.json");
-        this.load.image("stone","project_assets/item/Stone.png");
     }
 
 

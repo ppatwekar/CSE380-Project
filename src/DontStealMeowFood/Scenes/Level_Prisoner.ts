@@ -27,7 +27,6 @@ export default class Level_Prisoner extends GameLevel{
     private graph : PositionGraph;
     private logo : Sprite;
     // A list of items
-    private items: Array<Item>;
     protected h1 : HighLight;
     private levelEndArea : Rect;
     private rec : Receiver;
@@ -36,13 +35,8 @@ export default class Level_Prisoner extends GameLevel{
         super.loadScene(); // Loads audio
         this.load.tilemap("prisonerLevel","project_assets/tilemaps/Level_Prisoner_tilemap/LevelMap.json");
         this.load.object("navmesh","project_assets/data/Level_Prisoner_data/navmesh.json");
-        this.load.spritesheet("cat","project_assets/spritesheets/cat.json");
-        this.load.spritesheet("raccoon","project_assets/spritesheets/raccoon.json")
         this.load.object("enemyData","project_assets/data/Level_Prisoner_data/enemy.json");
-        this.load.image("inventorySlot", "project_assets/sprites/inventory.png");
-        this.load.image("yoyo","project_assets/item/yoyo.png");
         this.load.object("weaponData","project_assets/data/weaponData.json");
-        this.load.image("stone","project_assets/item/Stone.png");
         this.load.image("breakable","project_assets/data/Level_Prisoner_data/breakable.png");
 
     }

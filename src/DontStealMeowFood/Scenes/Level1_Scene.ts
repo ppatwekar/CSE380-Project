@@ -28,18 +28,13 @@ export default class Level1_Scene extends GameLevel {
     private logo : Sprite
     //private enemies : Array<AnimatedSprite>;
     // A list of items
-    private items: Array<Item>;
     protected h1 : HighLight;
 
     loadScene(): void {
         super.loadScene();
         this.load.tilemap("level1","project_assets/tilemaps/level1_tilemap/TutorialLevel.json");
         this.load.object("navmesh","project_assets/data/level1_data/navmesh.json");
-        this.load.spritesheet("cat","project_assets/spritesheets/cat.json");
-        this.load.spritesheet("raccoon","project_assets/spritesheets/raccoon.json")
         this.load.object("enemyData","project_assets/data/level1_data/enemy.json");
-        this.load.image("inventorySlot", "project_assets/sprites/inventory.png");
-        this.load.image("yoyo","project_assets/item/yoyo.png");
         this.load.object("weaponData","project_assets/data/weaponData.json");
     }
 
