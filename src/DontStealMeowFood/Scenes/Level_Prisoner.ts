@@ -2,12 +2,16 @@ import PositionGraph from "../../Wolfie2D/DataTypes/Graphs/PositionGraph";
 import Map from "../../Wolfie2D/DataTypes/Map";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Receiver from "../../Wolfie2D/Events/Receiver";
+import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
+import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import Scene from "../../Wolfie2D/Scene/Scene";
+import Color from "../../Wolfie2D/Utils/Color";
 import BattlerAI from "../AI/BattlerAI";
 import EnemyAI from "../AI/EnemyAI";
 import PlayerController from "../AI/PlayerController";
@@ -25,6 +29,8 @@ export default class Level_Prisoner extends GameLevel{
     // A list of items
     private items: Array<Item>;
     protected h1 : HighLight;
+    private levelEndArea : Rect;
+    private rec : Receiver;
 
     loadScene(): void {
         this.load.tilemap("prisonerLevel","project_assets/tilemaps/Level_Prisoner_tilemap/LevelMap.json");
@@ -75,8 +81,24 @@ export default class Level_Prisoner extends GameLevel{
 
         this.setCustomProperties();
 
+        this.addLevelEnd(new Vec2(608,1808),new Vec2(12,12));
+        this.rec = new Receiver();
+        this.rec.subscribe(Custom_Events.PLAYER_ENTERED_LEVEL_END);
 
 
+
+    }
+
+    manageEvents(){
+        while(this.rec.hasNextEvent()){
+            let event = this.rec.getNextEvent();
+            switch(event.type){
+                case Custom_Events.PLAYER_ENTERED_LEVEL_END:
+                    {
+                        this.player.position = new Vec2(344,264);
+                    }
+            }
+        }
     }
 
     updateScene(deltaT: number): void {
@@ -84,6 +106,7 @@ export default class Level_Prisoner extends GameLevel{
         this.h1.checkClosestEnemies(this.enemies, this.player);
         this.stoneController.update();
         BreakableTile.updateFaultyTiles();
+        this.manageEvents();
         
     }
 
@@ -93,13 +116,21 @@ export default class Level_Prisoner extends GameLevel{
         for(let enemy of this.enemies){
             if((<EnemyAI>enemy._ai).custID === "strongEnemy1" || (<EnemyAI>enemy._ai).custID === "strongEnemy2"){
                 (<EnemyAI>enemy._ai).inRange = 500;
+                (<EnemyAI>enemy._ai).speed = 50;
+                (<EnemyAI>enemy._ai).vision = 500;
             }
         }
 
-        //this.createBreakableTiles(new Vec2(408,920),6);
-
         BreakableTile.makeTiles(new Vec2(408,920),new Vec2(6,0),this);
         
+    }
+
+    addLevelEnd(position : Vec2, size : Vec2){
+        this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT,"primary",{position : position, size : size});
+        this.levelEndArea.addPhysics(undefined, undefined, false, true);
+        this.levelEndArea.setTrigger("player", Custom_Events.PLAYER_ENTERED_LEVEL_END, null);
+        this.levelEndArea.color = new Color(1,0,0,1);
+
     }
 
     
@@ -126,6 +157,7 @@ class BreakableTile{
         this.owner.setTrigger("stone",Custom_Events.HIT_FAULTY_STONE,null);
         BreakableTile.faultyTiles.push(this);
         this.reciever = new Receiver();
+        this.reciever.subscribe([Custom_Events.HIT_FAULTY_STONE, Custom_Events.HIT_FAULTY_YOYO]);
         this.scene = scene;
         this.lives = 10;
     }
@@ -135,13 +167,22 @@ class BreakableTile{
             let hasHit = false;
             let event = this.reciever.getNextEvent();
             switch(event.type){
-                case Custom_Events.HIT_FAULTY_STONE || Custom_Events.HIT_FAULTY_YOYO:
+                case Custom_Events.HIT_FAULTY_STONE:
                     {
+                        console.log(event.type);
                         let node = this.scene.getSceneGraph().getNode(event.data.get("node"));
                         let other = this.scene.getSceneGraph().getNode(event.data.get("other"));
 
                         node.id == this.owner.id || other.id == this.owner.id ? hasHit = true : hasHit = false;
                     }
+                case Custom_Events.HIT_FAULTY_YOYO : {
+                    console.log(event.type);
+                        let node = this.scene.getSceneGraph().getNode(event.data.get("node"));
+                        let other = this.scene.getSceneGraph().getNode(event.data.get("other"));
+
+                        node.id == this.owner.id || other.id == this.owner.id ? hasHit = true : hasHit = false;
+
+                }
             }
 
             if(hasHit){
@@ -164,6 +205,7 @@ class BreakableTile{
             let index = BreakableTile.faultyTiles.indexOf(tile);
             BreakableTile.faultyTiles.splice(index,1);
             tile.owner.visible = false;
+            tile.owner.destroy();
         });
 
         BreakableTile.removeTiles = [];

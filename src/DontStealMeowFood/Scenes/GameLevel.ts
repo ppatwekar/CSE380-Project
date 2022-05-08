@@ -105,8 +105,11 @@ export default class GameLevel extends Scene {
                 break;
             case Custom_Events.ENEMY_DEATH:
                 {
+                    
                     let asset = this.sceneGraph.getNode(event.data.get("enemy")._id);
-                    // asset.destroy();
+                    let index = this.enemies.indexOf(event.data.get("enemy"));
+                    this.enemies.splice(index,1);
+                    //asset.destroy();
                     console.log("Enemy Died!");
                 }
                 break;
@@ -196,7 +199,7 @@ export default class GameLevel extends Scene {
     }
 
     protected setGoal(text: string, textColor = Color.WHITE, backgroundColor = Color.BLACK) : void {
-        this.goalDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "objectives", {position: new Vec2(40, 10), text: text});
+        this.goalDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "objectives", {position: new Vec2(50, 10), text: text});
         this.goalDisplay.textColor = textColor;
         this.goalDisplay.backgroundColor = backgroundColor;
     }

@@ -112,6 +112,9 @@ export default class Yoyo2 extends WeaponType{
     }
 
     addToEnemiesHit(node : CanvasNode){
+        if(!node.visible){
+            return;
+        }
         for(let enemy of this.enemiesHit){
             if(enemy.id == node.id){
                 return;
@@ -131,6 +134,7 @@ export default class Yoyo2 extends WeaponType{
             this.owner.visible = true;
             this.owner.addPhysics(new Circle(Vec2.ZERO,3));
             this.owner.setGroup("yoyo");
+            //this.owner.setTrigger("faultyTile",Custom_Events.HIT_FAULTY_YOYO,null);
             this.owner.position = this.belongsTo.position.clone();
             this.collidableMap = <OrthogonalTilemap>scene.getLayer("Bushes").getItems()[0];
             this.sceneGraph = scene.getSceneGraph();
@@ -149,12 +153,21 @@ export default class Yoyo2 extends WeaponType{
         //that is the passsed parameter then return true, else false
         //check GameNode.id maybe.
 
+        let index = -1;
+
         for(let i = 0; i<this.enemiesHit.length; i++){
             if(this.enemiesHit[i].id == node.id){
                 //delete that enemy
-                this.enemiesHit.splice(i,1);
-                return true;
+                //this.enemiesHit.splice(i,1);
+                index = i;
+                //return true;
+                break;
             }
+        }
+
+        if(index > -1){
+            this.enemiesHit.splice(index,1);
+            return true;
         }
         
         return false;
