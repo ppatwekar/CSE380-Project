@@ -33,6 +33,7 @@ export default class Level_Prisoner extends GameLevel{
     private rec : Receiver;
 
     loadScene(): void {
+        super.loadScene(); // Loads audio
         this.load.tilemap("prisonerLevel","project_assets/tilemaps/Level_Prisoner_tilemap/LevelMap.json");
         this.load.object("navmesh","project_assets/data/Level_Prisoner_data/navmesh.json");
         this.load.spritesheet("cat","project_assets/spritesheets/cat.json");
@@ -41,7 +42,6 @@ export default class Level_Prisoner extends GameLevel{
         this.load.image("inventorySlot", "project_assets/sprites/inventory.png");
         this.load.image("yoyo","project_assets/item/yoyo.png");
         this.load.object("weaponData","project_assets/data/weaponData.json");
-        this.load.audio("level1_music", "project_assets/music/theme_music.mp3");
         this.load.image("stone","project_assets/item/Stone.png");
         this.load.image("breakable","project_assets/data/Level_Prisoner_data/breakable.png");
 
@@ -73,7 +73,7 @@ export default class Level_Prisoner extends GameLevel{
         this.h1 = new HighLight();
 
         this.setGoal("Escape The Raccoon Prison!");
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1_music", loop: true, holdReference: true});
+        // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1_music", loop: true, holdReference: true});
 
         let weaponData = this.load.getObject("weaponData");
 

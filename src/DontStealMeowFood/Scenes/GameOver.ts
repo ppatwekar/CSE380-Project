@@ -9,16 +9,23 @@ import Color from "../../Wolfie2D/Utils/Color";
 import MainMenu from "./MainMenu";
 
 export default class GameOver extends Scene {
-
+    loadScene(): void {}
+    
     startScene() {
-        const center = this.viewport.getCenter();
+        // const center = this.viewport.getCenter();
 
         this.addUILayer("primary");
 
-        const gameOver = <Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(center.x, center.y), text: "Game Over"});
+        // Center the viewport
+        let size = this.viewport.getHalfSize();
+        this.viewport.setFocus(size);
+
+        this.viewport.setZoomLevel(1);
+
+        const gameOver = <Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(size.x, size.y), text: "Game Over"});
         gameOver.textColor = Color.WHITE;
 
-        const back = <Button>this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y+100), text:"Main Menu"});
+        const back = <Button>this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(size.x, size.y+100), text:"Main Menu"});
         back.size.set(200, 50);
         back.borderWidth = 2;
         back.borderColor = Color.WHITE;
@@ -33,7 +40,7 @@ export default class GameOver extends Scene {
             let event = this.receiver.getNextEvent();
 
             if(event.type==="menu"){
-                this.sceneManager.changeToScene(MainMenu);
+                this.sceneManager.changeToScene(MainMenu, {});
             }
         }
     }

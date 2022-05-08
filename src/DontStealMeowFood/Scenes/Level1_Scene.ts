@@ -32,6 +32,7 @@ export default class Level1_Scene extends GameLevel {
     protected h1 : HighLight;
 
     loadScene(): void {
+        super.loadScene();
         this.load.tilemap("level1","project_assets/tilemaps/level1_tilemap/TutorialLevel.json");
         this.load.object("navmesh","project_assets/data/level1_data/navmesh.json");
         this.load.spritesheet("cat","project_assets/spritesheets/cat.json");
@@ -40,7 +41,6 @@ export default class Level1_Scene extends GameLevel {
         this.load.image("inventorySlot", "project_assets/sprites/inventory.png");
         this.load.image("yoyo","project_assets/item/yoyo.png");
         this.load.object("weaponData","project_assets/data/weaponData.json");
-        this.load.audio("level1_music", "project_assets/music/theme_music.mp3");
     }
 
     startScene(): void {
@@ -78,7 +78,7 @@ export default class Level1_Scene extends GameLevel {
         this.h1 = new HighLight();
 
         this.setGoal("Find the Exit!", Color.BLACK, Color.WHITE);
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1_music", loop: true, holdReference: true});
+        // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1_music", loop: true, holdReference: true});
     }
 
     updateScene(deltaT: number): void {

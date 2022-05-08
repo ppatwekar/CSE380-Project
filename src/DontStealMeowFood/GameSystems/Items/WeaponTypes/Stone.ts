@@ -16,7 +16,7 @@ export default class Stone{
         this.owner.visible = false;
         this.owner.addPhysics(new Circle(Vec2.ZERO,3));
         this.owner.setGroup("stone");
-        this.owner.setTrigger("player",Custom_Events.STONE_HIT_PLAYER,null);
+        // this.owner.setTrigger("player",Custom_Events.STONE_HIT_PLAYER,null);
         this.owner.setTrigger("enemy",Custom_Events.STONE_HIT_ENEMY,null);
         this.speed = speed;
     }

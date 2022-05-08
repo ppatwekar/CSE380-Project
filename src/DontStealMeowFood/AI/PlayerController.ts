@@ -142,17 +142,29 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             case Custom_Events.PAUSE_EVENT:
                 {
                     this.isPaused = !this.isPaused;
+                    if (this.isPaused) {
+                        // In Pause
+                        this.inventory.hideInventory();
+                    } else {
+                        console.log("Showing>");
+                        this.inventory.showInventory();
+                    }
                 }
                 break;
             case Custom_Events.PLAYER_DEATH:
                 {
                     console.log("player paused");
                     this.isPaused = true;
+                    this.handlePlayerDeath();
                 }
                 break;
         }
 
      }
+
+    handlePlayerDeath() {
+        this.receiver.destroy();
+    }
 
     // TODO
     update(deltaT: number): void {

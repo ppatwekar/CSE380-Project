@@ -33,6 +33,8 @@ import GameOver from "./GameOver";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
+import PauseManager from "../GameSystems/PauseManager";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 export default class GameLevel extends Scene {
     protected playerSpawn: Vec2; 
@@ -52,14 +54,20 @@ export default class GameLevel extends Scene {
     protected isPaused: boolean;
 
     /* Pause Manager */
+    protected pauseManager: PauseManager;
     private pauseLayer: Layer;
     private control: Layer;
     private help: Layer;
+    protected menuState: string;
 
     protected mainLayer: Layer;
 
     protected nextLevel: new (...args: any) => GameLevel;
     
+    loadScene(): void {
+        this.load.audio("level1_music", "project_assets/music/theme_music.mp3");
+    }
+
     startScene(): void{
         this.mainLayer = this.addLayer("primary",10);
 
@@ -72,8 +80,11 @@ export default class GameLevel extends Scene {
         AudioManager.setVolume(AudioChannelType.MUSIC, 0.1);
 
         /* Pause layer */
-        this.initPause();
+        // this.initPause();
+        this.pauseManager = new PauseManager(this);
         this.isPaused = false;
+
+        this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: "level1_music", loop: true, holdReference: true});
     }
 
     updateScene(deltaT: number): void{
@@ -81,8 +92,13 @@ export default class GameLevel extends Scene {
         let currHealth = (<BattlerAI>this.player._ai).health;
         this.healthDisplay.text = "Health: " + currHealth;
         if (Input.isKeyJustPressed("escape")) {
-            this.emitter.fireEvent(Custom_Events.IN_CINEMATIC, {inCinematic: !this.inCinematic});
-            this.emitter.fireEvent(Custom_Events.PAUSE_EVENT);
+            // this.emitter.fireEvent(Custom_Events.IN_CINEMATIC, {inCinematic: !this.inCinematic});
+            this.emitter.fireEvent(Custom_Events.PAUSE_EVENT, {ignoreClick: this.isPaused});
+        }
+        if (Input.isMouseJustPressed(0) && !Input.isMouseJustPressed(2)) {
+            if (this.menuState !== null) {
+                this.emitter.fireEvent(this.menuState);
+            }
         }
     }
 
@@ -92,6 +108,17 @@ export default class GameLevel extends Scene {
             let event = this.receiver.getNextEvent();
             this.handleEvent(event);
             
+        }
+
+        this.pauseManager.update();
+        let response = this.pauseManager.handleAllEvents();
+        if (response !== null && this.isPaused) {
+            if (response === "mainMenuPause") {
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1_music"});
+                this.sceneManager.changeToScene(MainMenu, {});
+            } else if (response === "resume") {
+                this.emitter.fireEvent(Custom_Events.PAUSE_EVENT);
+            }
         }
 
     }
@@ -155,51 +182,25 @@ export default class GameLevel extends Scene {
                 {
                     this.isPaused = !this.isPaused;
                     if (this.isPaused) {
-                        this.showPause();
+                        this.mainLayer.disable();
+                        this.pauseManager.showPause();
                     } else {
-                        console.log("Ushow!");
-                        this.unshowPause();
+                        this.mainLayer.enable();
+                        this.pauseManager.unshowPause();
                     }
                 }
                 break;
-            case "pauseMenu":
-                {
-                    this.showPause();
-                    break;
-                }
-            case "controls":
-                {
-                    this.showControls();
-                }
-                break;
-            case "help":
-                {
-                    this.showHelp();
-                }
-                break;
-            case "mainMenu":
-                {
-                    this.sceneManager.changeToScene(MainMenu);
-                }
-                break;
-            case "resume":
-                console.log("SEEING RESUME!");
-                this.emitter.fireEvent(Custom_Events.PAUSE_EVENT);
-                break;
-        }
-
-        if (event.type === "resume") {
-            console.log("SEEING RESUME WITH IF...");
         }
     }
 
     protected gameover(): void{
         console.log("change scene to gameover");
+        this.receiver.destroy();
         this.sceneManager.changeToScene(GameOver);
     }
 
     protected setGoal(text: string, textColor = Color.WHITE, backgroundColor = Color.BLACK) : void {
-        this.goalDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "objectives", {position: new Vec2(50, 10), text: text});
+        this.goalDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "objectives", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(this.viewport.getCenter().clone().scale(0.19, 0.21) ), text: text});
         this.goalDisplay.textColor = textColor;
         this.goalDisplay.backgroundColor = backgroundColor;
     }
@@ -282,12 +283,7 @@ export default class GameLevel extends Scene {
             Custom_Events.PLAYER_DEATH,
             Custom_Events.PAUSE_EVENT,
             Custom_Events.COMPLETE_OBJECTIVE,
-            Custom_Events.IN_CINEMATIC,
-            "pauseMenu",
-            "controls",
-            "help",
-            "mainMenu",
-            "resume"
+            Custom_Events.IN_CINEMATIC  
         ]);
     }
 
@@ -318,262 +314,103 @@ export default class GameLevel extends Scene {
     
 
     
-}
-
-
-createNavmesh(key : string) : void {
-    let graphLayer = this.addLayer("graph");
-    graphLayer.setHidden(true);
-
-    let navmeshData = this.load.getObject(key);
-
-    this.navGraph = new PositionGraph();
-
-    for(let node of navmeshData["nodes"]){
-        let position : Vec2 = new Vec2(node[0]/2,node[1]/2);
-
-        this.navGraph.addPositionedNode(position);
-
-        this.add.graphic(GraphicType.POINT, "graph", {position: position});
     }
 
-    for(let edge of navmeshData["edges"]){
-        this.navGraph.addEdge(edge[0],edge[1]);
 
-        this.add.graphic(GraphicType.LINE,"graph",{start : this.navGraph.getNodePosition(edge[0]), end : this.navGraph.getNodePosition(edge[1])});
-    }
+    createNavmesh(key : string) : void {
+        let graphLayer = this.addLayer("graph");
+        graphLayer.setHidden(true);
 
-    let navmesh = new Navmesh(this.navGraph);
-    this.navManager.addNavigableEntity(Custom_Names.NAVMESH,navmesh);
+        let navmeshData = this.load.getObject(key);
 
-}
+        this.navGraph = new PositionGraph();
 
+        for(let node of navmeshData["nodes"]){
+            let position : Vec2 = new Vec2(node[0]/2,node[1]/2);
 
-initializeEnemyWeapons(enemies :AnimatedSprite[]) : void{
-    const enemyData = this.load.getObject("enemyData");
-    for(let i = 0; i<enemies.length; i++){
-        let data = enemyData.enemies[i];
-        let weapon = this.createWeapon(data.weapon);
-        weapon.sprite.visible = false;
-        (<EnemyAI>enemies[i]._ai).weapon = weapon;
-        (<EnemyAI>enemies[i]._ai).inRange = weapon.type instanceof RaccoonStoner ? 128 : 32;
-    }
-}
+            this.navGraph.addPositionedNode(position);
 
-getStonePool() : StoneController{
-    return this.stoneController;
-}
-
-initializeEnemies(data : Record<string,any>) : void {
-    const enemyData = data;
-    //console.log(enemyData);
-
-    this.enemies = new Array(enemyData.numEnemies);
-
-    for(let i = 0; i<enemyData.numEnemies; i++){
-        let data = enemyData.enemies[i];
-        //console.log(data);
-
-        this.enemies[i] = this.add.animatedSprite(data.type,"primary");
-        this.enemies[i].position.set(data.position[0]/2, data.position[1]/2);
-        this.enemies[i].animation.play("IdleR");
-
-        this.enemies[i].addPhysics(new AABB(Vec2.ZERO, new Vec2(8,8)));
-        if(data.route){
-            data.route = data.route.map((index : number) => this.navGraph.getNodePosition(index));
-        }
-        else{
-            data.guardPosition = new Vec2(data.guardPosition[0]/2, data.guardPosition[1]/2);
+            this.add.graphic(GraphicType.POINT, "graph", {position: position});
         }
 
-        
-        let enemyVision = 96;
-        
+        for(let edge of navmeshData["edges"]){
+            this.navGraph.addEdge(edge[0],edge[1]);
 
-        let statusArray: Array<string> = [];            
-        let actionsDef = [new AttackAction(3, [Custom_Statuses.IN_RANGE], [Custom_Statuses.REACHED_GOAL], {inRange: 16}),
-        new Move(4, [], [Custom_Statuses.IN_RANGE], {inRange: 100}), //100
-        new Retreat(1, [Custom_Statuses.LOW_HEALTH, Custom_Statuses.CAN_RETREAT], [Custom_Statuses.REACHED_GOAL], {retreatDistance: 200})
-        ];
+            this.add.graphic(GraphicType.LINE,"graph",{start : this.navGraph.getNodePosition(edge[0]), end : this.navGraph.getNodePosition(edge[1])});
+        }
 
-        let enemyOptions = {
-            defaultMode: data.mode,
-            patrolRoute: data.route, // This only matters if they're a patroller
-            guardPosition: data.guardPosition,  // This only matters if the're a guard
-            player : this.player,
-            goal: Custom_Statuses.REACHED_GOAL,
-            status: statusArray,
-            actions: actionsDef,
-            inRange: 32, //128
-            vision: enemyVision,
-            health: 10,
-            custID : data.custID
-        }    
-        this.enemies[i].addAI(EnemyAI,enemyOptions);
-        this.enemies[i].setGroup("enemy");
-        this.enemies[i].setTrigger("yoyo",Custom_Events.YOYO_HIT_ENEMY,null);
+        let navmesh = new Navmesh(this.navGraph);
+        this.navManager.addNavigableEntity(Custom_Names.NAVMESH,navmesh);
+
     }
 
-    //(<YoyoController>this.yoyo._ai).enemies = this.enemies;
 
-}
-
-initPause() {
-        /* Add a pauseMenu Layer */
-        const layerName = "pauseMenu";
-        this.pauseLayer = this.addUILayer(layerName);
-        this.pauseLayer.setDepth(105);
-        // let l = <Rect>this.add.graphic(GraphicType.RECT, layerName, {position: new Vec2(this.viewport.getCenter().x / this.viewport.getZoomLevel(), this.viewport.getCenter().y / this.viewport.getZoomLevel()), size: this.viewport.getHalfSize().clone().scale(1.85)});
-        // l.setColor(Color.BLACK);
-        // l.alpha = 1;
-    
-        let resume = <Button>this.add.uiElement(UIElementType.BUTTON, layerName, {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 50)), text: "Resume"});
-        resume.onClickEventId = "resume";
-
-        let control = <Label>this.add.uiElement(UIElementType.LABEL, layerName, {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 0)), text: "Controls"});
-        control.onClickEventId = "controls";
-
-        let helpButton = <Label>this.add.uiElement(UIElementType.LABEL, layerName, {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, -25)), text: "Help"});
-        helpButton.onClickEventId = "help";
-
-        let menu = <Label>this.add.uiElement(UIElementType.LABEL, layerName, {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, -50)), text: "Main Menu"});
-        menu.onClickEventId = "mainMenu";
-
-        resume.backgroundColor = control.backgroundColor = helpButton.backgroundColor = menu.backgroundColor = Color.BLACK;
-        resume.textColor = control.textColor = helpButton.textColor = menu.textColor = Color.WHITE;
-
-        resume.onClick = () => {
-            console.log("CLICKED RESUME!");
+    initializeEnemyWeapons(enemies :AnimatedSprite[]) : void{
+        const enemyData = this.load.getObject("enemyData");
+        for(let i = 0; i<enemies.length; i++){
+            let data = enemyData.enemies[i];
+            let weapon = this.createWeapon(data.weapon);
+            weapon.sprite.visible = false;
+            (<EnemyAI>enemies[i]._ai).weapon = weapon;
+            (<EnemyAI>enemies[i]._ai).inRange = weapon.type instanceof RaccoonStoner ? 128 : 32;
         }
-        resume.onEnter = () => {
-            console.log("ENTERED RESUME");
-            resume.backgroundColor = Color.WHITE;
-            resume.textColor = Color.BLACK;
-        };
-        resume.onLeave = () => {
-            resume.backgroundColor = Color.BLACK;
-            resume.textColor = Color.WHITE;
-        };
+    }
 
-        control.onEnter = () => {
-            control.backgroundColor = Color.WHITE;
-            control.textColor = Color.BLACK;
-        };
-        control.onLeave = () => {
-            control.backgroundColor = Color.BLACK;
-            control.textColor = Color.WHITE;
-        };
+    getStonePool() : StoneController{
+        return this.stoneController;
+    }
 
-        helpButton.onEnter = () => {
-            helpButton.backgroundColor = Color.WHITE;
-            helpButton.textColor = Color.BLACK;
-        };
-        helpButton.onLeave = () => {
-            helpButton.backgroundColor = Color.BLACK;
-            helpButton.textColor = Color.WHITE;
-        };
+    initializeEnemies(data : Record<string,any>) : void {
+        const enemyData = data;
+        //console.log(enemyData);
 
-        menu.onEnter = () => {
-            menu.backgroundColor = Color.WHITE;
-            menu.textColor = Color.BLACK;
-        };
-        menu.onLeave = () => {
-            menu.backgroundColor = Color.BLACK;
-            menu.textColor = Color.WHITE;
-        };
+        this.enemies = new Array(enemyData.numEnemies);
 
-        this.controlsScreen();
-        this.helpScreen();
+        for(let i = 0; i<enemyData.numEnemies; i++){
+            let data = enemyData.enemies[i];
+            //console.log(data);
 
-        this.unshowPause();
-}
+            this.enemies[i] = this.add.animatedSprite(data.type,"primary");
+            this.enemies[i].position.set(data.position[0]/2, data.position[1]/2);
+            this.enemies[i].animation.play("IdleR");
 
-controlsScreen() {
-    this.control = this.addUILayer("control");
-    this.control.setHidden(true);
-    
-    const controlHeader = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 300)), text: "Controls"});
-    controlHeader.textColor = Color.WHITE;
+            this.enemies[i].addPhysics(new AABB(Vec2.ZERO, new Vec2(8,8)));
+            if(data.route){
+                data.route = data.route.map((index : number) => this.navGraph.getNodePosition(index));
+            }
+            else{
+                data.guardPosition = new Vec2(data.guardPosition[0]/2, data.guardPosition[1]/2);
+            }
 
-    const controls1 = "WASD | Move";
-    const controls2 = "E | Item Pick Up";
-    const controls3 = "Q | Drop Current Item";
-    const controls4 = "1/2/3/4/5 or Mouse Wheel Up/Down | Equip Inventory Item";
+            
+            let enemyVision = 96;
+            
 
-    const cline1 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 100)), text: controls1});
-    const cline2 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 50)), text: controls2});
-    const cline3 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()), text: controls3});
-    const cline4 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, -50)), text: controls4});
+            let statusArray: Array<string> = [];            
+            let actionsDef = [new AttackAction(3, [Custom_Statuses.IN_RANGE], [Custom_Statuses.REACHED_GOAL], {inRange: 16}),
+            new Move(4, [], [Custom_Statuses.IN_RANGE], {inRange: 100}), //100
+            new Retreat(1, [Custom_Statuses.LOW_HEALTH, Custom_Statuses.CAN_RETREAT], [Custom_Statuses.REACHED_GOAL], {retreatDistance: 200})
+            ];
 
-    cline1.textColor = cline2.textColor = cline3.textColor = cline4.textColor = Color.WHITE;
+            let enemyOptions = {
+                defaultMode: data.mode,
+                patrolRoute: data.route, // This only matters if they're a patroller
+                guardPosition: data.guardPosition,  // This only matters if the're a guard
+                player : this.player,
+                goal: Custom_Statuses.REACHED_GOAL,
+                status: statusArray,
+                actions: actionsDef,
+                inRange: 32, //128
+                vision: enemyVision,
+                health: 10,
+                custID : data.custID
+            }    
+            this.enemies[i].addAI(EnemyAI,enemyOptions);
+            this.enemies[i].setGroup("enemy");
+            this.enemies[i].setTrigger("yoyo",Custom_Events.YOYO_HIT_ENEMY,null);
+        }
 
-    // Back Button
-    const controlBack = this.add.uiElement(UIElementType.BUTTON, "control", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(-25, 0)), text: "Back"});
-    controlBack.size.set(200, 50);
-    controlBack.borderWidth = 2;
-    controlBack.borderColor = Color.WHITE;
-    controlBack.backgroundColor = Color.TRANSPARENT;
-    controlBack.onClickEventId = "pauseMenu";
-}
+        //(<YoyoController>this.yoyo._ai).enemies = this.enemies;
 
-helpScreen() {
-    this.help = this.addUILayer("help");
-    this.help.setHidden(true);
-
-    const aboutHeader = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 250)), text: "Help"});
-    aboutHeader.textColor = Color.WHITE;
-
-    // Resolved: Give yourself credit and add your name to the about page!
-    const text1 = "Story:";
-    const text2 = "Vanilla the cat had been living peacefully her entire life," ;
-    const text2s = "but recently a gang of raccoons invaded her living space and stole all her cat food.";
-    const text2t = "Vanilla decides to take revenge on the raccoons and get her food back";
-    const text3 = "Created by Jun Yi Lin, Tahmidul Alam, and Prathamesh Patwekar";
-
-    const line1 = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 150)), text: text1});
-    const line2 = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 100)), text: text2});
-    const line2s = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 50)), text: text2s});
-    const line2t = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()), text: text2t});
-    const line3 = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, -50)), text: text3});
-
-    line1.textColor = Color.WHITE;
-    line2.textColor = Color.WHITE;
-    line2s.textColor = Color.WHITE;
-    line2t.textColor = Color.WHITE;
-    line3.textColor = Color.YELLOW;
-
-    const aboutBack = this.add.uiElement(UIElementType.BUTTON, "help", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(-25, 0)), text: "Back"});
-    aboutBack.size.set(200, 50);
-    aboutBack.borderWidth = 2;
-    aboutBack.borderColor = Color.WHITE;
-    aboutBack.backgroundColor = Color.TRANSPARENT;
-    aboutBack.onClickEventId = "pauseMenu";
-}
-
-showPause() {
-    this.mainLayer.setHidden(true);
-    this.pauseLayer.enable();
-    this.pauseLayer.setHidden(false);
-    this.control.setHidden(true);
-    this.help.setHidden(true);
-}
-unshowPause() {
-    // console.log("UNSHOW!");
-    this.control.setHidden(true);
-    this.help.setHidden(true);
-    this.pauseLayer.setHidden(true);
-    this.pauseLayer.disable();
-    this.mainLayer.setHidden(false);
-}
-showControls() {
-    this.pauseLayer.setHidden(true);
-    this.control.setHidden(false);
-    this.help.setHidden(true);
-}
-showHelp() {
-    this.pauseLayer.setHidden(true);
-    this.control.setHidden(true);
-    this.help.setHidden(false);
-}
-    
+    } 
 }
