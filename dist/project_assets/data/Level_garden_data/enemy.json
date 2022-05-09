@@ -13,7 +13,7 @@
             "mode" : "patrol",
             "route" : [4,5,6],
             "type" : "raccoon",
-            "weapon" : "raccHitHard",
+            "weapon" : "raccClaw",
             "custID" : "strongEnemy1"
         },
         {
@@ -63,7 +63,7 @@
             "mode" : "patrol",
             "route" : [25,26,27,28],
             "type" : "raccoon",
-            "weapon" : "raccHitHard",
+            "weapon" : "raccClaw",
             "custID" : "strongEnemy2"
         }
     ]
