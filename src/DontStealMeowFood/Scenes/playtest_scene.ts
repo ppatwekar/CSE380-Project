@@ -21,6 +21,7 @@ import AttackAction from "../AI/EnemyActions/Attack";
 import Move from "../AI/EnemyActions/Move";
 import Retreat from "../AI/EnemyActions/Retreat";
 import StoneController from "../GameSystems/Items/WeaponTypes/StoneController";
+import Color from "../../Wolfie2D/Utils/Color";
 
 export default class playtest_scene extends GameLevel{
     private bushes : OrthogonalTilemap;
@@ -32,11 +33,11 @@ export default class playtest_scene extends GameLevel{
     
     loadScene(): void {
         super.loadScene();
-        this.load.tilemap("playTestLevel","project_assets/tilemaps/sampleMap.json");
-        this.load.object("navmesh","project_assets/data/navmesh.json");
-        this.load.object("enemyData","project_assets/data/enemy.json");
+        this.load.tilemap("playTestLevel","project_assets/tilemaps/Level2/sampleMap.json");
+        this.load.object("navmesh","project_assets/data/Level2/navmesh.json");
+        this.load.object("enemyData","project_assets/data/Level2/enemy.json");
         this.load.object("weaponData","project_assets/data/weaponData.json");
-        this.load.object("items","project_assets/data/items.json");
+        this.load.object("items","project_assets/data/Level2/items.json");
     }
 
 
@@ -75,13 +76,14 @@ export default class playtest_scene extends GameLevel{
         this.initializeEnemyWeapons(this.enemies);
         this.h1 = new HighLight();
 
-        this.setGoal("Objective: Playtest!");
 
         let weaponData = this.load.getObject("weaponData");
 
         this.stoneController = new StoneController(this,weaponData.weapons[2].speed);
 
         this.spawnItems(this.load.getObject("items"));
+
+        this.setGoal("Objective: Kill all raccoons!!",Color.WHITE,Color.BLACK,new Vec2(80,10));
 
 
     }
@@ -91,6 +93,9 @@ export default class playtest_scene extends GameLevel{
         this.stoneController.update();
         super.updateScene(deltaT);
         this.h1.checkClosestEnemies(this.enemies, this.player);
+        if(this.enemies.length === 0){
+            //this.setGoal("Level Finished");
+        }
     }
 
     

@@ -30,6 +30,7 @@ export default class Level_Prisoner extends GameLevel{
     // A list of items
     protected h1 : HighLight;
     private levelEndArea : Rect;
+    private realEnd : Rect;
     private rec : Receiver;
 
     
@@ -44,7 +45,7 @@ export default class Level_Prisoner extends GameLevel{
     }
 
     startScene(): void {
-        this.playerSpawn = new Vec2(344,264);
+        this.playerSpawn = new Vec2(345,264); //344, 264
         let tilemapLayers = this.add.tilemap("prisonerLevel",new Vec2(0.5,0.5));
         this.bushes = <OrthogonalTilemap>tilemapLayers[1].getItems()[0];
 
@@ -65,6 +66,9 @@ export default class Level_Prisoner extends GameLevel{
 
         (<PlayerController>this.player._ai).enemies = this.enemies;
 
+        (<PlayerController>this.player._ai).numFoodItems = 7;
+
+
         this.initializeEnemyWeapons(this.enemies);
         this.h1 = new HighLight();
 
@@ -78,10 +82,12 @@ export default class Level_Prisoner extends GameLevel{
         this.setCustomProperties();
 
         this.addLevelEnd(new Vec2(608,1808),new Vec2(12,12));
+        this.addLevelRealEnd(new Vec2(336,1808),new Vec2(12,12));
         this.rec = new Receiver();
-        this.rec.subscribe(Custom_Events.PLAYER_ENTERED_LEVEL_END);
+        this.rec.subscribe([Custom_Events.PLAYER_ENTERED_LEVEL_END, "LevelReallyEnded"]);
 
         this.spawnItems(this.load.getObject("items"));
+
 
 
 
@@ -97,6 +103,14 @@ export default class Level_Prisoner extends GameLevel{
                     {
                         this.player.position = new Vec2(344,264);
                         this.setGoal("Oops! You chose the wrong tile and Teleported Back to the Beginning",Color.WHITE, Color.BLACK, new Vec2(115,10));
+                        break;
+                    }
+                case "LevelReallyEnded":
+                    {
+                        if((<PlayerController>this.player._ai).numFoodItems == 0){
+                            this.setGoal("Congratulations! You made it out of the raccoon prison.",Color.WHITE, Color.BLACK, new Vec2(100,10));
+                            break;
+                        }
                     }
             }
         }
@@ -115,6 +129,8 @@ export default class Level_Prisoner extends GameLevel{
 
     setCustomProperties() : void{
         BreakableTile.makeTiles(new Vec2(408,920),new Vec2(6,0),this);
+        BreakableTile.makeTiles(new Vec2(824,1272),new Vec2(0,5),this);
+        
     }
 
     addLevelEnd(position : Vec2, size : Vec2){
@@ -123,6 +139,13 @@ export default class Level_Prisoner extends GameLevel{
         this.levelEndArea.setTrigger("player", Custom_Events.PLAYER_ENTERED_LEVEL_END, null);
         this.levelEndArea.color = new Color(1,0,0,1);
 
+    }
+
+    addLevelRealEnd(position : Vec2, size : Vec2){
+        this.realEnd = <Rect>this.add.graphic(GraphicType.RECT,"primary",{position : position, size : size});
+        this.realEnd.addPhysics(undefined, undefined, false, true);
+        this.realEnd.setTrigger("player", "LevelReallyEnded", null);
+        this.realEnd.color = new Color(1,0,0,1);
     }
 
     

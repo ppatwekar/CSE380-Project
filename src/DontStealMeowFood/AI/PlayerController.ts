@@ -294,24 +294,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             
         }
         
-        //Target an enemy and attack
-        /*
-        if (this.target != null) {
-            let item = this.inventory.getItem();
-            this.lookDirection = this.owner.position.dirTo(this.target);
-
-            // If there is an item in the current slot, use it
-            if (item) {
-                item.use(this.owner, "player", this.lookDirection);
-                this.owner.rotation = Vec2.UP.angleToCCW(this.lookDirection);
-
-                if (item instanceof Healthpack) {
-                    // Destroy the used healthpack
-                    this.inventory.removeItem();
-                    item.sprite.visible = false;
-                }
-            }
-        } */
+        
     }
 
     yoyoMousePos : Vec2;

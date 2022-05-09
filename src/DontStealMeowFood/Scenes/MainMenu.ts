@@ -223,7 +223,7 @@ export default class MainMenu extends Scene {
                         ]
                     }
                 };
-                this.sceneManager.changeToScene(playtest_scene, {}, sceneOptions);
+                this.sceneManager.changeToScene(Level1_Scene, {}, sceneOptions);
             } else if(event.type === "level2"){
                 let sceneOptions = {
                     physics : {
@@ -243,7 +243,7 @@ export default class MainMenu extends Scene {
                         ]
                     }
                 };
-                this.sceneManager.changeToScene(Level1_Scene, {}, sceneOptions);
+                this.sceneManager.changeToScene(playtest_scene, {}, sceneOptions);
             }
             else if(event.type === "level3"){
                 let sceneOptions = {
