@@ -1,0 +1,16 @@
+{
+    "items": [
+        {
+            "type": "healthpack",
+            "position": [1968, 1072]
+        },
+        {
+            "type": "healthpack",
+            "position": [1968, 1136]
+        },
+        {
+            "type": "healthpack",
+            "position": [1968, 1200]
+        }
+    ]
+}

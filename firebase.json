@@ -33,6 +33,11 @@
         "source": "/benchmark3",
         "destination": "/benchmark3/dist/index.html",
         "type": 302
+      },
+      {
+        "source": "/",
+        "destination": "/finalProd/dist/index.html",
+        "type": 302
       }
     ]
   },

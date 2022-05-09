@@ -1,0 +1,53 @@
+{
+    "numWeapons": 4,
+    "weapons": [
+        {
+            "weaponType": "yoyo",
+            "name": "yoyo",
+            "displayName": "YoYo",
+            "spriteKey": "yoyo",
+            "damage": 3,
+            "cooldown": 250,
+            "useVolume": 650,
+            "color": "#FFEEDD",
+            "speed" : 3,
+            "range" : 80
+        },
+        {
+            "weaponType" : "raccClaw",
+            "name" : "raccClaw",
+            "displayName" : "raccClaw",
+            "damage" : 7,
+            "cooldown" : 2000,
+            "spriteKey" : "raccoon",
+            "useVolume" : 650
+
+
+        },
+        {
+            "weaponType" : "raccStone",
+            "name" : "raccStone",
+            "displayName" : "raccStone",
+            "damage" : 4,
+            "cooldown" : 1000,
+            "spriteKey" : "stone",
+            "useVolume" : 650,
+            "speed" : 4,
+            "numStones" : 5
+
+
+        },
+        {
+            "weaponType" : "raccHitHard",
+            "name" : "raccHitHard",
+            "displayName" : "raccHitHard",
+            "damage" : 15,
+            "cooldown" : 500,
+            "spriteKey" : "raccoon",
+            "useVolume" : 650,
+            "speed" : 4,
+            "numStones" : 5
+        }
+    
+    ]
+}

@@ -1,0 +1,56 @@
+{
+    "numEnemies" : 7,
+    "enemies" : [
+        {
+            "position" : [478,1602],
+            "mode" : "patrol",
+            "route" : [0, 1],
+            "type" : "raccoon",
+            "weapon" : "raccClaw"
+        },
+        {
+            "position" : [374, 1948],
+            "mode" : "patrol",
+            "route" : [3,4,5,6,7,8,9],
+            "type" : "raccoon",
+            "weapon" : "raccHitHard",
+            "custID" : "strongEnemy1"
+        },
+        {
+            "position" : [878,1904],
+            "mode" : "patrol",
+            "route" : [6,7,8,9,3,4,5],
+            "type" : "raccoon",
+            "weapon" : "raccHitHard",
+            "custID" : "strongEnemy2"
+        },
+        {
+            "position" : [1168,2772],
+            "mode" : "patrol",
+            "route" : [10,11,12,13],
+            "type" : "raccoon",
+            "weapon" : "raccStone"
+        },
+        {
+            "position" : [1692,2994],
+            "mode" : "patrol",
+            "route" : [14,15],
+            "type" : "raccoon",
+            "weapon" : "raccClaw"
+        },
+        {
+            "position" : [1392,2872],
+            "mode" : "patrol",
+            "route" : [12,13,10,11],
+            "type" : "raccoon",
+            "weapon" : "raccStone"
+        },
+        {
+            "position" : [1248,3112],
+            "mode" : "patrol",
+            "route" : [16,17],
+            "type" : "raccoon",
+            "weapon" : "raccClaw"
+        }
+    ]
+}

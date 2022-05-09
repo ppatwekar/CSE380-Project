@@ -1,0 +1,49 @@
+{
+    "numFood": 7,
+    "items" : [
+        {
+            "type" : "healthpack",
+            "position" : [638,240]
+        },
+        {
+            "type" : "healthpack",
+            "position" : [820,240]
+        },
+        {
+            "type" : "healthpack",
+            "position" : [602,898]
+        },
+        {
+            "type" : "healthpack",
+            "position" : [816,910]
+        },
+        {
+            "type" : "food",
+            "position" : [1040,2124]
+        },
+        {
+            "type" : "food",
+            "position" : [1332,2130]
+        },
+        {
+            "type" : "food",
+            "position" : [1618,2126]
+        },
+        {
+           "type" : "food",
+           "position" : [1524,2560] 
+        },
+        {
+            "type" : "food",
+            "position" : [1522,2616]
+        },
+        {
+            "type" : "food",
+            "position" : [1466,2646]
+        },
+        {
+            "type" : "food",
+            "position" : [1568,2654]
+        }
+    ]
+}

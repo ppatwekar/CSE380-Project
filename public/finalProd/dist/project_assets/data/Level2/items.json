@@ -1,0 +1,28 @@
+{
+    "items" : [
+        {
+            "type" : "healthpack",
+            "position" : [231,110]
+        },
+        {
+            "type" : "food",
+            "position" : [231,310]
+        },
+        {
+            "type" : "healthpack",
+            "position" : [1318,1802]
+        },
+        {
+            "type" : "food",
+            "position" : [928,1262]
+        },
+        {
+            "type" : "healthpack",
+            "position" : [1798,1608]
+        },
+        {
+            "type" : "food",
+            "position" : [1678,2282]
+        }
+    ]
+}

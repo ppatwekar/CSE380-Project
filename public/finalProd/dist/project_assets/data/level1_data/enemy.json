@@ -1,0 +1,11 @@
+{
+    "numEnemies" : 1,
+    "enemies" : [
+        {
+            "position" : [1152,1056],
+            "mode" : "patrol",
+            "route" : [0, 1],
+            "type" : "raccoon"
+        }
+    ]
+}
