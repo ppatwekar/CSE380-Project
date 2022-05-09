@@ -1,4 +1,5 @@
 {
+    "numFood": 7,
     "items" : [
         {
             "type" : "healthpack",

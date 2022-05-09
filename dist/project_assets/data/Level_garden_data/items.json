@@ -1,0 +1,21 @@
+{
+    "numFood": 0,
+    "items" : [
+        {
+            "type" : "healthpack",
+            "position" : [81,1882]
+        },
+        {
+            "type" : "healthpack",
+            "position" : [1192,1822]
+        },
+        {
+            "type" : "healthpack",
+            "position" : [1042,421]
+        },
+        {
+            "type" : "healthpack",
+            "position" : [337,1049]
+        }
+    ]
+}

@@ -31,6 +31,7 @@ export default class Level_Garden extends GameLevel{
         this.load.tilemap("gardenLevel","project_assets/tilemaps/Level_garden_tilemap/Level_garden.json");
         this.load.object("navmesh","project_assets/data/Level_garden_data/navmesh.json");
         this.load.object("enemyData","project_assets/data/Level_garden_data/enemy.json");
+        this.load.object("items","project_assets/data/Level_garden_data/items.json");
     }
 
     startScene(): void {
@@ -58,6 +59,7 @@ export default class Level_Garden extends GameLevel{
         this.initializeEnemyWeapons(this.enemies);
         this.h1 = new HighLight();
 
+        this.spawnItems(this.load.getObject("items"));
         this.setGoal("Find Exit");
 
         this.addLevelEnd(new Vec2(336,411),new Vec2(94,64));
