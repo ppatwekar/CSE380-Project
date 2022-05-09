@@ -84,9 +84,11 @@ export default class playtest_scene extends GameLevel{
 
         this.spawnItems(this.load.getObject("items"));
 
-        this.setGoal("Objective: Kill all raccoons!!",Color.WHITE,Color.BLACK,new Vec2(80,10));
+        //this.setGoal("Objective: Kill all raccoons!!",Color.WHITE,Color.BLACK,new Vec2(80,10));
 
         this.nextLevel = "Level3";
+
+        this.setGoal("Objective: Kill all raccoons!! Raccoons Left : "+this.enemies.length,Color.WHITE,Color.BLACK,new Vec2(80,10));
 
 
     }
@@ -94,7 +96,10 @@ export default class playtest_scene extends GameLevel{
 
     updateScene(deltaT: number): void {
         this.stoneController.update();
+
         super.updateScene(deltaT);
+        this.goalDisplay.text = "Objective: Kill all raccoons!! Raccoons Left : "+this.enemies.length;
+
         this.h1.checkClosestEnemies(this.enemies, this.player);
         if(this.enemies.length === 0){
             let sceneOptions = {
