@@ -500,7 +500,7 @@ export default class GameLevel extends Scene {
                 vision: enemyVision,
                 health: health,
                 speed: speed,
-                custID : data["custId"]
+                custID : data["custID"]
             }    
             this.enemies[i].addAI(EnemyAI,enemyOptions);
             this.enemies[i].setGroup("enemy");
