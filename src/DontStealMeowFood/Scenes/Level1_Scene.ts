@@ -35,6 +35,7 @@ export default class Level1_Scene extends GameLevel {
         this.load.tilemap("level1","project_assets/tilemaps/level1_tilemap/TutorialLevel.json");
         this.load.object("navmesh","project_assets/data/level1_data/navmesh.json");
         this.load.object("enemyData","project_assets/data/level1_data/enemy.json");
+        this.load.object("items", "project_assets/data/level1_data/items.json");
     }
 
     startScene(): void {
@@ -75,6 +76,8 @@ export default class Level1_Scene extends GameLevel {
 
         this.setGoal("Find the Exit!", Color.BLACK, Color.WHITE, new Vec2(50, 10));
         // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1_music", loop: true, holdReference: true});
+
+        this.spawnItems(this.load.getObject("items"));
     }
 
     updateScene(deltaT: number): void {
