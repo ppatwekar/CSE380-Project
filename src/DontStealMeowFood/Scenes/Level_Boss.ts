@@ -19,6 +19,7 @@ import HighLight from "../GameSystems/HighLight";
 import Item from "../GameSystems/items/Item";
 import StoneController from "../GameSystems/Items/WeaponTypes/StoneController";
 import GameLevel from "./GameLevel"
+import GameWin from "./GameWin";
 import MainMenu from "./MainMenu";
 
 export default class Level_Boss extends GameLevel{
@@ -88,7 +89,7 @@ export default class Level_Boss extends GameLevel{
             }
             if (bossHealth <= 0) {
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1_music"});
-                this.sceneManager.changeToScene(MainMenu, {});
+                this.sceneManager.changeToScene(GameWin, {});
             }
             this.bossHealthDisplay.text = "Boss Remaining Health: " + bossHealth;
         }
