@@ -41,6 +41,7 @@ export default class Level_Prisoner extends GameLevel{
         this.load.object("enemyData","project_assets/data/Level_Prisoner_data/enemy.json");
         this.load.object("weaponData","project_assets/data/weaponData.json");
         this.load.image("breakable","project_assets/data/Level_Prisoner_data/breakable.png");
+        this.load.object("items","project_assets/data/Level_Prisoner_data/items.json");
 
     }
 
@@ -81,6 +82,8 @@ export default class Level_Prisoner extends GameLevel{
         this.addLevelEnd(new Vec2(608,1808),new Vec2(12,12));
         this.rec = new Receiver();
         this.rec.subscribe(Custom_Events.PLAYER_ENTERED_LEVEL_END);
+
+        this.spawnItems(this.load.getObject("items"));
 
 
 

@@ -225,6 +225,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     item.sprite.destroy();
                 }
             }
+            
 
             
             
