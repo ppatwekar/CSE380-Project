@@ -131,7 +131,7 @@ export default class Level_Prisoner extends GameLevel{
                                     ]
                                 }
                             };
-
+                            this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1_music"});
                             this.sceneManager.changeToScene(Level_Sea,{},sceneOptions);
                             break;
                         }

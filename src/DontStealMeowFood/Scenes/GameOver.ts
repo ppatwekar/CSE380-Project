@@ -1,4 +1,5 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Input from "../../Wolfie2D/Input/Input";
 import UIElement from "../../Wolfie2D/Nodes/UIElement";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
@@ -40,6 +41,7 @@ export default class GameOver extends Scene {
             let event = this.receiver.getNextEvent();
 
             if(event.type==="menu"){
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1_music"});
                 this.sceneManager.changeToScene(MainMenu, {});
             }
         }

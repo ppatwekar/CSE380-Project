@@ -1,5 +1,6 @@
 import PositionGraph from "../../Wolfie2D/DataTypes/Graphs/PositionGraph";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Receiver from "../../Wolfie2D/Events/Receiver";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
@@ -101,6 +102,7 @@ export default class Level_Sea extends GameLevel{
                     ]
                 }
             };
+            this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1_music"});
             this.sceneManager.changeToScene(Level_Boss,{},sceneOptions);
         }
     }

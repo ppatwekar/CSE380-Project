@@ -121,7 +121,7 @@ export default class playtest_scene extends GameLevel{
                     ]
                 }
             };
-
+            this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1_music"});
             this.sceneManager.changeToScene(Level_Garden,{},sceneOptions);
         }
     }

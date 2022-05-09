@@ -21,6 +21,9 @@ import GameLevel from "./GameLevel";
 import AttackAction from "../AI/EnemyActions/Attack";
 import Move from "../AI/EnemyActions/Move";
 import Retreat from "../AI/EnemyActions/Retreat";
+import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
+import playtest_scene from "./playtest_scene";
+import Receiver from "../../Wolfie2D/Events/Receiver";
 
 export default class Level1_Scene extends GameLevel {
     private bushes : OrthogonalTilemap;
@@ -29,6 +32,9 @@ export default class Level1_Scene extends GameLevel {
     //private enemies : Array<AnimatedSprite>;
     // A list of items
     protected h1 : HighLight;
+
+    private levelEndArea: Rect;
+    private r = new Receiver();
 
     loadScene(): void {
         super.loadScene();
@@ -39,7 +45,8 @@ export default class Level1_Scene extends GameLevel {
     }
 
     startScene(): void {
-        this.playerSpawn = new Vec2(288/2, 1760/2);
+        // this.playerSpawn = new Vec2(288/2, 1760/2);
+        this.playerSpawn = new Vec2(840/2, 888/2);
         let tilemapLayers = this.add.tilemap("level1", new Vec2(0.5,0.5));
         this.bushes = <OrthogonalTilemap>tilemapLayers[1].getItems()[0];
         console.log(this.bushes.size);
@@ -78,16 +85,32 @@ export default class Level1_Scene extends GameLevel {
         // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1_music", loop: true, holdReference: true});
 
         this.spawnItems(this.load.getObject("items"));
+
+        this.addLevelEnd(new Vec2(704/2, 832/2), new Vec2(32, 32));
+        this.r.subscribe("levelEnd");
     }
 
     updateScene(deltaT: number): void {
         super.updateScene(deltaT);
         this.h1.checkClosestEnemies(this.enemies, this.player);
+        while (this.r.hasNextEvent()) {
+            let event = this.r.getNextEvent();
+            if (event.type === "levelEnd") {
+                console.log("WHAT?");
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1_music"});
+                this.sceneManager.changeToScene(playtest_scene, {}, this.sceneOptions);
+            }
+        }
         // console.log(this.player.position.x +  ", y: " + this.player.position.y);
     }
 
     
-
+    addLevelEnd(position: Vec2, size: Vec2) {
+        this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT,"primary",{position : position, size : size});
+        this.levelEndArea.addPhysics(undefined, undefined, false, true);
+        this.levelEndArea.setTrigger("player", "levelEnd", null);
+        this.levelEndArea.color = new Color(1,0,0,1);
+    }
     
 
 }
