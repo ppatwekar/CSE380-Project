@@ -74,16 +74,6 @@ export default class Level_Garden extends GameLevel{
         this.h1.checkClosestEnemies(this.enemies, this.player);
 
     }
-
-    setCustomProperties() : void{
-        for(let enemy of this.enemies){
-            if((<EnemyAI>enemy._ai).custID === "strongEnemy1" || (<EnemyAI>enemy._ai).custID === "strongEnemy2"){
-                (<EnemyAI>enemy._ai).inRange = 500;
-                (<EnemyAI>enemy._ai).speed = 50;
-                (<EnemyAI>enemy._ai).vision = 500;
-            }
-        }
-    }
     
     addLevelEnd(position: Vec2, size: Vec2){
         this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT,"primary",{position : position, size : size});
