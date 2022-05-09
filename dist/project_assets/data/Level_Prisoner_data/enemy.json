@@ -32,23 +32,23 @@
             "weapon" : "raccStone"
         },
         {
-            "position" : [1168,2874],
+            "position" : [1692,2994],
             "mode" : "patrol",
-            "route" : [11,12,13,10],
+            "route" : [14,15],
             "type" : "raccoon",
             "weapon" : "raccClaw"
         },
         {
-            "position" : [1332,2872],
+            "position" : [1392,2872],
             "mode" : "patrol",
             "route" : [12,13,10,11],
             "type" : "raccoon",
             "weapon" : "raccStone"
         },
         {
-            "position" : [1332,2764],
+            "position" : [1248,3112],
             "mode" : "patrol",
-            "route" : [13,10,11,12],
+            "route" : [16,17],
             "type" : "raccoon",
             "weapon" : "raccClaw"
         }
