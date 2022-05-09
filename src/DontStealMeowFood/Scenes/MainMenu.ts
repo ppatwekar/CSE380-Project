@@ -31,10 +31,12 @@ export default class MainMenu extends Scene {
         let size = this.viewport.getHalfSize();
         this.viewport.setFocus(size);
  
+        let title = <Label>this.add.uiElement(UIElementType.LABEL, "mainMenu", {position: new Vec2(size.x, size.y - 300), text: "Don't Steal Meow Food"});
+        title.textColor = Color.WHITE;
+        title.backgroundColor = Color.BLACK;
         this.viewport.setZoomLevel(1);
 
         // const center = this.viewport.getCenter();
-
 
         let createButton = (p: Vec2, t: string) => {
             const play = this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: p, text: t === "level1" ? "Start" : (t[0].toUpperCase() + t.substring(1))});
@@ -192,8 +194,6 @@ export default class MainMenu extends Scene {
 
         /* Receivers */
         this.receiver.subscribe(["menu","level1","level2","level3","level4","level5", "level6", "control","levels","help", "end"]);
-
-        
     }
 
     // TODO: ADD LEVELS
