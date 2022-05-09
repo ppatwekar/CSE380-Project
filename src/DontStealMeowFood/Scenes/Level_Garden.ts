@@ -7,6 +7,7 @@ import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import Color from "../../Wolfie2D/Utils/Color";
 import BattlerAI from "../AI/BattlerAI";
+import EnemyAI from "../AI/EnemyAI";
 import PlayerController from "../AI/PlayerController";
 import { Custom_Events } from "../GameConstants";
 import BattleManager from "../GameSystems/BattleManager";
@@ -14,6 +15,7 @@ import HighLight from "../GameSystems/HighLight";
 import Item from "../GameSystems/items/Item";
 import StoneController from "../GameSystems/Items/WeaponTypes/StoneController";
 import GameLevel from "./GameLevel"
+import Level_Prisoner from "./Level_Prisoner";
 
 export default class Level_Garden extends GameLevel{
     private bushes : OrthogonalTilemap;
@@ -63,6 +65,8 @@ export default class Level_Garden extends GameLevel{
         let weaponData = this.load.getObject("weaponData");
 
         this.stoneController = new StoneController(this,weaponData.weapons[2].speed);
+
+        this.nextLevel = Level_Prisoner;
     }
 
     updateScene(deltaT: number): void {
@@ -71,6 +75,16 @@ export default class Level_Garden extends GameLevel{
 
     }
 
+    setCustomProperties() : void{
+        for(let enemy of this.enemies){
+            if((<EnemyAI>enemy._ai).custID === "strongEnemy1" || (<EnemyAI>enemy._ai).custID === "strongEnemy2"){
+                (<EnemyAI>enemy._ai).inRange = 500;
+                (<EnemyAI>enemy._ai).speed = 50;
+                (<EnemyAI>enemy._ai).vision = 500;
+            }
+        }
+    }
+    
     addLevelEnd(position: Vec2, size: Vec2){
         this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT,"primary",{position : position, size : size});
         this.levelEndArea.addPhysics(undefined, undefined, false, true);

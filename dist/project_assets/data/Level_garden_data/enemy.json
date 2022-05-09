@@ -12,8 +12,8 @@
             "position" : [939,1372],
             "mode" : "patrol",
             "route" : [4,5,6],
-            "type" : "raccoon",
-            "weapon": "raccClaw"
+            "weapon" : "raccHitHard",
+            "custID" : "strongEnemy1"
         },
         {
             "position": [785,1785],
@@ -61,8 +61,8 @@
             "position":[80,188],
             "mode" : "patrol",
             "route" : [25,26,27,28],
-            "type" : "raccoon",
-            "weapon": "raccClaw"
+            "weapon" : "raccHitHard",
+            "custID" : "strongEnemy2"
         }
     ]
 }

@@ -12,6 +12,7 @@ import Level_Prisoner from "./Level_Prisoner";
 import playtest_scene from "./playtest_scene";
 import Level_Garden from "./Level_Garden";
 import Level_Boss from "./Level_Boss";
+import Level_Sea from "./Level_Sea";
 
 export default class MainMenu extends Scene {
     // Layers for multiple main menu screens
@@ -129,11 +130,11 @@ export default class MainMenu extends Scene {
             l4.backgroundColor = Color.GREEN;
             l4.onClickEventId = "level4";
 
-            const l5 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l4.position.x + xMar + l , l4.position.y), text : "LOCKED"});
+            const l5 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l4.position.x + xMar + l , l4.position.y), text : "Level 5"});
             l5.size.set(l,w);
             l5.borderColor = Color.WHITE;
-            l5.backgroundColor = Color.TRANSPARENT;
-            l5.onClickEventId = "";
+            l5.backgroundColor = Color.GREEN;
+            l5.onClickEventId = "level5";
 
             const l6 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l5.position.x + xMar + l , l5.position.y), text : "Level 6"});
             l6.size.set(l,w);
@@ -286,6 +287,27 @@ export default class MainMenu extends Scene {
                     }
                 };
                 this.sceneManager.changeToScene(Level_Prisoner, {}, sceneOptions);
+            }else if(event.type === "level5"){
+                let sceneOptions = {
+                    physics : {
+                        /**
+                         *      pl  ene  yoyo ston
+                         * pl   0    1    1    1
+                         * ene  1    0    1    1
+                         * yoyo 1    1    0    0
+                         * ston 1    1    0    0
+                         */
+                        groupNames : ["player","enemy","yoyo","stone"],
+                        collisions : 
+                        [
+                            [0,1,0,1],
+                            [1,1,0,0],
+                            [0,0,0,0],
+                            [1,0,0,0]
+                        ]
+                    }
+                };
+                this.sceneManager.changeToScene(Level_Sea, {}, sceneOptions);
             }
             else if (event.type === "level5") {
                 // UNCOMMENT THIS WHEN ADDING YOUR LEVEL. SET COLOR TO GREEN IN levelsScreen()

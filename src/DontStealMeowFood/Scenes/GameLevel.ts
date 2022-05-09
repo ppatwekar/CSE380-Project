@@ -176,8 +176,23 @@ export default class GameLevel extends Scene {
                 {
                     if(this.nextLevel){
                         let sceneOptions = {
-                            // TODO
-                        }
+                            physics : {
+                                /**
+                                 *      pl  ene  yoyo
+                                 * pl   0    1    1
+                                 * ene  1    0    1
+                                 * yoyo 1    1    0
+                                 */
+                                groupNames : ["player","enemy","yoyo","stone"],
+                                collisions : 
+                                [
+                                    [0,1,0,1],
+                                    [1,1,0,0],
+                                    [0,0,0,0],
+                                    [1,0,0,0]
+                                ]
+                            }
+                        };
                         this.sceneManager.changeToScene(this.nextLevel, {}, sceneOptions);
                     }
                 }
@@ -307,7 +322,7 @@ export default class GameLevel extends Scene {
                 // Create a healthpack
                 this.createHealthpack(new Vec2(item.position[0]/2, item.position[1]/2));
             }
-            else{
+            else if(item.type === "food"){
                 this.createFood(new Vec2(item.position[0]/2, item.position[1]/2));
                 i++;
             }
