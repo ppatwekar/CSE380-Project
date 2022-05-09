@@ -152,6 +152,14 @@ export default class Level_Prisoner extends GameLevel{
     
 
     setCustomProperties() : void{
+        for(let enemy of this.enemies){
+            if((<EnemyAI>enemy._ai).custID === "strongEnemy1" || (<EnemyAI>enemy._ai).custID === "strongEnemy2"){
+                (<EnemyAI>enemy._ai).inRange = 500;
+                (<EnemyAI>enemy._ai).speed = 50;
+                (<EnemyAI>enemy._ai).vision = 500;
+            }
+        }
+
         BreakableTile.makeTiles(new Vec2(408,920),new Vec2(6,0),this);
         BreakableTile.makeTiles(new Vec2(824,1272),new Vec2(0,5),this);
         
