@@ -79,7 +79,7 @@ export default class GameLevel extends Scene {
         this.load.object("weaponData","project_assets/data/weaponData.json");
         this.load.audio("melee", "project_assets/sounds/melee.wav");
         this.load.audio("stone_hit", "project_assets/sounds/stone_hit.wav");
-        this.load.audio("yoyo_hit", "project_assets/sounds/yoyo_hit_hit.wav");
+        this.load.audio("yoyo_hit", "project_assets/sounds/yoyo_hit.wav");
     }
 
     startScene(options? : any): void{
@@ -99,6 +99,7 @@ export default class GameLevel extends Scene {
         this.addUI();
         this.audioManagerCtx = AudioManager.getInstance();
         AudioManager.setVolume(AudioChannelType.MUSIC, 0.1);
+        AudioManager.setVolume(AudioChannelType.SFX, 0.3);
 
         /* Pause layer */
         // this.initPause();
@@ -203,6 +204,16 @@ export default class GameLevel extends Scene {
                         this.mainLayer.enable();
                         this.pauseManager.unshowPause();
                     }
+                }
+                break;
+            case Custom_Events.YOYO_HIT_ENEMY:
+                {
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "yoyo_hit"});
+                }
+                break;
+            case  Custom_Events.STONE_HIT_PLAYER:
+                {
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "stone_hit"});
                 }
                 break;
         }
@@ -335,7 +346,9 @@ export default class GameLevel extends Scene {
             Custom_Events.PLAYER_DEATH,
             Custom_Events.PAUSE_EVENT,
             Custom_Events.COMPLETE_OBJECTIVE,
-            Custom_Events.IN_CINEMATIC  
+            Custom_Events.IN_CINEMATIC  ,
+            Custom_Events.YOYO_HIT_ENEMY,
+            Custom_Events.STONE_HIT_PLAYER
         ]);
     }
 
