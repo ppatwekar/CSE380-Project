@@ -28,7 +28,8 @@ import WeaponTypeRegistry from "./DontStealMeowFood/Registry/WeaponTypeRegistry"
             {name: "slot4", keys: ["4"]},
             {name: "slot5", keys: ["5"]},
             {name: "attackInput", keys: ["space"]},
-            {name: "pauseInput", keys: ["escape"]}
+            {name: "pauseInput", keys: ["escape"]},
+            {name : "use",keys : ["u"]}
         ],
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want

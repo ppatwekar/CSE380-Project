@@ -3,6 +3,10 @@
         {
             "type" : "healthpack",
             "position" : [231,110]
+        },
+        {
+            "type" : "food",
+            "position" : [231,310]
         }
     ]
 }

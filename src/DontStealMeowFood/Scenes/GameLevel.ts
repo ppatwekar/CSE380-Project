@@ -277,6 +277,7 @@ export default class GameLevel extends Scene {
     }
 
     spawnItems(data : Record<string,any>, layer? : string){
+        let i : number = 0;
         for(let item of data.items){
             if(item.type === "healthpack"){
                 // Create a healthpack
@@ -284,8 +285,11 @@ export default class GameLevel extends Scene {
             }
             else{
                 this.createFood(new Vec2(item.position[0]/2, item.position[1]/2));
+                i++;
             }
         }
+
+        (<PlayerController>this.player._ai).numFoodItems = i;
         
 
     }

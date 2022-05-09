@@ -21,16 +21,9 @@ import Run from "./ProjectAnimations/ActualStates/Run";
 import Left from "./ProjectAnimations/DirectionStates/Left";
 import Right from "./ProjectAnimations/DirectionStates/Right";
 import Up from "./ProjectAnimations/DirectionStates/Up";
-import Debug from "../../Wolfie2D/Debug/Debug";
-import Color from "../../Wolfie2D/Utils/Color";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
-import Graphic from "../../Wolfie2D/Nodes/Graphic";
-import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
-import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
-import Timer from "../../Wolfie2D/Timing/Timer";
-import Yoyo2 from "../GameSystems/Items/WeaponTypes/Yoyo2";
-import Attack from "./ProjectAnimations/ActualStates/Melee";
 import Melee from "./ProjectAnimations/ActualStates/Melee";
+import Food from "../GameSystems/Items/Food";
 
 
 export default class PlayerController extends StateMachineAI implements BattlerAI {
@@ -77,6 +70,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
     yoyoHasReturned : boolean;
 
+    numFoodItems : number;
+
     // Choosing inventory
     private slotPos = 0;
 
@@ -99,6 +94,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.items = options.items;
         this.inventory = options.inventory;
         this.inventory.showInventory();
+
 
         this.receiver = new Receiver();
 
@@ -222,6 +218,14 @@ export default class PlayerController extends StateMachineAI implements BattlerA
            // this.weapon.type
             //use event queue to catch event that yoyo returned.
 
+            if(Input.isJustPressed("use")){
+                let item = this.inventory.removeItem();
+                if(item){
+                    item.use(this.owner);
+                    item.sprite.destroy();
+                }
+            }
+
             
             
             // Check for slot change
@@ -256,7 +260,13 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 for (let item of this.items) {
                     if (this.owner.collisionShape.overlaps(item.sprite.boundary)) {
                         // We overlap it, try to pick it up
-                        this.inventory.addItem(item);
+                        if(item instanceof Food){
+                            this.numFoodItems--;
+                            item.sprite.visible = false;
+                        }
+                        else{
+                            this.inventory.addItem(item);
+                        }
                         break;
                     }
                 }
@@ -275,6 +285,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     this.items.push(item);
                 }
             }
+
+            
             
         }
         

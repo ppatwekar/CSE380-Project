@@ -11,6 +11,7 @@ import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import Scene from "../../Wolfie2D/Scene/Scene";
+import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
 import BattlerAI from "../AI/BattlerAI";
 import EnemyAI from "../AI/EnemyAI";
@@ -30,6 +31,8 @@ export default class Level_Prisoner extends GameLevel{
     protected h1 : HighLight;
     private levelEndArea : Rect;
     private rec : Receiver;
+
+    
 
     loadScene(): void {
         super.loadScene(); // Loads audio
@@ -66,7 +69,7 @@ export default class Level_Prisoner extends GameLevel{
         this.initializeEnemyWeapons(this.enemies);
         this.h1 = new HighLight();
 
-        this.setGoal("Escape The Raccoon Prison!");
+        this.setGoal("Escape The Raccoon Prison!",Color.WHITE, Color.BLACK, new Vec2(60,10));
         // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1_music", loop: true, holdReference: true});
 
         let weaponData = this.load.getObject("weaponData");
@@ -83,6 +86,8 @@ export default class Level_Prisoner extends GameLevel{
 
     }
 
+    
+
     manageEvents(){
         while(this.rec.hasNextEvent()){
             let event = this.rec.getNextEvent();
@@ -90,6 +95,7 @@ export default class Level_Prisoner extends GameLevel{
                 case Custom_Events.PLAYER_ENTERED_LEVEL_END:
                     {
                         this.player.position = new Vec2(344,264);
+                        this.setGoal("Oops! You chose the wrong tile and Teleported Back to the Beginning",Color.WHITE, Color.BLACK, new Vec2(115,10));
                     }
             }
         }
@@ -141,7 +147,7 @@ class BreakableTile{
     reciever : Receiver;
     scene : Scene;
 
-    constructor(position : Vec2, scene : Scene){
+    constructor(position : Vec2, scene : Scene, lives? : number){
         this.owner = scene.add.sprite("breakable","primary");
         this.owner.position = position;
         this.owner.scale = new Vec2(0.5,0.5);
@@ -153,7 +159,8 @@ class BreakableTile{
         this.reciever = new Receiver();
         this.reciever.subscribe([Custom_Events.HIT_FAULTY_STONE, Custom_Events.HIT_FAULTY_YOYO]);
         this.scene = scene;
-        this.lives = 10;
+        //this.lives = 10;
+        lives ? this.lives = lives : this.lives = 10;
     }
 
     handleEvents(){
@@ -206,12 +213,12 @@ class BreakableTile{
 
     }
 
-    static makeTiles(start : Vec2, count : Vec2, scene : Scene){
+    static makeTiles(start : Vec2, count : Vec2, scene : Scene, lives? : number){
         if(count.x > 0 && count.y > 0){
             for(let i = 0; i<count.x; i++){
                 for(let j = 0; j<count.y; j++){
                     let currPos = new Vec2(start.x + i * 16, start.y + i * 16);
-                    new BreakableTile(currPos,scene);
+                    new BreakableTile(currPos,scene, lives);
                 }
             }
 
@@ -219,13 +226,13 @@ class BreakableTile{
         else if(count.x > 0){
             for(let i = 0; i<count.x; i++){
                 let currPos = new Vec2(start.x + i * 16, start.y);
-                new BreakableTile(currPos,scene);
+                new BreakableTile(currPos,scene, lives);
             }
         }
         else{
             for(let i = 0; i<count.y; i++){
                 let currPos = new Vec2(start.x, start.y + i * 16);
-                new BreakableTile(currPos,scene);
+                new BreakableTile(currPos,scene, lives);
             }
 
         }

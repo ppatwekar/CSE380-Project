@@ -273,9 +273,9 @@ export default class MainMenu extends Scene {
                         collisions : 
                         [
                             [0,1,0,1,1],
-                            [1,1,0,1,1],
+                            [1,1,0,0,1],
                             [0,0,0,0,0],
-                            [1,1,0,0,0],
+                            [1,0,0,0,0],
                             [1,1,0,0,0]
                         ]
                     }
