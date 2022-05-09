@@ -77,6 +77,9 @@ export default class GameLevel extends Scene {
         this.load.image("healthpack","project_assets/item/Healthpack.png");
         this.load.image("catFood","project_assets/item/CatFood.png");
         this.load.object("weaponData","project_assets/data/weaponData.json");
+        this.load.audio("melee", "project_assets/sounds/melee.wav");
+        this.load.audio("stone_hit", "project_assets/sounds/stone_hit.wav");
+        this.load.audio("yoyo_hit", "project_assets/sounds/yoyo_hit_hit.wav");
     }
 
     startScene(options? : any): void{
