@@ -79,7 +79,7 @@ export default class Level_Sea extends GameLevel{
         this.h1.checkClosestEnemies(this.enemies, this.player);
 
         this.food = (<PlayerController>this.player._ai).numFoodItems;
-        this.goalDisplay.text = "Find All Food 2:"+this.food+"/"+this.totalFood;
+        this.goalDisplay.text = "Find All Food:"+this.food+"/"+this.totalFood;
 
         if(this.food<=0){
             let sceneOptions = {

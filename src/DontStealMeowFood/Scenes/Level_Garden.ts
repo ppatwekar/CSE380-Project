@@ -60,7 +60,7 @@ export default class Level_Garden extends GameLevel{
         this.h1 = new HighLight();
 
         this.spawnItems(this.load.getObject("items"));
-        this.setGoal("Find Exit");
+        this.setGoal("Find Exit", Color.WHITE, Color.BLACK, new Vec2(60,10));
 
         this.addLevelEnd(new Vec2(336,411),new Vec2(94,64));
 
