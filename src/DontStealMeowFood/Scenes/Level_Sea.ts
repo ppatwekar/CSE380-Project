@@ -30,7 +30,7 @@ export default class Level_Sea extends GameLevel{
 
     loadScene(): void {
         super.loadScene(); // Loads audio
-        this.load.tilemap("gardenLevel","project_assets/tilemaps/Level_Sea_tilemap/Level_Sea.json");
+        this.load.tilemap("gardenLevel","project_assets/tilemaps/Level_Sea_tilemap/Level_sea.json");
         this.load.object("navmesh","project_assets/data/Level_Sea_data/navmesh.json");
         this.load.object("enemyData","project_assets/data/Level_Sea_data/enemy.json");
         this.load.object("weaponData","project_assets/data/weaponData.json");
