@@ -470,7 +470,7 @@ export default class GameLevel extends Scene {
                         break;
                     case "bossman":
                         {
-                            health = 300;
+                            health = 150;
                             inRange = 128;
                             speed = 30;
                             enemyVision = 128;
@@ -500,7 +500,7 @@ export default class GameLevel extends Scene {
                 vision: enemyVision,
                 health: health,
                 speed: speed,
-                custID : data["custID"]
+                custID : data["custId"]
             }    
             this.enemies[i].addAI(EnemyAI,enemyOptions);
             this.enemies[i].setGroup("enemy");

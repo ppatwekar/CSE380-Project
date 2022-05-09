@@ -1,6 +1,8 @@
 import PositionGraph from "../../Wolfie2D/DataTypes/Graphs/PositionGraph";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Receiver from "../../Wolfie2D/Events/Receiver";
+import Input from "../../Wolfie2D/Input/Input";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
@@ -17,6 +19,7 @@ import HighLight from "../GameSystems/HighLight";
 import Item from "../GameSystems/items/Item";
 import StoneController from "../GameSystems/Items/WeaponTypes/StoneController";
 import GameLevel from "./GameLevel"
+import MainMenu from "./MainMenu";
 
 export default class Level_Boss extends GameLevel{
     private bushes : OrthogonalTilemap;
@@ -80,6 +83,13 @@ export default class Level_Boss extends GameLevel{
         this.stoneController.update();
         if (this.boss) {
             let bossHealth = (<EnemyAI>this.boss._ai).currentHealth;
+            if (Input.isKeyJustPressed("k")) {
+                bossHealth = 0;
+            }
+            if (bossHealth <= 0) {
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1_music"});
+                this.sceneManager.changeToScene(MainMenu, {});
+            }
             this.bossHealthDisplay.text = "Boss Remaining Health: " + bossHealth;
         }
     }
