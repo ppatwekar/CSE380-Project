@@ -67,7 +67,7 @@ export default class Level_Sea extends GameLevel{
         this.totalFood = items.numFood;
         this.spawnItems(items);
 
-        this.setGoal("Find All Food:"+this.food+"/"+this.totalFood, Color.WHITE, Color.BLACK, new Vec2(60,10));
+        this.setGoal("Find All Food:"+this.food+" / "+this.totalFood, Color.WHITE, Color.BLACK, new Vec2(52,10));
 
         let weaponData = this.load.getObject("weaponData");
         this.stoneController = new StoneController(this,weaponData.weapons[2].speed);
@@ -80,7 +80,7 @@ export default class Level_Sea extends GameLevel{
         this.h1.checkClosestEnemies(this.enemies, this.player);
 
         this.food = (<PlayerController>this.player._ai).numFoodItems;
-        this.goalDisplay.text = "Find All Food:"+this.food+"/"+this.totalFood;
+        this.goalDisplay.text = "Find All Food: "+this.food+" / "+this.totalFood;
 
         if(this.food<=0){
             let sceneOptions = {

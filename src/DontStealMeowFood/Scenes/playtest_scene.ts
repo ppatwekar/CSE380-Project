@@ -49,7 +49,7 @@ export default class playtest_scene extends GameLevel{
 
         let tilemapSize : Vec2 = this.bushes.size.scaled(0.5);
         this.viewport.setBounds(0,0,tilemapSize.x,tilemapSize.y);
-
+        this.viewport.setFocus(this.viewport.getHalfSize());
         
 
         // let center = this.viewport.getCenter();
@@ -60,8 +60,7 @@ export default class playtest_scene extends GameLevel{
 
         // }
         this.initializeWeapons();
-        super.startScene();
-        this.viewport.setZoomLevel(4);
+        super.startScene({zoomLevel: 3});
         this.createNavmesh("navmesh");
 
         this.initializeEnemies(this.load.getObject("enemyData"));
@@ -88,7 +87,7 @@ export default class playtest_scene extends GameLevel{
 
         this.nextLevel = "Level3";
 
-        this.setGoal("Objective: Kill all raccoons!! Raccoons Left : "+this.enemies.length,Color.WHITE,Color.BLACK,new Vec2(80,10));
+        this.setGoal("Objective: Kill all raccoons!! Raccoons Left : "+this.enemies.length,Color.WHITE,Color.BLACK,new Vec2(108,10));
 
 
     }

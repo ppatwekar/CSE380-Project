@@ -24,6 +24,7 @@ import Retreat from "../AI/EnemyActions/Retreat";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import playtest_scene from "./playtest_scene";
 import Receiver from "../../Wolfie2D/Events/Receiver";
+import Level_Garden from "./Level_Garden";
 
 export default class Level1_Scene extends GameLevel {
     private bushes : OrthogonalTilemap;
@@ -53,6 +54,7 @@ export default class Level1_Scene extends GameLevel {
 
         let tilemapSize : Vec2 = this.bushes.size.scaled(0.5);
         this.viewport.setBounds(0,0,tilemapSize.x,tilemapSize.y);
+        this.viewport.setFocus(this.viewport.getHalfSize());
 
         
 
@@ -81,7 +83,7 @@ export default class Level1_Scene extends GameLevel {
         (<PlayerController>this.player._ai).enemies = this.enemies;
         this.h1 = new HighLight();
 
-        this.setGoal("Find the Exit!", Color.BLACK, Color.WHITE, new Vec2(50, 10));
+        this.setGoal("Find the Exit!", Color.BLACK, Color.WHITE, new Vec2(40, 10));
         // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1_music", loop: true, holdReference: true});
 
         this.spawnItems(this.load.getObject("items"));

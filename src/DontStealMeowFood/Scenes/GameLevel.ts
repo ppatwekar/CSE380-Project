@@ -81,10 +81,11 @@ export default class GameLevel extends Scene {
 
     startScene(options? : any): void{
         this.mainLayer = this.addLayer("primary",10);
-
+        
         let zoomLevel = 4;
         if (options) {
             if (options.zoomLevel) {
+                console.log(zoomLevel);
                 zoomLevel = options.zoomLevel;
             }
         }
@@ -212,16 +213,21 @@ export default class GameLevel extends Scene {
     }
 
     protected setGoal(text: string, textColor = Color.WHITE, backgroundColor = Color.BLACK, position?: Vec2) : void {
-        this.goalDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "objectives", {position: position ? position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(this.viewport.getCenter().clone().scale(0.19, 0.21) ), text: text});
+        this.goalDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "objectives", {position: position ? position: new Vec2(6, 800), text: text});
         this.goalDisplay.textColor = textColor;
         this.goalDisplay.backgroundColor = backgroundColor;
     }
 
     protected addUI(){
         this.addUILayer("health");
-        let location = this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(this.viewport.getCenter().clone().scale(0.205, -0.235));
+        // let location = this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(this.viewport.getCenter().clone().scale(0.205, -0.235));
+        let location = new Vec2(27, 195);
+
         if (this.viewport.getZoomLevel() != 4) {
-            location = this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(this.viewport.getCenter().clone().scale(0.27, -0.32));
+            // location = this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(this.viewport.getCenter().clone().scale(0.27, -0.32));
+            // console.log(this.viewport.getCenter().y);
+            // console.log(location.x);
+            location = new Vec2(38, 260);
         }
         // new Vec2(this.viewport.getCenter().x * 0.05, this.viewport.getCenter().y * 0.485)
         this.healthDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "health", {position: location, text: "Health: " + (<BattlerAI>this.player._ai).health});
@@ -237,9 +243,12 @@ export default class GameLevel extends Scene {
     }
 
     initializePlayer() : void{
-        let location = this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(this.viewport.getCenter().clone().scale(0.225, -0.20));
+        // let location = this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(this.viewport.getCenter().clone().scale(0.225, -0.20));
+        let location = new Vec2(15, 180);
         if (this.viewport.getZoomLevel() != 4) {
-            location = this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(this.viewport.getCenter().clone().scale(0.30, -0.28));
+            console.log("OI?");
+            // location = this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(this.viewport.getCenter().clone().scale(0.30, -0.28));
+            location = new Vec2(20, 240);
         }
         // new Vec2(16, (this.viewport.getCenter().y * 0.45))
         let inventory = new InventoryManager(this, 5, "inventorySlot", location, 2, "slots1", "items1");
