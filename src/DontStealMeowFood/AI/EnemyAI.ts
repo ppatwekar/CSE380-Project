@@ -60,6 +60,8 @@ export default class EnemyAI extends StateMachineGoapAI{
 
     custID : string;
 
+    alert : boolean;
+
     protected isPaused: boolean;
 
     private addedFlag: boolean = false;
@@ -83,6 +85,7 @@ export default class EnemyAI extends StateMachineGoapAI{
         this.currentHealth = options.health;
 
         //this.weapon = options.weapon;
+        this.alert = false;
 
         this.player = options.player;
         this.speed = options.speed ? options.speed : this.speed;
@@ -129,6 +132,9 @@ export default class EnemyAI extends StateMachineGoapAI{
     }
 
     damage(damage : number){
+        if(!this.alert){
+            this.currentHealth = 0;
+        }
         this.currentHealth -= damage;
         console.log("Enemy took Damage! Remaining Health: " + this.currentHealth);
 

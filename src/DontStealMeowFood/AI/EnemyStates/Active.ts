@@ -28,7 +28,7 @@ export default class Active extends EnemyState{
         this.retObj = {};
         this.retObj = {target : this.parent.lastPlayerPos};
         this.parent.path = this.owner.getScene().getNavigationManager().getPath(Custom_Names.NAVMESH, this.owner.position, this.parent.lastPlayerPos, true);
-
+        this.parent.alert = true;
         
     }
 

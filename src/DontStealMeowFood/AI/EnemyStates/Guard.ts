@@ -2,7 +2,7 @@ import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import NavigationPath from "../../../Wolfie2D/Pathfinding/NavigationPath";
-import { Custom_Names } from "../../GameConstants";
+import { Custom_Events, Custom_Names } from "../../GameConstants";
 import EnemyAI, { EnemyStates } from "../EnemyAI";
 import EnemyState from "./EnemyState";
 
@@ -32,6 +32,7 @@ export default class Guard extends EnemyState{
             this.awayFromGuardPosition = false;
             this.owner.pathfinding = false;
         }
+        this.parent.alert = false;
     }
     handleInput(event: GameEvent): void {
 

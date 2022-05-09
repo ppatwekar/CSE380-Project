@@ -23,6 +23,7 @@ export default class Patrol extends EnemyState{
     }
 
     onEnter(options: Record<string, any>): void {
+        this.parent.alert = false;
         this.currentPath = this.getNextPath();
     }
     handleInput(event: GameEvent): void {
