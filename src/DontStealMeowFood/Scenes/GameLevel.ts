@@ -205,8 +205,8 @@ export default class GameLevel extends Scene {
         this.sceneManager.changeToScene(GameOver);
     }
 
-    protected setGoal(text: string, textColor = Color.WHITE, backgroundColor = Color.BLACK) : void {
-        this.goalDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "objectives", {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(this.viewport.getCenter().clone().scale(0.19, 0.21) ), text: text});
+    protected setGoal(text: string, textColor = Color.WHITE, backgroundColor = Color.BLACK, position?: Vec2) : void {
+        this.goalDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "objectives", {position: position ? position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(this.viewport.getCenter().clone().scale(0.19, 0.21) ), text: text});
         this.goalDisplay.textColor = textColor;
         this.goalDisplay.backgroundColor = backgroundColor;
     }
