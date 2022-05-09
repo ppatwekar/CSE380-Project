@@ -132,8 +132,8 @@ export default class EnemyAI extends StateMachineGoapAI{
     }
 
     damage(damage : number){
-        if(!this.alert){
-            this.currentHealth = 0;
+        if(!this.alert && this.maxHealth<100){
+            damage = damage*2;
         }
         this.currentHealth -= damage;
         console.log("Enemy took Damage! Remaining Health: " + this.currentHealth);
