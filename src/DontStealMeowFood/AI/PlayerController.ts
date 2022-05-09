@@ -81,6 +81,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     // Checks if we are paused
     private isPaused: boolean;
 
+    getSpeed(): number {
+        return this.speed;
+    }
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.isPaused = false;

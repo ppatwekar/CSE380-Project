@@ -11,6 +11,7 @@ import Level1_Scene from "./level1_scene";
 import Level_Prisoner from "./Level_Prisoner";
 import playtest_scene from "./playtest_scene";
 import Level_Garden from "./Level_Garden";
+import Level_Boss from "./Level_Boss";
 
 export default class MainMenu extends Scene {
     // Layers for multiple main menu screens
@@ -74,13 +75,17 @@ export default class MainMenu extends Scene {
             const controls2 = "E | Item Pick Up";
             const controls3 = "Q | Drop Current Item";
             const controls4 = "1/2/3/4/5 or Mouse Wheel Up/Down | Equip Inventory Item";
+            const controls5 = "U | Use";
+            const controls6 = "Left-Click/Spacebar | Attack";
 
             const cline1 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(size.x, size.y - 100), text: controls1});
             const cline2 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(size.x, size.y - 50), text: controls2});
             const cline3 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(size.x, size.y), text: controls3});
             const cline4 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(size.x, size.y + 50), text: controls4});
+            const cline5 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(size.x, size.y + 100), text: controls5});
+            const cline6 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(size.x, size.y + 150), text: controls6});
 
-            cline1.textColor = cline2.textColor = cline3.textColor = cline4.textColor = Color.WHITE;
+            cline1.textColor = cline2.textColor = cline3.textColor = cline4.textColor = cline5.textColor = cline6.textColor = Color.WHITE;
 
             // Back Button
             const controlBack = this.add.uiElement(UIElementType.BUTTON, "control", {position: new Vec2(size.x, size.y + 250), text: "Back"});
@@ -130,11 +135,11 @@ export default class MainMenu extends Scene {
             l5.backgroundColor = Color.TRANSPARENT;
             l5.onClickEventId = "";
 
-            const l6 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l5.position.x + xMar + l , l5.position.y), text : "LOCKED"});
+            const l6 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l5.position.x + xMar + l , l5.position.y), text : "Level 6"});
             l6.size.set(l,w);
             l6.borderColor = Color.WHITE;
-            l6.backgroundColor = Color.TRANSPARENT;
-            l6.onClickEventId = "";
+            l6.backgroundColor = Color.GREEN;
+            l6.onClickEventId = "level6";
 
             const back = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(this.viewport.getHalfSize().x, 2 * this.viewport.getHalfSize().y - yMar/2), text: "Back"});
             back.size.set(l,2*this.viewport.getHalfSize().y - 7 *yMar - 2 * w);
@@ -185,7 +190,7 @@ export default class MainMenu extends Scene {
         helpScreen();
 
         /* Receivers */
-        this.receiver.subscribe(["menu","level1","level2","level3","level4","control","levels","help", "end"]);
+        this.receiver.subscribe(["menu","level1","level2","level3","level4","level5", "level6", "control","levels","help", "end"]);
 
         
     }
@@ -281,6 +286,45 @@ export default class MainMenu extends Scene {
                     }
                 };
                 this.sceneManager.changeToScene(Level_Prisoner, {}, sceneOptions);
+            }
+            else if (event.type === "level5") {
+                // UNCOMMENT THIS WHEN ADDING YOUR LEVEL. SET COLOR TO GREEN IN levelsScreen()
+                /*
+                let sceneOptions = {
+                    physics : {
+                        groupNames : ["player","enemy","yoyo","stone"],
+                        collisions : 
+                        [
+                            [0,1,0,1],
+                            [1,1,0,1],
+                            [0,0,0,0],
+                            [1,1,0,0]
+                        ]
+                    }
+                };
+                this.sceneManager.changeToScene(Level_Prisoner, {}, sceneOptions)
+                */
+            } else if (event.type === "level6") {
+                let sceneOptions = {
+                    physics : {
+                        /**
+                         *      pl  ene  yoyo ston
+                         * pl   0    1    1    1
+                         * ene  1    0    1    1
+                         * yoyo 1    1    0    0
+                         * ston 1    1    0    0
+                         */
+                        groupNames : ["player","enemy","yoyo","stone"],
+                        collisions : 
+                        [
+                            [0,1,0,1],
+                            [1,1,0,1],
+                            [0,0,0,0],
+                            [1,1,0,0]
+                        ]
+                    }
+                };
+                this.sceneManager.changeToScene(Level_Boss, {}, sceneOptions);
             }
 
             if(event.type === "help"){

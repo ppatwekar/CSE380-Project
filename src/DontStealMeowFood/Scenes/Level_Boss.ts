@@ -5,8 +5,11 @@ import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
+import Label from "../../Wolfie2D/Nodes/UIElements/Label";
+import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Color from "../../Wolfie2D/Utils/Color";
 import BattlerAI from "../AI/BattlerAI";
+import EnemyAI from "../AI/EnemyAI";
 import PlayerController from "../AI/PlayerController";
 import { Custom_Events } from "../GameConstants";
 import BattleManager from "../GameSystems/BattleManager";
@@ -26,23 +29,24 @@ export default class Level_Garden extends GameLevel{
 
     loadScene(): void {
         super.loadScene(); // Loads audio
-        this.load.tilemap("gardenLevel","project_assets/tilemaps/Level_garden_tilemap/Level_garden.json");
-        this.load.object("navmesh","project_assets/data/Level_garden_data/navmesh.json");
-        this.load.object("enemyData","project_assets/data/Level_garden_data/enemy.json");
+        this.load.tilemap("bossLevel","project_assets/tilemaps/level_boss_tilemap/level_boss.json");
+        this.load.object("navmesh","project_assets/data/level_boss_data/navmesh.json");
+        this.load.object("enemyData","project_assets/data/level_boss_data/enemy.json");
     }
 
     startScene(): void {
-        this.playerSpawn = new Vec2(80,950);
-        let tilemapLayers = this.add.tilemap("gardenLevel", new Vec2(0.5,0.5));
+        // this.playerSpawn = new Vec2(464/2,1744/2); // ACTUAL
+        this.playerSpawn = new Vec2(1904/2,88/2); // DEBUG
+        let tilemapLayers = this.add.tilemap("bossLevel", new Vec2(0.5,0.5));
         this.bushes = <OrthogonalTilemap>tilemapLayers[1].getItems()[0];
 
         let tilemapSize : Vec2 = this.bushes.size.scaled(0.5);
         this.viewport.setBounds(0,0,tilemapSize.x,tilemapSize.y);
 
         this.initializeWeapons();
-        super.startScene({zoomLevel: 3});
+        super.startScene({zoomLevel: 4});
+        // this.viewport.setZoomLevel(4);
         this.createNavmesh("navmesh");
-
         this.initializeEnemies(this.load.getObject("enemyData"));
 
         this.battleManager = new BattleManager();
@@ -56,9 +60,14 @@ export default class Level_Garden extends GameLevel{
         this.initializeEnemyWeapons(this.enemies);
         this.h1 = new HighLight();
 
-        this.setGoal("Find Exit");
+        this.setGoal("Defeat the Raccoon Boss", Color.WHITE, Color.BLACK, new Vec2(50, 10));
+        this.setGoal("Get All of Your Food Back!", Color.WHITE, Color.BLACK, new Vec2(51, 20));
 
-        this.addLevelEnd(new Vec2(336,411),new Vec2(94,64));
+        this.bossHealthDisplay.padding = new Vec2(10, 10);
+        this.bossHealthDisplay.textColor = Color.ORANGE;
+        this.bossHealthDisplay.backgroundColor = Color.BLACK;
+
+        // this.addLevelEnd(new Vec2(336,411),new Vec2(94,64));
 
         let weaponData = this.load.getObject("weaponData");
 
@@ -68,7 +77,11 @@ export default class Level_Garden extends GameLevel{
     updateScene(deltaT: number): void {
         super.updateScene(deltaT);
         this.h1.checkClosestEnemies(this.enemies, this.player);
-
+        this.stoneController.update();
+        if (this.boss) {
+            let bossHealth = (<EnemyAI>this.boss._ai).currentHealth;
+            this.bossHealthDisplay.text = "Boss Remaining Health: " + bossHealth;
+        }
     }
 
     addLevelEnd(position: Vec2, size: Vec2){
@@ -76,5 +89,17 @@ export default class Level_Garden extends GameLevel{
         this.levelEndArea.addPhysics(undefined, undefined, false, true);
         this.levelEndArea.setTrigger("player", Custom_Events.COMPLETE_OBJECTIVE, null);
         this.levelEndArea.color = new Color(1,0,0,1);
+    }
+
+    setCustomProperties(): void {
+        for (let enemy of this.enemies) {
+            let e = (<EnemyAI>enemy._ai);
+            if (e.custID === "bossman") {
+                e.inRange = 550;
+                e.speed = (<PlayerController>this.player._ai).getSpeed() + 5;
+                e.vision = 550;
+            }
+            
+        }
     }
 }

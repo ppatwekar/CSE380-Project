@@ -39,10 +39,8 @@ export default class Level_Prisoner extends GameLevel{
         this.load.tilemap("prisonerLevel","project_assets/tilemaps/Level_Prisoner_tilemap/LevelMap.json");
         this.load.object("navmesh","project_assets/data/Level_Prisoner_data/navmesh.json");
         this.load.object("enemyData","project_assets/data/Level_Prisoner_data/enemy.json");
-        this.load.object("weaponData","project_assets/data/weaponData.json");
         this.load.image("breakable","project_assets/data/Level_Prisoner_data/breakable.png");
         this.load.object("items","project_assets/data/Level_Prisoner_data/items.json");
-
     }
 
     startScene(): void {
@@ -54,8 +52,8 @@ export default class Level_Prisoner extends GameLevel{
         this.viewport.setBounds(0,0,tilemapSize.x,tilemapSize.y);
 
         this.initializeWeapons();
-        super.startScene();
-        this.viewport.setZoomLevel(4);
+        super.startScene({zoomLevel: 4});
+        // this.viewport.setZoomLevel(4);
         this.createNavmesh("navmesh");
         this.initializeEnemies(this.load.getObject("enemyData"));
 
@@ -116,16 +114,7 @@ export default class Level_Prisoner extends GameLevel{
     
 
     setCustomProperties() : void{
-        for(let enemy of this.enemies){
-            if((<EnemyAI>enemy._ai).custID === "strongEnemy1" || (<EnemyAI>enemy._ai).custID === "strongEnemy2"){
-                (<EnemyAI>enemy._ai).inRange = 500;
-                (<EnemyAI>enemy._ai).speed = 50;
-                (<EnemyAI>enemy._ai).vision = 500;
-            }
-        }
-
         BreakableTile.makeTiles(new Vec2(408,920),new Vec2(6,0),this);
-        
     }
 
     addLevelEnd(position : Vec2, size : Vec2){

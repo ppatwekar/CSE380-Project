@@ -1,0 +1,85 @@
+{
+    "numEnemies" : 11,
+    "enemies" : [
+        {
+            "position" : [528, 1296],
+            "mode" : "patrol",
+            "route" : [0, 1],
+            "type" : "raccoon",
+            "weapon": "raccHitHard"
+        },
+        {
+            "position" : [368, 1456],
+            "mode" : "patrol",
+            "route" : [2, 3, 4],
+            "type" : "raccoon",
+            "weapon": "raccHitHard"
+        },
+        {
+            "position": [1392, 1872],
+            "mode" : "patrol",
+            "route" : [5, 6, 7],
+            "type" : "raccoon",
+            "weapon": "raccHitHard"
+        },
+        {
+            "position" : [1680, 1968],
+            "mode" : "patrol",
+            "route" : [8, 9, 10],
+            "type" : "raccoon",
+            "weapon": "raccHitHard"
+        },
+        {
+            "position": [1584, 1552],
+            "mode" : "patrol",
+            "route" : [11, 12],
+            "type" : "raccoon",
+            "weapon": "raccHitHard"
+        },
+        {
+            "position":[1776, 1552],
+            "mode" : "patrol",
+            "route" : [13, 14],
+            "type" : "raccoon",
+            "weapon": "raccHitHard"
+        },
+        {
+            "position":[752, 1072],
+            "mode" : "patrol",
+            "route" : [15, 16, 17],
+            "type" : "raccoon",
+            "weapon": "raccHitHard"
+        },
+        {
+            "position":[848, 1072],
+            "mode" : "patrol",
+            "route" : [18, 19, 20],
+            "type" : "raccoon",
+            "weapon": "raccHitHard"
+        },
+        {
+            "position":[592, 920],
+            "mode" : "patrol",
+            "route" : [21, 22, 23],
+            "type" : "raccoon",
+            "weapon": "raccHitHard",
+            "custId": "strongEnemy3"
+        },
+        {
+            "position":[1488, 912],
+            "mode" : "patrol",
+            "route" : [24, 25, 26],
+            "type" : "raccoon",
+            "weapon": "raccHitHard",
+            "custId": "strongEnemy1"
+        },
+        {
+            "position":[1040, 336],
+            "mode" : "patrol",
+            "route" : [27, 28, 29, 30, 31, 32],
+            "type" : "raccoon",
+            "weapon": "raccHitHard",
+            "custId": "bossman"
+        }
+    ]
+}

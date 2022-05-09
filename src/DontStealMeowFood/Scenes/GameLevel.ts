@@ -44,6 +44,7 @@ export default class GameLevel extends Scene {
     protected items : Array<Item> = new Array();
     protected yoyo : Sprite;
     protected healthDisplay: Label;
+    protected bossHealthDisplay: Label;
     protected goalDisplay: Label;
     protected battleManager : BattleManager;
     protected inCinematic: boolean = false;
@@ -61,6 +62,9 @@ export default class GameLevel extends Scene {
 
     protected mainLayer: Layer;
 
+    /* Boss */
+    protected boss: any;
+
     protected nextLevel: new (...args: any) => GameLevel;
     
     loadScene(): void {
@@ -72,13 +76,19 @@ export default class GameLevel extends Scene {
         this.load.image("stone","project_assets/item/Stone.png");
         this.load.image("healthpack","project_assets/item/Healthpack.png");
         this.load.image("catFood","project_assets/item/CatFood.png");
-
+        this.load.object("weaponData","project_assets/data/weaponData.json");
     }
 
-    startScene(): void{
+    startScene(options? : any): void{
         this.mainLayer = this.addLayer("primary",10);
 
-        this.viewport.setZoomLevel(4);
+        let zoomLevel = 4;
+        if (options) {
+            if (options.zoomLevel) {
+                zoomLevel = options.zoomLevel;
+            }
+        }
+        this.viewport.setZoomLevel(zoomLevel);
 
         this.initializePlayer();
         this.subscribeToEvents();
@@ -202,6 +212,7 @@ export default class GameLevel extends Scene {
     protected gameover(): void{
         console.log("change scene to gameover");
         this.receiver.destroy();
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1_music"});
         this.sceneManager.changeToScene(GameOver);
     }
 
@@ -213,17 +224,30 @@ export default class GameLevel extends Scene {
 
     protected addUI(){
         this.addUILayer("health");
-        this.healthDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "health", {position: new Vec2(this.viewport.getCenter().x * 0.05, this.viewport.getCenter().y * 0.485), text: "Health: " + (<BattlerAI>this.player._ai).health});
+        let location = this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(this.viewport.getCenter().clone().scale(0.205, -0.235));
+        if (this.viewport.getZoomLevel() != 4) {
+            location = this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(this.viewport.getCenter().clone().scale(0.27, -0.32));
+        }
+        // new Vec2(this.viewport.getCenter().x * 0.05, this.viewport.getCenter().y * 0.485)
+        this.healthDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "health", {position: location, text: "Health: " + (<BattlerAI>this.player._ai).health});
         this.healthDisplay.textColor = Color.BLACK;
         this.healthDisplay.backgroundColor = Color.WHITE;
+
+        this.bossHealthDisplay = <Label>this.add.uiElement(UIElementType.LABEL, "health", {position: this.viewport.getCenter().clone().scale(0.25, 0.40), text: "Boss Remaining Health: "});
+        this.bossHealthDisplay.textColor = Color.TRANSPARENT;
+        this.bossHealthDisplay.backgroundColor = Color.TRANSPARENT;
 
         this.addUILayer("objectives");
         
     }
 
     initializePlayer() : void{
-
-        let inventory = new InventoryManager(this, 5, "inventorySlot", new Vec2(16, this.viewport.getCenter().y * 0.45), 2, "slots1", "items1");
+        let location = this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(this.viewport.getCenter().clone().scale(0.225, -0.20));
+        if (this.viewport.getZoomLevel() != 4) {
+            location = this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(this.viewport.getCenter().clone().scale(0.30, -0.28));
+        }
+        // new Vec2(16, (this.viewport.getCenter().y * 0.45))
+        let inventory = new InventoryManager(this, 5, "inventorySlot", location, 2, "slots1", "items1");
         let weapon = this.createWeapon("yoyo");
         this.player = this.add.animatedSprite("cat","primary");
         if(!this.playerSpawn){
@@ -403,8 +427,39 @@ export default class GameLevel extends Scene {
                 data.guardPosition = new Vec2(data.guardPosition[0]/2, data.guardPosition[1]/2);
             }
 
-            
             let enemyVision = 96;
+            let inRange = 32;
+            let health = 10;
+            let speed;
+
+            if (data["custId"]) {
+                switch (data["custId"]) {
+                    case "strongEnemy1":
+                    case "strongEnemy2":
+                        {
+                            inRange = 250;
+                            speed = 50;
+                            enemyVision = 300;
+                        }
+                        break;
+                    case "strongEnemy3":
+                        {
+                            health = 30
+                            inRange = enemyVision = 96;
+                        }
+                        break;
+                    case "bossman":
+                        {
+                            health = 300;
+                            inRange = 128;
+                            speed = 30;
+                            enemyVision = 128;
+                            this.boss = this.enemies[i];
+                            console.log("FOUND BOSS!");
+                        }
+                        break;
+                }
+            }
             
 
             let statusArray: Array<string> = [];            
@@ -421,10 +476,11 @@ export default class GameLevel extends Scene {
                 goal: Custom_Statuses.REACHED_GOAL,
                 status: statusArray,
                 actions: actionsDef,
-                inRange: 32, //128
+                inRange: inRange, //128
                 vision: enemyVision,
-                health: 10,
-                custID : data.custID
+                health: health,
+                speed: speed,
+                custID : data["custId"]
             }    
             this.enemies[i].addAI(EnemyAI,enemyOptions);
             this.enemies[i].setGroup("enemy");

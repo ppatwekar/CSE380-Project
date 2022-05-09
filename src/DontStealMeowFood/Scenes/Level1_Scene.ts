@@ -35,7 +35,6 @@ export default class Level1_Scene extends GameLevel {
         this.load.tilemap("level1","project_assets/tilemaps/level1_tilemap/TutorialLevel.json");
         this.load.object("navmesh","project_assets/data/level1_data/navmesh.json");
         this.load.object("enemyData","project_assets/data/level1_data/enemy.json");
-        this.load.object("weaponData","project_assets/data/weaponData.json");
     }
 
     startScene(): void {
@@ -56,9 +55,11 @@ export default class Level1_Scene extends GameLevel {
         //     position : new Vec2(117,503) //if tiled has location (x,y) then location here is (x/2,y/2)
 
         // }
+
         this.initializeWeapons();
-        super.startScene();
-        this.viewport.setZoomLevel(3);
+        super.startScene({zoomLevel: 3});
+        // this.initializePlayer();
+
         this.createNavmesh("navmesh");
 
         this.initializeEnemies(this.load.getObject("enemyData"));
@@ -72,7 +73,7 @@ export default class Level1_Scene extends GameLevel {
         (<PlayerController>this.player._ai).enemies = this.enemies;
         this.h1 = new HighLight();
 
-        this.setGoal("Find the Exit!", Color.BLACK, Color.WHITE);
+        this.setGoal("Find the Exit!", Color.BLACK, Color.WHITE, new Vec2(50, 10));
         // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1_music", loop: true, holdReference: true});
     }
 

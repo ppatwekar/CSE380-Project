@@ -62,6 +62,8 @@ export default class EnemyAI extends StateMachineGoapAI{
 
     protected isPaused: boolean;
 
+    private addedFlag: boolean = false;
+
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
 
@@ -83,7 +85,7 @@ export default class EnemyAI extends StateMachineGoapAI{
         //this.weapon = options.weapon;
 
         this.player = options.player;
-
+        this.speed = options.speed ? options.speed : this.speed;
         this.inRange = options.inRange;
 
         this.goal = options.goal;
@@ -117,6 +119,9 @@ export default class EnemyAI extends StateMachineGoapAI{
             Custom_Events.PAUSE_EVENT
         ]);
 
+        if (this.custID === "bossman") {
+            this.owner.scale = this.owner.scale.clone().scaleTo(3);
+        }
     }
 
     activate(options: Record<string, any>): void {
