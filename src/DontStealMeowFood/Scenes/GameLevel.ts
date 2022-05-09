@@ -452,14 +452,14 @@ export default class GameLevel extends Scene {
             let health = 10;
             let speed;
 
-            if (data["custId"]) {
-                switch (data["custId"]) {
+            if (data["custID"]) {
+                switch (data["custID"]) {
                     case "strongEnemy1":
                     case "strongEnemy2":
                         {
-                            inRange = 250;
+                            inRange = 500;
                             speed = 50;
-                            enemyVision = 300;
+                            enemyVision = 500;
                         }
                         break;
                     case "strongEnemy3":
