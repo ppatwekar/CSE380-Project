@@ -25,7 +25,6 @@ export default class Level_Sea extends GameLevel{
     protected food: number;
     protected totalFood: number;
     private rec : Receiver;
-    protected nextLevel: new (...args: any) => GameLevel;
 
     loadScene(): void {
         super.loadScene(); // Loads audio
@@ -71,6 +70,8 @@ export default class Level_Sea extends GameLevel{
 
         let weaponData = this.load.getObject("weaponData");
         this.stoneController = new StoneController(this,weaponData.weapons[2].speed);
+
+        this.nextLevel = Level_Boss;
     }
 
     updateScene(deltaT: number): void {
