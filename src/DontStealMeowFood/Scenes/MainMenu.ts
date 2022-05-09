@@ -74,6 +74,7 @@ export default class MainMenu extends Scene {
             const controlHeader = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(size.x, size.y - 300), text: "Controls"});
             controlHeader.textColor = Color.WHITE;
 
+            const c0 = "** Hitting an enemy from the back deals 2x the damage **";
             const controls1 = "WASD | Move";
             const controls2 = "E | Item Pick Up";
             const controls3 = "Q | Drop Current Item";
@@ -81,6 +82,7 @@ export default class MainMenu extends Scene {
             const controls5 = "U | Use";
             const controls6 = "Left-Click/Spacebar | Attack";
 
+            const cline0 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(size.x, size.y - 150), text: c0});
             const cline1 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(size.x, size.y - 100), text: controls1});
             const cline2 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(size.x, size.y - 50), text: controls2});
             const cline3 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(size.x, size.y), text: controls3});
@@ -88,7 +90,7 @@ export default class MainMenu extends Scene {
             const cline5 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(size.x, size.y + 100), text: controls5});
             const cline6 = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(size.x, size.y + 150), text: controls6});
 
-            cline1.textColor = cline2.textColor = cline3.textColor = cline4.textColor = cline5.textColor = cline6.textColor = Color.WHITE;
+            cline0.textColor = cline1.textColor = cline2.textColor = cline3.textColor = cline4.textColor = cline5.textColor = cline6.textColor = Color.WHITE;
 
             // Back Button
             const controlBack = this.add.uiElement(UIElementType.BUTTON, "control", {position: new Vec2(size.x, size.y + 250), text: "Back"});
@@ -166,18 +168,21 @@ export default class MainMenu extends Scene {
             const text2s = "but recently a gang of raccoons invaded her living space and stole all her cat food.";
             const text2t = "Vanilla decides to take revenge on the raccoons and get her food back";
             const text3 = "Created by Jun Yi Lin, Tahmidul Alam, and Prathamesh Patwekar";
+            const text4 = "Cheat (Only in Boss Level): Press K to Kill the Boss";
     
             const line1 = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: new Vec2(size.x, size.y - 150), text: text1});
             const line2 = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: new Vec2(size.x, size.y - 100), text: text2});
             const line2s = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: new Vec2(size.x, size.y - 50), text: text2s});
             const line2t = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: new Vec2(size.x, size.y), text: text2t});
             const line3 = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: new Vec2(size.x, size.y + 50), text: text3});
+            const line4 = <Label>this.add.uiElement(UIElementType.LABEL, "help", {position: new Vec2(size.x, size.y + 100), text: text4});
     
             line1.textColor = Color.WHITE;
             line2.textColor = Color.WHITE;
             line2s.textColor = Color.WHITE;
             line2t.textColor = Color.WHITE;
             line3.textColor = Color.YELLOW;
+            line4.textColor = Color.WHITE;
     
             const aboutBack = this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(size.x, size.y + 250), text: "Back"});
             aboutBack.size.set(200, 50);
