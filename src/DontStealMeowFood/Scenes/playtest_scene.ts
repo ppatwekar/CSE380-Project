@@ -22,6 +22,7 @@ import Move from "../AI/EnemyActions/Move";
 import Retreat from "../AI/EnemyActions/Retreat";
 import StoneController from "../GameSystems/Items/WeaponTypes/StoneController";
 import Color from "../../Wolfie2D/Utils/Color";
+import Level_Garden from "./Level_Garden";
 
 export default class playtest_scene extends GameLevel{
     private bushes : OrthogonalTilemap;
@@ -85,6 +86,8 @@ export default class playtest_scene extends GameLevel{
 
         this.setGoal("Objective: Kill all raccoons!!",Color.WHITE,Color.BLACK,new Vec2(80,10));
 
+        this.nextLevel = "Level3";
+
 
     }
 
@@ -94,7 +97,27 @@ export default class playtest_scene extends GameLevel{
         super.updateScene(deltaT);
         this.h1.checkClosestEnemies(this.enemies, this.player);
         if(this.enemies.length === 0){
-            //this.setGoal("Level Finished");
+            let sceneOptions = {
+                physics : {
+                    /**
+                     *      pl  ene  yoyo ston
+                     * pl   0    1    1    1
+                     * ene  1    0    1    1
+                     * yoyo 1    1    0    0
+                     * ston 1    1    0    0
+                     */
+                    groupNames : ["player","enemy","yoyo","stone"],
+                    collisions : 
+                    [
+                        [0,1,0,1],
+                        [1,1,0,0],
+                        [0,0,0,0],
+                        [1,0,0,0]
+                    ]
+                }
+            };
+
+            this.sceneManager.changeToScene(Level_Garden,{},sceneOptions);
         }
     }
 

@@ -71,7 +71,7 @@ export default class Level_Sea extends GameLevel{
         let weaponData = this.load.getObject("weaponData");
         this.stoneController = new StoneController(this,weaponData.weapons[2].speed);
 
-        this.nextLevel = Level_Boss;
+        this.nextLevel = "Level6";
     }
 
     updateScene(deltaT: number): void {
@@ -82,7 +82,26 @@ export default class Level_Sea extends GameLevel{
         this.goalDisplay.text = "Find All Food 2:"+this.food+"/"+this.totalFood;
 
         if(this.food<=0){
-            this.emitter.fireEvent(Custom_Events.COMPLETE_OBJECTIVE);
+            let sceneOptions = {
+                physics : {
+                    /**
+                     *      pl  ene  yoyo ston
+                     * pl   0    1    1    1
+                     * ene  1    0    1    1
+                     * yoyo 1    1    0    0
+                     * ston 1    1    0    0
+                     */
+                    groupNames : ["player","enemy","yoyo","stone"],
+                    collisions : 
+                    [
+                        [0,1,0,1],
+                        [1,1,0,0],
+                        [0,0,0,0],
+                        [1,0,0,0]
+                    ]
+                }
+            };
+            this.sceneManager.changeToScene(Level_Boss,{},sceneOptions);
         }
     }
 

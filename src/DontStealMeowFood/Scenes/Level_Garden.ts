@@ -68,10 +68,44 @@ export default class Level_Garden extends GameLevel{
 
         this.stoneController = new StoneController(this,weaponData.weapons[2].speed);
 
-        this.nextLevel = Level_Prisoner;
+        this.nextLevel = "Level4";
+
+        this.rec = new Receiver();
+        this.rec.subscribe('Custom_Events.COMPLETE_OBJECTIVE');
+    }
+
+
+    events(): void {
+        while(this.rec.hasNextEvent()){
+            let event = this.rec.getNextEvent();
+            if(event.type === Custom_Events.COMPLETE_OBJECTIVE){
+                let sceneOptions = {
+                    physics : {
+                        /**
+                         *      pl  ene  yoyo
+                         * pl   0    1    1
+                         * ene  1    0    1
+                         * yoyo 1    1    0
+                         */
+                        groupNames : ["player","enemy","yoyo","stone","faultyTile"],
+                        collisions : 
+                        [
+                            [0,1,0,1,1],
+                            [1,1,0,0,1],
+                            [0,0,0,0,0],
+                            [1,0,0,0,0],
+                            [1,1,0,0,0]
+                        ]
+                    }
+                };
+                this.sceneManager.changeToScene(Level_Prisoner,{},sceneOptions);
+
+            }
+        }
     }
 
     updateScene(deltaT: number): void {
+        this.events();
         super.updateScene(deltaT);
         this.h1.checkClosestEnemies(this.enemies, this.player);
 
@@ -82,5 +116,6 @@ export default class Level_Garden extends GameLevel{
         this.levelEndArea.addPhysics(undefined, undefined, false, true);
         this.levelEndArea.setTrigger("player", Custom_Events.COMPLETE_OBJECTIVE, null);
         this.levelEndArea.color = new Color(1,0,0,1);
+        
     }
 }

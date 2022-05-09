@@ -65,7 +65,7 @@ export default class GameLevel extends Scene {
     /* Boss */
     protected boss: any;
 
-    protected nextLevel: new (...args: any) => GameLevel;
+    protected nextLevel: string;
     
     loadScene(): void {
         this.load.audio("level1_music", "project_assets/music/theme_music.mp3");
@@ -174,27 +174,7 @@ export default class GameLevel extends Scene {
                 break;
             case Custom_Events.COMPLETE_OBJECTIVE:
                 {
-                    if(this.nextLevel){
-                        let sceneOptions = {
-                            physics : {
-                                /**
-                                 *      pl  ene  yoyo
-                                 * pl   0    1    1
-                                 * ene  1    0    1
-                                 * yoyo 1    1    0
-                                 */
-                                groupNames : ["player","enemy","yoyo","stone"],
-                                collisions : 
-                                [
-                                    [0,1,0,1],
-                                    [1,1,0,0],
-                                    [0,0,0,0],
-                                    [1,0,0,0]
-                                ]
-                            }
-                        };
-                        this.sceneManager.changeToScene(this.nextLevel, {}, sceneOptions);
-                    }
+                    console.log("RIP");
                 }
                 break;
             case Custom_Events.IN_CINEMATIC:
