@@ -23,6 +23,7 @@ import Retreat from "../AI/EnemyActions/Retreat";
 import StoneController from "../GameSystems/Items/WeaponTypes/StoneController";
 import Color from "../../Wolfie2D/Utils/Color";
 import Level_Garden from "./Level_Garden";
+import MainMenu from "./MainMenu";
 
 export default class playtest_scene extends GameLevel{
     private bushes : OrthogonalTilemap;
@@ -121,7 +122,8 @@ export default class playtest_scene extends GameLevel{
                 }
             };
             this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1_music"});
-            this.sceneManager.changeToScene(Level_Garden,{},sceneOptions);
+            // this.sceneManager.changeToScene(Level_Garden,{},sceneOptions);
+            this.sceneManager.changeToScene(MainMenu,{},sceneOptions);
         }
     }
 

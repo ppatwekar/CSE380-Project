@@ -55,17 +55,17 @@ export default class PauseManager {
         let resume = <Button>scene.add.uiElement(UIElementType.BUTTON, layerName, {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 50)), text: "Resume"});
         resume.onClickEventId = "resume";
 
-        let control = <Label>scene.add.uiElement(UIElementType.LABEL, layerName, {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 15)), text: "Controls"});
-        control.onClickEventId = "controlsPause";
+        // let control = <Label>scene.add.uiElement(UIElementType.LABEL, layerName, {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, 15)), text: "Controls"});
+        // control.onClickEventId = "controlsPause";
 
-        let helpButton = <Label>scene.add.uiElement(UIElementType.LABEL, layerName, {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, -20)), text: "Help"});
-        helpButton.onClickEventId = "helpPause";
+        // let helpButton = <Label>scene.add.uiElement(UIElementType.LABEL, layerName, {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, -20)), text: "Help"});
+        // helpButton.onClickEventId = "helpPause";
 
         let menu = <Label>scene.add.uiElement(UIElementType.LABEL, layerName, {position: this.viewport.getCenter().clone().scale(1/this.viewport.getZoomLevel()).sub(new Vec2(0, -55)), text: "Main Menu"});
         menu.onClickEventId = "mainMenuPause";
 
-        resume.backgroundColor = control.backgroundColor = helpButton.backgroundColor = menu.backgroundColor = Color.BLACK;
-        resume.textColor = control.textColor = helpButton.textColor = menu.textColor = Color.WHITE;
+        resume.backgroundColor =  menu.backgroundColor = Color.BLACK;
+        resume.textColor = menu.textColor = Color.WHITE;
 
         resume.onClick = () => {
             console.log("CLICKED RESUME!");
@@ -83,29 +83,29 @@ export default class PauseManager {
             this.menuState = null;
         };
 
-        control.onEnter = () => {
-            control.backgroundColor = Color.WHITE;
-            control.textColor = Color.BLACK;
-            if (this.menuState !== "controlsPause")
-                {this.menuState = "controlsPause";}
-        };
-        control.onLeave = () => {
-            control.backgroundColor = Color.BLACK;
-            control.textColor = Color.WHITE;
-            this.menuState = null;
-        };
+        // control.onEnter = () => {
+        //     control.backgroundColor = Color.WHITE;
+        //     control.textColor = Color.BLACK;
+        //     if (this.menuState !== "controlsPause")
+        //         {this.menuState = "controlsPause";}
+        // };
+        // control.onLeave = () => {
+        //     control.backgroundColor = Color.BLACK;
+        //     control.textColor = Color.WHITE;
+        //     this.menuState = null;
+        // };
 
-        helpButton.onEnter = () => {
-            helpButton.backgroundColor = Color.WHITE;
-            helpButton.textColor = Color.BLACK;
-            if (this.menuState !== "helpPause")
-                {this.menuState = "helpPause";}
-        };
-        helpButton.onLeave = () => {
-            helpButton.backgroundColor = Color.BLACK;
-            helpButton.textColor = Color.WHITE;
-            this.menuState = null;
-        };
+        // helpButton.onEnter = () => {
+        //     helpButton.backgroundColor = Color.WHITE;
+        //     helpButton.textColor = Color.BLACK;
+        //     if (this.menuState !== "helpPause")
+        //         {this.menuState = "helpPause";}
+        // };
+        // helpButton.onLeave = () => {
+        //     helpButton.backgroundColor = Color.BLACK;
+        //     helpButton.textColor = Color.WHITE;
+        //     this.menuState = null;
+        // };
 
         menu.onEnter = () => {
             menu.backgroundColor = Color.WHITE;

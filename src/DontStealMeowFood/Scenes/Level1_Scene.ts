@@ -25,6 +25,7 @@ import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import playtest_scene from "./playtest_scene";
 import Receiver from "../../Wolfie2D/Events/Receiver";
 import Level_Garden from "./Level_Garden";
+import MainMenu from "./MainMenu";
 
 export default class Level1_Scene extends GameLevel {
     private bushes : OrthogonalTilemap;
@@ -100,7 +101,8 @@ export default class Level1_Scene extends GameLevel {
             if (event.type === "levelEnd") {
                 console.log("WHAT?");
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1_music"});
-                this.sceneManager.changeToScene(playtest_scene, {}, this.sceneOptions);
+                // this.sceneManager.changeToScene(playtest_scene, {}, this.sceneOptions);
+                this.sceneManager.changeToScene(MainMenu, {}, this.sceneOptions);
             }
         }
         // console.log(this.player.position.x +  ", y: " + this.player.position.y);

@@ -16,6 +16,7 @@ import Item from "../GameSystems/items/Item";
 import StoneController from "../GameSystems/Items/WeaponTypes/StoneController";
 import GameLevel from "./GameLevel"
 import Level_Boss from "./Level_Boss";
+import MainMenu from "./MainMenu";
 
 export default class Level_Sea extends GameLevel{
     private bushes : OrthogonalTilemap;
@@ -103,7 +104,8 @@ export default class Level_Sea extends GameLevel{
                 }
             };
             this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1_music"});
-            this.sceneManager.changeToScene(Level_Boss,{},sceneOptions);
+            // this.sceneManager.changeToScene(Level_Boss,{},sceneOptions);
+            this.sceneManager.changeToScene(MainMenu,{},sceneOptions);
         }
     }
 

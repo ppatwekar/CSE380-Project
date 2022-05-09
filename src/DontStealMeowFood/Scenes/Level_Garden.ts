@@ -17,6 +17,7 @@ import Item from "../GameSystems/items/Item";
 import StoneController from "../GameSystems/Items/WeaponTypes/StoneController";
 import GameLevel from "./GameLevel"
 import Level_Prisoner from "./Level_Prisoner";
+import MainMenu from "./MainMenu";
 
 export default class Level_Garden extends GameLevel{
     private bushes : OrthogonalTilemap;
@@ -100,7 +101,8 @@ export default class Level_Garden extends GameLevel{
                     }
                 };
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1_music"});
-                this.sceneManager.changeToScene(Level_Prisoner,{},sceneOptions);
+                // this.sceneManager.changeToScene(Level_Prisoner,{},sceneOptions);
+                this.sceneManager.changeToScene(MainMenu,{},sceneOptions);
 
             }
         }

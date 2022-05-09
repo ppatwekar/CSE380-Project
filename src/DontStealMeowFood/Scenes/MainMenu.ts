@@ -62,7 +62,7 @@ export default class MainMenu extends Scene {
         // Add Help Button
         createButton(new Vec2(size.x, size.y + 150), "help");
 
-        createButton(new Vec2(size.x, size.y + 250), "end");
+        // createButton(new Vec2(size.x, size.y + 250), "end");
 
         /* Control Screen */
         let controlScreen = () => {
