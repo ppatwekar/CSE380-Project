@@ -17,7 +17,7 @@
             "weaponType" : "raccClaw",
             "name" : "raccClaw",
             "displayName" : "raccClaw",
-            "damage" : 1,
+            "damage" : 7,
             "cooldown" : 2000,
             "spriteKey" : "raccoon",
             "useVolume" : 650
