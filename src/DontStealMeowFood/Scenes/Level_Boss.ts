@@ -35,8 +35,8 @@ export default class Level_Garden extends GameLevel{
     }
 
     startScene(): void {
-        // this.playerSpawn = new Vec2(464/2,1744/2); // ACTUAL
-        this.playerSpawn = new Vec2(1904/2,88/2); // DEBUG
+        this.playerSpawn = new Vec2(464/2,1744/2); // ACTUAL
+        // this.playerSpawn = new Vec2(1904/2,88/2); // DEBUG
         let tilemapLayers = this.add.tilemap("bossLevel", new Vec2(0.5,0.5));
         this.bushes = <OrthogonalTilemap>tilemapLayers[1].getItems()[0];
 
