@@ -10,6 +10,7 @@ import GameOver from "./GameOver";
 import Level1_Scene from "./level1_scene";
 import Level_Prisoner from "./Level_Prisoner";
 import playtest_scene from "./playtest_scene";
+import Level_Garden from "./Level_Garden";
 
 export default class MainMenu extends Scene {
     // Layers for multiple main menu screens
@@ -117,11 +118,11 @@ export default class MainMenu extends Scene {
             l3.backgroundColor = Color.GREEN;
             l3.onClickEventId = "level3";
 
-            const l4 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l1.position.x , l1.position.y + w + 4 * yMar), text : "LOCKED"});
+            const l4 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l1.position.x , l1.position.y + w + 4 * yMar), text : "Level 4"});
             l4.size.set(l,w);
             l4.borderColor = Color.WHITE;
-            l4.backgroundColor = Color.TRANSPARENT;
-            l4.onClickEventId = "";
+            l4.backgroundColor = Color.GREEN;
+            l4.onClickEventId = "level4";
 
             const l5 = <Button>this.add.uiElement(UIElementType.BUTTON,"levels",{position : new Vec2(l4.position.x + xMar + l , l4.position.y), text : "LOCKED"});
             l5.size.set(l,w);
@@ -184,7 +185,7 @@ export default class MainMenu extends Scene {
         helpScreen();
 
         /* Receivers */
-        this.receiver.subscribe(["menu","level1","level2","level3","control","levels","help", "end"]);
+        this.receiver.subscribe(["menu","level1","level2","level3","level4","control","levels","help", "end"]);
 
         
     }
@@ -242,6 +243,27 @@ export default class MainMenu extends Scene {
                 let sceneOptions = {
                     physics : {
                         /**
+                         *      pl  ene  yoyo ston
+                         * pl   0    1    1    1
+                         * ene  1    0    1    1
+                         * yoyo 1    1    0    0
+                         * ston 1    1    0    0
+                         */
+                        groupNames : ["player","enemy","yoyo","stone"],
+                        collisions : 
+                        [
+                            [0,1,0,1],
+                            [1,1,0,1],
+                            [0,0,0,0],
+                            [1,1,0,0]
+                        ]
+                    }
+                };
+                this.sceneManager.changeToScene(Level_Garden, {}, sceneOptions);
+            }else if(event.type === "level4"){
+                let sceneOptions = {
+                    physics : {
+                        /**
                          *      pl  ene  yoyo
                          * pl   0    1    1
                          * ene  1    0    1
@@ -259,8 +281,6 @@ export default class MainMenu extends Scene {
                     }
                 };
                 this.sceneManager.changeToScene(Level_Prisoner, {}, sceneOptions);
-                
-
             }
 
             if(event.type === "help"){

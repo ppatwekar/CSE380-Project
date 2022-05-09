@@ -231,6 +231,7 @@ export default class GameLevel extends Scene {
             this.playerSpawn = Vec2.ZERO;
         }
         this.player.position.copy(this.playerSpawn);
+        console.log("player",this.player);
         this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(8,8))); // Regular Player AABB
         this.player.addAI(PlayerController,
             {
