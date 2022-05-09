@@ -63,7 +63,7 @@
             "route" : [21, 22, 23],
             "type" : "raccoon",
             "weapon": "raccHitHard",
-            "custId": "strongEnemy3"
+            "custID": "strongEnemy3"
         },
         {
             "position":[1488, 912],
@@ -71,7 +71,7 @@
             "route" : [24, 25, 26],
             "type" : "raccoon",
             "weapon": "raccHitHard",
-            "custId": "strongEnemy1"
+            "custID": "strongEnemy1"
         },
         {
             "position":[1040, 336],
@@ -79,7 +79,7 @@
             "route" : [27, 28, 29, 30, 31, 32],
             "type" : "raccoon",
             "weapon": "raccHitHard",
-            "custId": "bossman"
+            "custID": "bossman"
         }
     ]
 }
