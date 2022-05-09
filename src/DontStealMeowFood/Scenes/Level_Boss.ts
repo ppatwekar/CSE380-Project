@@ -61,7 +61,7 @@ export default class Level_Boss extends GameLevel{
         this.h1 = new HighLight();
 
         this.setGoal("Defeat the Raccoon Boss", Color.WHITE, Color.BLACK, new Vec2(50, 10));
-        this.setGoal("Get All of Your Food Back!", Color.WHITE, Color.BLACK, new Vec2(51, 20));
+        // this.setGoal("Get All of Your Food Back!", Color.WHITE, Color.BLACK, new Vec2(51, 20));
 
         this.bossHealthDisplay.padding = new Vec2(10, 10);
         this.bossHealthDisplay.textColor = Color.ORANGE;

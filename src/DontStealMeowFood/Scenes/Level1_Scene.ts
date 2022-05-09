@@ -47,8 +47,8 @@ export default class Level1_Scene extends GameLevel {
     }
 
     startScene(): void {
-        // this.playerSpawn = new Vec2(288/2, 1760/2);
-        this.playerSpawn = new Vec2(840/2, 888/2);
+        this.playerSpawn = new Vec2(288/2, 1760/2);
+        // this.playerSpawn = new Vec2(840/2, 888/2);
         let tilemapLayers = this.add.tilemap("level1", new Vec2(0.5,0.5));
         this.bushes = <OrthogonalTilemap>tilemapLayers[1].getItems()[0];
         console.log(this.bushes.size);
